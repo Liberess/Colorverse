@@ -51,6 +51,21 @@ public:
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
 	void Roll();
 
+private:
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta=(AllowPrivateAccess), Category="LivingEntity")
+	bool bIsDamageable;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta=(AllowPrivateAccess), Category="Player Movement")
+	bool bIsRooling;
+	
+	FTimerHandle RollTimer;
+
+	void SetEnabledRoll();
+
+public:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Player Movement")
+	float RollDelayTime;
+
 protected:
 	void OnResetVR();
 

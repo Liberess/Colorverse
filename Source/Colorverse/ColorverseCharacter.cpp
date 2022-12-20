@@ -42,6 +42,8 @@ void AColorverseCharacter::BeginPlay()
 
 	if(IsValid(CharacterMovement))
 		CharacterMovement->MaxWalkSpeed = WalkSpeed;
+
+	bIsDamageable = true;
 }
 
 void AColorverseCharacter::SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent)
@@ -49,6 +51,8 @@ void AColorverseCharacter::SetupPlayerInputComponent(class UInputComponent* Play
 	check(PlayerInputComponent);
 	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &ACharacter::Jump);
 	PlayerInputComponent->BindAction("Jump", IE_Released, this, &ACharacter::StopJumping);
+
+	PlayerInputComponent->BindAction("Roll", IE_Pressed, this, &AColorverseCharacter::Roll);
 
 	PlayerInputComponent->BindAxis("MoveForward", this, &AColorverseCharacter::MoveForward);
 	PlayerInputComponent->BindAxis("MoveRight", this, &AColorverseCharacter::MoveRight);
@@ -113,6 +117,7 @@ void AColorverseCharacter::MoveForward(float Value)
 			if(bIsRunTimer && CharacterMovement->Velocity.IsZero())
 			{
 				bIsRunTimer = false;
+				bIsRunning = false;
 				CharacterMovement->MaxWalkSpeed = WalkSpeed;
 				GetWorldTimerManager().ClearTimer(ToggleRunTimer);
 			}
@@ -161,8 +166,26 @@ void AColorverseCharacter::SetEnabledToggleRun()
 
 void AColorverseCharacter::Roll_Implementation()
 {
+	if(!bIsRunning || bIsRooling)
+		return;
+
+	if(CharacterMovement->IsFalling())
+		return;
 	
+	bIsRooling = true;
+	bIsDamageable = false;
+
+	Print(1.0f, TEXT("Roll On"));
+	
+	GetWorldTimerManager().ClearTimer(RollTimer);
+	GetWorldTimerManager().SetTimer(RollTimer, this, &AColorverseCharacter::SetEnabledRoll, RollDelayTime, false);
 }
 
+void AColorverseCharacter::SetEnabledRoll()
+{
+	bIsRooling = false;
+	bIsDamageable = true;
+	Print(1.0f, TEXT("Roll Off"));
+}
 
 #pragma endregion Movement
