@@ -14,22 +14,49 @@ class AColorverseCharacter : public ACharacter
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 	class UCameraComponent* FollowCamera;
-	
+
+private:
+	bool bIsRunTimer;
+	FTimerHandle ToggleRunTimer;
+
 public:
 	AColorverseCharacter();
 
+	virtual void BeginPlay() override;
+
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Camera)
 	float BaseTurnRate;
-	
+
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Camera)
 	float BaseLookUpRate;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Player Movement")
+	bool bIsRunning;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Player Movement")
+	float WalkSpeed;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Player Movement")
+	float RunSpeed;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Player Movement")
+	float AutoRunStartDelay;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Player Movement")
+	float RollSpeed;
+
+	UFUNCTION(BlueprintCallable)
+	void SetEnabledToggleRun();
+
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
+	void Roll();
 
 protected:
 	void OnResetVR();
 
 	void MoveForward(float Value);
 	void MoveRight(float Value);
-	
+
 	void TurnAtRate(float Rate);
 	void LookUpAtRate(float Rate);
 
@@ -43,4 +70,3 @@ public:
 	FORCEINLINE class USpringArmComponent* GetCameraBoom() const { return CameraBoom; }
 	FORCEINLINE class UCameraComponent* GetFollowCamera() const { return FollowCamera; }
 };
-
