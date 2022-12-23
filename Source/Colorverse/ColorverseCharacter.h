@@ -42,29 +42,29 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Player Movement")
 	float AutoRunStartDelay;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Player Movement")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Player Movement")
 	float RollSpeed;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Player Movement")
+	float RollDelay;
+	
 	UFUNCTION(BlueprintCallable)
 	void SetEnabledToggleRun();
 
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
 	void Roll();
 
+	UFUNCTION(BlueprintCallable)
+	void SetDisabledRoll();
+	
 private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta=(AllowPrivateAccess), Category="LivingEntity")
 	bool bIsDamageable;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta=(AllowPrivateAccess), Category="Player Movement")
-	bool bIsRooling;
+	bool bIsRolling;
 	
 	FTimerHandle RollTimer;
-
-	void SetEnabledRoll();
-
-public:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Player Movement")
-	float RollDelayTime;
 
 protected:
 	void OnResetVR();

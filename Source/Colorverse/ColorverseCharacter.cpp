@@ -158,7 +158,6 @@ void AColorverseCharacter::MoveRight(float Value)
 
 void AColorverseCharacter::SetEnabledToggleRun()
 {
-	check(CharacterMovement);
 	bIsRunning = true;
 	CharacterMovement->MaxWalkSpeed = RunSpeed;
 	//Print(1.0f, TEXT("SetEnabledToggleRun"));
@@ -166,24 +165,24 @@ void AColorverseCharacter::SetEnabledToggleRun()
 
 void AColorverseCharacter::Roll_Implementation()
 {
-	if(!bIsRunning || bIsRooling)
+	if(!bIsRunning || bIsRolling)
 		return;
 
 	if(CharacterMovement->IsFalling())
 		return;
 	
-	bIsRooling = true;
+	bIsRolling = true;
 	bIsDamageable = false;
 
 	Print(1.0f, TEXT("Roll On"));
 	
 	GetWorldTimerManager().ClearTimer(RollTimer);
-	GetWorldTimerManager().SetTimer(RollTimer, this, &AColorverseCharacter::SetEnabledRoll, RollDelayTime, false);
+	GetWorldTimerManager().SetTimer(RollTimer, this, &AColorverseCharacter::SetDisabledRoll, RollDelay, false);
 }
 
-void AColorverseCharacter::SetEnabledRoll()
+void AColorverseCharacter::SetDisabledRoll()
 {
-	bIsRooling = false;
+	bIsRolling = false;
 	bIsDamageable = true;
 	Print(1.0f, TEXT("Roll Off"));
 }
