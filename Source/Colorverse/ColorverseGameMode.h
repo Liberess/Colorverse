@@ -11,6 +11,8 @@ class AColorverseGameMode : public AGameModeBase
 
 public:
 	AColorverseGameMode();
+
+	virtual void BeginPlay() override;
 };
 
 

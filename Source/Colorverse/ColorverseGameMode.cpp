@@ -1,5 +1,4 @@
 #include "ColorverseGameMode.h"
-#include "ColorverseCharacter.h"
 #include "UObject/ConstructorHelpers.h"
 
 AColorverseGameMode::AColorverseGameMode()
@@ -9,4 +8,11 @@ AColorverseGameMode::AColorverseGameMode()
 	{
 		DefaultPawnClass = PlayerPawnBPClass.Class;
 	}
+}
+
+void AColorverseGameMode::BeginPlay()
+{
+	Super::BeginPlay();
+
+	
 }
