@@ -1,6 +1,8 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "InteractObject.h"
+#include "InteractWidget.h"
 #include "GameFramework/Character.h"
 #include "ColorverseCharacter.generated.h"
 
@@ -14,11 +16,7 @@ class AColorverseCharacter : public ACharacter
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 	class UCameraComponent* FollowCamera;
-
-private:
-	bool bIsRunTimer;
-	FTimerHandle ToggleRunTimer;
-
+	
 public:
 	AColorverseCharacter();
 
@@ -56,8 +54,32 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	void SetDisabledRoll();
+
+	UFUNCTION()
+	void OnOverlapBegin(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
+
+	UFUNCTION()
+	void OnOverlapEnd(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
+
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
+	void Interact();
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta=(AllowPrivateAccess), Category=Interact)
+	bool bIsInteract;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Interact)
+	AInteractObject* InteractObject;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=Interact)
+	TSubclassOf<UUserWidget> InteractWidgetClass;
 	
+	UPROPERTY()
+	UInteractWidget* InteractWidget;
+
 private:
+	bool bIsRunTimer;
+	FTimerHandle ToggleRunTimer;
+	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta=(AllowPrivateAccess), Category="LivingEntity")
 	bool bIsDamageable;
 
@@ -65,6 +87,8 @@ private:
 	bool bIsRolling;
 	
 	FTimerHandle RollTimer;
+
+	bool bIsWatchingInteractWidget;
 
 protected:
 	void OnResetVR();

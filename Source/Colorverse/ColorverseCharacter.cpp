@@ -1,5 +1,6 @@
 #include "ColorverseCharacter.h"
 #include "HeadMountedDisplayFunctionLibrary.h"
+#include "IInteractable.h"
 #include "Camera/CameraComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "Components/InputComponent.h"
@@ -12,7 +13,9 @@
 AColorverseCharacter::AColorverseCharacter()
 {
 	GetCapsuleComponent()->InitCapsuleSize(42.f, 96.0f);
-
+	GetCapsuleComponent()->OnComponentBeginOverlap.AddDynamic(this, &AColorverseCharacter::OnOverlapBegin);
+	GetCapsuleComponent()->OnComponentEndOverlap.AddDynamic(this, &AColorverseCharacter::OnOverlapEnd);
+	
 	BaseTurnRate = 45.f;
 	BaseLookUpRate = 45.f;
 
@@ -24,8 +27,7 @@ AColorverseCharacter::AColorverseCharacter()
 	GetCharacterMovement()->RotationRate = FRotator(0.0f, 540.0f, 0.0f);
 	GetCharacterMovement()->JumpZVelocity = 600.f;
 	GetCharacterMovement()->AirControl = 0.2f;
-
-
+	
 	CameraBoom = CreateDefaultSubobject<USpringArmComponent>(TEXT("CameraBoom"));
 	CameraBoom->SetupAttachment(RootComponent);
 	CameraBoom->TargetArmLength = 300.0f;
@@ -66,6 +68,8 @@ void AColorverseCharacter::SetupPlayerInputComponent(class UInputComponent* Play
 	PlayerInputComponent->BindTouch(IE_Released, this, &AColorverseCharacter::TouchStopped);
 
 	PlayerInputComponent->BindAction("ResetVR", IE_Pressed, this, &AColorverseCharacter::OnResetVR);
+
+	PlayerInputComponent->BindAction("Interact", IE_Pressed, this, &AColorverseCharacter::Interact);
 }
 
 #pragma region Movement 
@@ -160,7 +164,6 @@ void AColorverseCharacter::SetEnabledToggleRun()
 {
 	bIsRunning = true;
 	CharacterMovement->MaxWalkSpeed = RunSpeed;
-	//Print(1.0f, TEXT("SetEnabledToggleRun"));
 }
 
 void AColorverseCharacter::Roll_Implementation()
@@ -186,5 +189,57 @@ void AColorverseCharacter::SetDisabledRoll()
 	bIsDamageable = true;
 	Print(1.0f, TEXT("Roll Off"));
 }
-
 #pragma endregion Movement
+
+void AColorverseCharacter::OnOverlapBegin(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+{
+	if (OtherActor && OtherActor != this)
+	{
+		InteractObject = Cast<AInteractObject>(OtherActor);
+		if(IsValid(InteractObject))
+		{
+			bIsInteract = true;
+
+			if(!bIsWatchingInteractWidget)
+			{
+				if(IsValid(InteractWidgetClass))
+				{
+					InteractWidget = Cast<UInteractWidget>(CreateWidget(GetWorld(), InteractWidgetClass));
+					if(InteractWidget != nullptr)
+					{
+						InteractWidget->InteractTxt->SetText(FText::FromString(InteractObject->InteractWidgetDisplayTxt));
+						bIsWatchingInteractWidget = true;
+						InteractWidget->AddToViewport();
+					}
+				}
+			}
+		}
+	}
+}
+
+void AColorverseCharacter::OnOverlapEnd(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
+{
+	if (OtherActor && OtherActor != this)
+	{
+		if(IsValid(InteractObject) && InteractObject == OtherActor)
+		{
+			InteractObject = nullptr;
+			bIsInteract = false;
+
+			if(InteractWidget != nullptr)
+			{
+				bIsWatchingInteractWidget = false;
+				InteractWidget->RemoveFromParent();
+			}
+		}
+	}
+}
+
+void AColorverseCharacter::Interact_Implementation()
+{
+	if(!bIsInteract || !IsValid(InteractObject))
+		return;
+
+	InteractObject->OnInteract();
+	Print(1.0f, TEXT("Interact"));
+}
