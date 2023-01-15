@@ -30,7 +30,7 @@ public:
 	
 	UFUNCTION(BlueprintCallable, Category=Interactable)
 	virtual void OnInteract() override;
-	
+
 	UFUNCTION(BlueprintCallable, Category=Interactable)
 	virtual void OnExit() override;
 

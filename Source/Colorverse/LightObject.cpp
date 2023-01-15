@@ -1,4 +1,6 @@
 #include "LightObject.h"
+
+#include "ColorManager.h"
 #include "ColorverseCharacter.h"
 
 #define Print(duration, text) if(GEngine) GEngine->AddOnScreenDebugMessage(-1,duration, FColor::Yellow, text);
@@ -25,7 +27,14 @@ void ALightObject::OnEnter()
 
 void ALightObject::OnInteract()
 {
-	Print(1.0f, TEXT("LightObject::OnInteract"));
+	Super::OnInteract();
+	Print(1.0f, TEXT("LightObject::OnInteract::Get Light!"));
+
+	UColorManager* ColorMgr = GetWorld()->GetSubsystem<UColorManager>();
+	check(ColorMgr);
+	GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Green, FString::Printf(TEXT("pre : %d"), ColorMgr->GetLightAmount(EStageName::Stage_1)));
+	ColorMgr->SetLightAmount(EStageName::Stage_1, 1);
+	GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Green, FString::Printf(TEXT("now : %d"), ColorMgr->GetLightAmount(EStageName::Stage_1)));
 }
 
 void ALightObject::OnExit()
