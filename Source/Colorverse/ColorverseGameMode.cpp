@@ -1,6 +1,5 @@
 #include "ColorverseGameMode.h"
-
-#include "Kismet/GameplayStatics.h"
+#include "ColorManager.h"
 #include "UObject/ConstructorHelpers.h"
 
 AColorverseGameMode::AColorverseGameMode()
@@ -16,17 +15,7 @@ void AColorverseGameMode::BeginPlay()
 {
 	Super::BeginPlay();
 
-	TArray<AActor*> Actors;
-	UGameplayStatics::GetAllActorsOfClass(this, ACustomPostProcessVolume::StaticClass(), Actors);
-	for (auto Actor : Actors)
-	{
-		ACustomPostProcessVolume* PostVolume = Cast<ACustomPostProcessVolume>(Actor);
-		PostVolumeMap.Add(PostVolume->StageName, PostVolume);
-	}
-}
-
-void AColorverseGameMode::SetEnabledPostProcess(EStageName StageName, bool Active)
-{
-	if(PostVolumeMap.Num() > 0 && PostVolumeMap.Contains(StageName))
-		PostVolumeMap[StageName]->bEnabled = Active;
+	UColorManager* ColorMgr = GetWorld()->GetSubsystem<UColorManager>();
+	if(IsValid(ColorMgr))
+		ColorMgr->InitializeManager();
 }

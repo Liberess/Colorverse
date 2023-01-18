@@ -4,17 +4,17 @@
 
 bool UColorManager::ShouldCreateSubsystem(UObject* Outer) const
 {
-	if(!Super::ShouldCreateSubsystem(Outer))
+	if (!Super::ShouldCreateSubsystem(Outer))
 		return false;
 
 	const UWorld* WorldOuter = Cast<UWorld>(Outer);
-	if(IsValid(WorldOuter))
+	if (IsValid(WorldOuter))
 	{
 		AColorverseWorldSettings* WorldSettings = Cast<AColorverseWorldSettings>(WorldOuter->GetWorldSettings());
-		if(IsValid(WorldSettings))
+		if (IsValid(WorldSettings))
 			return WorldSettings->bUseColorManager;
 	}
-	
+
 	return false;
 }
 
@@ -27,12 +27,21 @@ void UColorManager::Initialize(FSubsystemCollectionBase& Collection)
 	LightAmountMap.Add(EStageName::Stage_3, 0);
 }
 
+void UColorManager::InitializeManager()
+{
+	GameMode = Cast<AColorverseGameMode>(UGameplayStatics::GetGameMode(GetWorld()));
+
+	TArray<AActor*> Actors;
+	UGameplayStatics::GetAllActorsOfClass(this, AColorArea::StaticClass(), Actors);
+	for (auto Actor : Actors)
+	{
+		AColorArea* ColorArea = Cast<AColorArea>(Actor);
+		ColorAreaMap.Add(ColorArea->StageName, ColorArea);
+	}
+}
+
 void UColorManager::SetLightAmount(EStageName StageName, int amount)
 {
-	if(LightAmountMap.Num() > 0 && LightAmountMap.Contains(StageName))
+	if (LightAmountMap.Num() > 0 && LightAmountMap.Contains(StageName))
 		LightAmountMap[StageName] += amount;
-
-	GameMode = Cast<AColorverseGameMode>(UGameplayStatics::GetGameMode(GetWorld()));
-	check(GameMode)
-	GameMode->SetEnabledPostProcess(StageName, false);
 }
