@@ -13,4 +13,7 @@ class COLORVERSE_API UInteractWidget : public UUserWidget
 public:
 	UPROPERTY(meta=(BindWidget))
 	UTextBlock* InteractTxt;
+
+	UFUNCTION(BlueprintCallable)
+	void SetInteractText(FText Txt);
 };

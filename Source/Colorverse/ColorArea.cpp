@@ -1,5 +1,4 @@
 #include "ColorArea.h"
-
 #include "ColorManager.h"
 
 #define Print(duration, text) if(GEngine) GEngine->AddOnScreenDebugMessage(-1,duration, FColor::Cyan, text);

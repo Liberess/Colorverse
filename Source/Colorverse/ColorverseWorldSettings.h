@@ -12,4 +12,7 @@ class COLORVERSE_API AColorverseWorldSettings : public AWorldSettings
 public:
 	UPROPERTY(EditAnywhere, Category="ColorverseWorldSettings | Color System")
 	bool bUseColorManager = true;
+	
+	UPROPERTY(EditAnywhere, Category="ColorverseWorldSettings | Inventory System")
+	bool bUseInventoryManager = true;
 };

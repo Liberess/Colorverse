@@ -23,7 +23,7 @@ public:
 	FVector hitNormal;
 };
 
-UINTERFACE(Blueprintable)
+UINTERFACE(MinimalAPI)
 class UIDamageable : public UInterface
 {
 	GENERATED_BODY()

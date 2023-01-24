@@ -45,6 +45,8 @@ void AColorverseCharacter::BeginPlay()
 	if(IsValid(CharacterMovement))
 		CharacterMovement->MaxWalkSpeed = WalkSpeed;
 
+	InvenMgr = GetWorld()->GetSubsystem<UInventoryManager>();
+	
 	bIsDamageable = true;
 }
 
@@ -70,6 +72,7 @@ void AColorverseCharacter::SetupPlayerInputComponent(class UInputComponent* Play
 	PlayerInputComponent->BindAction("ResetVR", IE_Pressed, this, &AColorverseCharacter::OnResetVR);
 
 	PlayerInputComponent->BindAction("Interact", IE_Pressed, this, &AColorverseCharacter::Interact);
+	PlayerInputComponent->BindAction("Inventory", IE_Pressed, this, &AColorverseCharacter::ControlInventory);
 }
 
 #pragma region Movement 
@@ -207,7 +210,7 @@ void AColorverseCharacter::OnOverlapBegin(class UPrimitiveComponent* OverlappedC
 					InteractWidget = Cast<UInteractWidget>(CreateWidget(GetWorld(), InteractWidgetClass));
 					if(InteractWidget != nullptr)
 					{
-						InteractWidget->InteractTxt->SetText(FText::FromString(InteractObject->InteractWidgetDisplayTxt));
+						InteractWidget->SetInteractText(FText::FromString(InteractObject->InteractWidgetDisplayTxt));
 						bIsWatchingInteractWidget = true;
 						InteractWidget->AddToViewport();
 					}
@@ -242,4 +245,9 @@ void AColorverseCharacter::Interact_Implementation()
 
 	InteractObject->OnInteract();
 	Print(1.0f, TEXT("Interact"));
+}
+
+void AColorverseCharacter::ControlInventory_Implementation()
+{
+	InvenMgr->SetInventoryUI();
 }

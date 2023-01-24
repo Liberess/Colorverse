@@ -3,6 +3,7 @@
 #include "CoreMinimal.h"
 #include "InteractObject.h"
 #include "InteractWidget.h"
+#include "InventoryManager.h"
 #include "GameFramework/Character.h"
 #include "ColorverseCharacter.generated.h"
 
@@ -76,6 +77,9 @@ public:
 	UPROPERTY()
 	UInteractWidget* InteractWidget;
 
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
+	void ControlInventory();
+
 private:
 	bool bIsRunTimer;
 	FTimerHandle ToggleRunTimer;
@@ -89,6 +93,8 @@ private:
 	FTimerHandle RollTimer;
 
 	bool bIsWatchingInteractWidget;
+
+	UInventoryManager* InvenMgr;
 
 protected:
 	void OnResetVR();

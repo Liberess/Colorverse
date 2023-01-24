@@ -1,5 +1,6 @@
 #include "ColorverseGameMode.h"
 #include "ColorManager.h"
+#include "InventoryManager.h"
 #include "UObject/ConstructorHelpers.h"
 
 AColorverseGameMode::AColorverseGameMode()
@@ -18,4 +19,8 @@ void AColorverseGameMode::BeginPlay()
 	UColorManager* ColorMgr = GetWorld()->GetSubsystem<UColorManager>();
 	if(IsValid(ColorMgr))
 		ColorMgr->InitializeManager();
+
+	UInventoryManager* InvenMgr = GetWorld()->GetSubsystem<UInventoryManager>();
+	if(IsValid(InvenMgr))
+		InvenMgr->InitializeManager();
 }
