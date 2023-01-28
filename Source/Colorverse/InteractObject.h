@@ -40,9 +40,13 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category=Interactable)
 	virtual void OnEnter() override;
-	
+
 	UFUNCTION(BlueprintCallable, Category=Interactable)
 	virtual void OnInteract() override;
+
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category=Interactable)
+	void Interact();
+	virtual void Interact_Implementation();
 
 	UFUNCTION(BlueprintCallable, Category=Interactable)
 	virtual void OnExit() override;

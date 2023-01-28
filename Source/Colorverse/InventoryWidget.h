@@ -12,10 +12,16 @@ class COLORVERSE_API UInventoryWidget : public UUserWidget
 	GENERATED_BODY()
 
 public:
+	UInventoryWidget(const FObjectInitializer& ObjectInitializer);
+	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	int GridColumnAmount = 6;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UTexture2D* EmptyImg;
 	
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta=(BindWidget))
+	//UPROPERTY(VisibleAnywhere, BlueprintReadOnly/*, meta=(BindWidget)*/)
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	UGridPanel* ItemGridPanel;
 
 	UFUNCTION(BlueprintCallable, Category=Inventory)

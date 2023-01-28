@@ -14,13 +14,13 @@ public:
 	FText Name;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item")
-	int Amount;
+	int Amount = 0;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item")
 	UTexture2D* IconImg;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item")
-	bool bIsValid;
+	bool bIsValid = false;
 };
 
 UINTERFACE(MinimalAPI)

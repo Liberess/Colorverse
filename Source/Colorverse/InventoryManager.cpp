@@ -25,6 +25,9 @@ void UInventoryManager::Initialize(FSubsystemCollectionBase& Collection)
 
 void UInventoryManager::InitializeManager()
 {
+	for(int i = 0; i < 25; i++)
+		InventoryArray.Add(FItem());
+	
 	FStringClassReference WidgetBPClassRef(TEXT("/Game/UI/BP_InventoryWidget.BP_InventoryWidget_C"));
 	if(UClass* WidgetClass = WidgetBPClassRef.TryLoadClass<UInventoryWidget>())
 	{
@@ -69,4 +72,28 @@ void UInventoryManager::SetInventoryItem(int Index)
 void UInventoryManager::UpdateInventory()
 {
 	InventoryWidget->UpdateInventory(InventoryArray);
+}
+
+void UInventoryManager::AddInventoryItem(FItem Item)
+{
+	for(int i = 0; i < InventoryArray.Num(); i++)
+	{
+		if(!InventoryArray[i].bIsValid)
+		{
+			InventoryArray[i] = Item;
+			GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Orange, TEXT("get"));
+			break;
+		}
+	}
+	/*for(auto item : InventoryArray)
+	{
+		if(!item.bIsValid)
+		{
+			item = Item;
+			GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Orange, TEXT("get"));
+			break;
+		}
+	}*/
+
+	UpdateInventory();
 }

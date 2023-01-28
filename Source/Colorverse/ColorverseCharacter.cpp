@@ -1,6 +1,5 @@
 #include "ColorverseCharacter.h"
 #include "HeadMountedDisplayFunctionLibrary.h"
-#include "IInteractable.h"
 #include "Camera/CameraComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "Components/InputComponent.h"

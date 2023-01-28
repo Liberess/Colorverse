@@ -48,7 +48,12 @@ void AInteractObject::OnEnter()
 
 void AInteractObject::OnInteract()
 {
-	Print(1.0f, TEXT("InteractObject::OnInteract"));
+	Interact();
+}
+
+void AInteractObject::Interact_Implementation()
+{
+	Print(1.0f, TEXT("InteractObject::Interact"));
 }
 
 void AInteractObject::OnExit()

@@ -34,4 +34,7 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	void UpdateInventory();
+
+	UFUNCTION(BlueprintCallable, Category=Inventory)
+	void AddInventoryItem(FItem Item);
 };
