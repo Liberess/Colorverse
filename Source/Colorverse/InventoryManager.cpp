@@ -81,19 +81,9 @@ void UInventoryManager::AddInventoryItem(FItem Item)
 		if(!InventoryArray[i].bIsValid)
 		{
 			InventoryArray[i] = Item;
-			GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Orange, TEXT("get"));
 			break;
 		}
 	}
-	/*for(auto item : InventoryArray)
-	{
-		if(!item.bIsValid)
-		{
-			item = Item;
-			GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Orange, TEXT("get"));
-			break;
-		}
-	}*/
 
 	UpdateInventory();
 }

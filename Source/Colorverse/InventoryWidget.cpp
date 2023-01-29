@@ -39,6 +39,7 @@ void UInventoryWidget::UpdateInventory(TArray<FItem> Inventory)
 			if(Inventory[i].bIsValid)
 			{
 				//ItemSlot->ItemBtn->SetVisibility(ESlateVisibility::Visible);
+				ItemSlot->UpdateItemSlot(Inventory[i]);
 				ItemSlot->ItemBtn->WidgetStyle.Normal.SetResourceObject(Cast<UObject>(Inventory[i].IconImg));
 				ItemSlot->ItemBtn->WidgetStyle.Hovered.SetResourceObject(Cast<UObject>(Inventory[i].IconImg));
 				ItemSlot->ItemBtn->WidgetStyle.Normal.TintColor = FLinearColor(1.0f, 1.0f, 1.0f, 1.0f);
@@ -47,6 +48,7 @@ void UInventoryWidget::UpdateInventory(TArray<FItem> Inventory)
 			else
 			{
 				//ItemSlot->ItemBtn->SetVisibility(ESlateVisibility::Hidden);
+				ItemSlot->ItemData = FItem();
 				ItemSlot->ItemBtn->WidgetStyle.Normal.SetResourceObject(Cast<UObject>(EmptyImg));
 				ItemSlot->ItemBtn->WidgetStyle.Hovered.SetResourceObject(Cast<UObject>(EmptyImg));
 				ItemSlot->ItemBtn->WidgetStyle.Normal.TintColor = FLinearColor(0.5f, 0.5f, 0.5f, 0.8f);
