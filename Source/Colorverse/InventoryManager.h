@@ -20,6 +20,8 @@ private:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta=(AllowPrivateAccess))
 	bool bIsInventoryOpen;
+
+	bool GetInventoryItemByName(const FText& Name, int& Index);
 	
 public:
 	virtual bool ShouldCreateSubsystem(UObject* Outer) const override;
@@ -29,12 +31,16 @@ public:
 
 	void SetInventoryUI();
 
-	UFUNCTION(BlueprintCallable)
+	FItem GetInventoryItem(int Index) { return InventoryArray[Index]; }
 	void SetInventoryItem(int Index);
+	void SetInventoryItem(int Index, const FItem& Item);
 
 	UFUNCTION(BlueprintCallable)
 	void UpdateInventory();
 
 	UFUNCTION(BlueprintCallable, Category=Inventory)
-	void AddInventoryItem(FItem Item);
+	void AddInventoryItem(const FItem& Item);
+
+	UFUNCTION(BlueprintCallable, Category=Inventory)
+	void UseInventoryItem(FItem Item);
 };

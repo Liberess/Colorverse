@@ -69,21 +69,67 @@ void UInventoryManager::SetInventoryItem(int Index)
 	UpdateInventory();
 }
 
+void UInventoryManager::SetInventoryItem(int Index, const FItem& Item)
+{
+	InventoryArray[Index] = Item;
+	UpdateInventory();
+}
+
 void UInventoryManager::UpdateInventory()
 {
 	InventoryWidget->UpdateInventory(InventoryArray);
 }
 
-void UInventoryManager::AddInventoryItem(FItem Item)
+void UInventoryManager::AddInventoryItem(const FItem& Item)
+{
+	static int Index = 0;
+	if(GetInventoryItemByName(Item.Name, Index))
+	{
+		InventoryArray[Index].Amount += Item.Amount;
+	}
+	else
+	{
+		for(int i = 0; i < InventoryArray.Num(); i++)
+		{
+			if(!InventoryArray[i].bIsValid)
+			{
+				InventoryArray[i] = Item;
+				InventoryArray[i].Amount = Item.Amount;
+				break;
+			}
+		}
+	}
+	
+	UpdateInventory();
+}
+
+void UInventoryManager::UseInventoryItem(FItem Item)
+{
+	static int Index = 0;
+	if(GetInventoryItemByName(Item.Name, Index))
+	{
+		InventoryArray[Index].Amount -= 1;
+		
+		if(InventoryArray[Index].Amount <= 0)
+		{
+			Item = FItem();
+			InventoryArray[Index] = FItem();
+		}
+
+		UpdateInventory();
+	}
+}
+
+bool UInventoryManager::GetInventoryItemByName(const FText& Name, int& Index)
 {
 	for(int i = 0; i < InventoryArray.Num(); i++)
 	{
-		if(!InventoryArray[i].bIsValid)
+		if(InventoryArray[i].Name.EqualTo(Name))
 		{
-			InventoryArray[i] = Item;
-			break;
+			Index = i;
+			return true;
 		}
 	}
 
-	UpdateInventory();
+	return false;
 }

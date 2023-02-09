@@ -1,4 +1,5 @@
 #include "InventoryWidget.h"
+#include "InventoryManager.h"
 #include "ItemSlotWidget.h"
 
 UInventoryWidget::UInventoryWidget(const FObjectInitializer& ObjectInitializer)
@@ -48,12 +49,24 @@ void UInventoryWidget::UpdateInventory(TArray<FItem> Inventory)
 			else
 			{
 				//ItemSlot->ItemBtn->SetVisibility(ESlateVisibility::Hidden);
-				ItemSlot->ItemData = FItem();
+				ItemSlot->UpdateItemSlot(FItem());
 				ItemSlot->ItemBtn->WidgetStyle.Normal.SetResourceObject(Cast<UObject>(EmptyImg));
 				ItemSlot->ItemBtn->WidgetStyle.Hovered.SetResourceObject(Cast<UObject>(EmptyImg));
 				ItemSlot->ItemBtn->WidgetStyle.Normal.TintColor = FLinearColor(0.5f, 0.5f, 0.5f, 0.8f);
 				ItemSlot->ItemBtn->WidgetStyle.Hovered.TintColor = FLinearColor(0.5f, 0.5f, 0.5f, 0.8f);
 			}
 		}
+	}
+}
+
+void UInventoryWidget::MoveItem()
+{
+	return;
+	if(SelectItemIndex != DropItemIndex)
+	{
+		UInventoryManager* InvenMgr = GetWorld()->GetSubsystem<UInventoryManager>();
+		check(InvenMgr);
+		InvenMgr->SetInventoryItem(DropItemIndex, InvenMgr->GetInventoryItem(SelectItemIndex));
+		InvenMgr->SetInventoryItem(SelectItemIndex);
 	}
 }

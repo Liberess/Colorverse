@@ -10,6 +10,14 @@ enum class EStageName : uint8
 	Stage_3 UMETA(DisplayName = "Stage_3")
 };
 
+UENUM(BlueprintType)
+enum class ECollectType : uint8
+{
+	Tree UMETA(DisplayName = "Tree"),
+	Ground UMETA(DisplayName = "Ground"),
+	Ore UMETA(DisplayName = "Ore")
+};
+
 class COLORVERSE_API Enums
 {
 	

@@ -9,27 +9,22 @@ UCLASS(Blueprintable)
 class COLORVERSE_API AInteractObject : public AActor, public IIInteractable
 {
 	GENERATED_BODY()
-	
-public:	
-	AInteractObject();
-	
-private:
-	UPROPERTY(EditAnywhere,
-	BlueprintGetter=GetInteractable,
-	BlueprintSetter=SetInteractable,
-	meta=(AllowPrivateAccess), Category=Interactable)
-	bool IsInteractable = true;
 
-	UFUNCTION(BlueprintGetter)
-	bool GetInteractable() const { return IsInteractable; }
-	
-	UFUNCTION(BlueprintSetter)
-	void SetInteractable(bool Enabled) { IsInteractable = Enabled; }
-	
 protected:
 	virtual void BeginPlay() override;
+
+	UPROPERTY(EditAnywhere,
+		BlueprintGetter=GetInteractable,
+		BlueprintSetter=SetInteractable,
+		meta=(AllowPrivateAccess), Category=Interactable)
+	bool IsInteractable = true;
+
+public:
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Interactable)
+	FString InteractWidgetDisplayTxt;
+
+	AInteractObject();
 	
-public:	
 	virtual void Tick(float DeltaTime) override;
 
 	UFUNCTION()
@@ -51,6 +46,9 @@ public:
 	UFUNCTION(BlueprintCallable, Category=Interactable)
 	virtual void OnExit() override;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Interactable)
-	FString InteractWidgetDisplayTxt;
+	UFUNCTION(BlueprintGetter)
+	bool GetInteractable() const { return IsInteractable; }
+
+	UFUNCTION(BlueprintSetter)
+	void SetInteractable(bool Enabled) { IsInteractable = Enabled; }
 };

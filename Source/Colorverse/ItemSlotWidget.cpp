@@ -3,17 +3,20 @@
 
 void UItemSlotWidget::OnClick_Implementation()
 {
-	ItemData = FItem();
-	
-	AmountTxt->SetText(FText::FromString(FString(TEXT(""))));
+	if(!ItemData.bIsValid)
+		return;
+
 	UInventoryManager* InvenMgr = GetWorld()->GetSubsystem<UInventoryManager>();
 	check(InvenMgr);
-	InvenMgr->SetInventoryItem(Index);
+	InvenMgr->UseInventoryItem(ItemData);
 }
 
 void UItemSlotWidget::UpdateItemSlot(const FItem& Item)
 {
 	ItemData = Item;
 
-	AmountTxt->SetText(FText::FromString(FString::FromInt(ItemData.Amount)));
+	if(ItemData.bIsValid)
+		AmountTxt->SetText(FText::FromString(FString::FromInt(ItemData.Amount)));
+	else
+		AmountTxt->SetText(FText::FromString(FString(TEXT(""))));
 }

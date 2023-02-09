@@ -1,26 +1,32 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Engine/DataTable.h"
 #include "UObject/Interface.h"
 #include "IItem.generated.h"
 
-USTRUCT(BlueprintType)
-struct FItem
+USTRUCT(BlueprintType, BlueprintType)
+struct FItem : public FTableRowBase
 {
+public:
 	GENERATED_USTRUCT_BODY();
 
-public:
+	FItem() : Id(-1), Amount(1), IconImg(), bIsValid(false) {};
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item")
+	int Id;
+	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item")
 	FText Name;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item")
-	int Amount = 0;
+	int Amount;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item")
 	UTexture2D* IconImg;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item")
-	bool bIsValid = false;
+	bool bIsValid;
 };
 
 UINTERFACE(MinimalAPI)

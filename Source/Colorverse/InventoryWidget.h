@@ -14,19 +14,28 @@ class COLORVERSE_API UInventoryWidget : public UUserWidget
 public:
 	UInventoryWidget(const FObjectInitializer& ObjectInitializer);
 	
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=Inventory)
 	int GridColumnAmount = 6;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=Inventory)
 	UTexture2D* EmptyImg;
 	
 	//UPROPERTY(VisibleAnywhere, BlueprintReadOnly/*, meta=(BindWidget)*/)
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Inventory)
 	UGridPanel* ItemGridPanel;
-
+	
 	UFUNCTION(BlueprintCallable, Category=Inventory)
 	void CreateInventory(int Slots);
 	
 	UFUNCTION(BlueprintCallable, Category=Inventory)
 	void UpdateInventory(TArray<FItem> Inventory);
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category=Inventory)
+	int SelectItemIndex = 0;
+	
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category=Inventory)
+	int DropItemIndex = 0;
+	
+	UFUNCTION(BlueprintCallable, Category=Inventory)
+	void MoveItem();
 };
