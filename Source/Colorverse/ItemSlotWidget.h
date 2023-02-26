@@ -15,8 +15,8 @@ class COLORVERSE_API UItemSlotWidget : public UUserWidget
 	
 public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, meta=(BindWidget))
-	UButton* ItemBtn;
-
+	UBorder* ThumbnailBorder;
+	
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, meta=(BindWidget))
 	UTextBlock* AmountTxt;
 	
@@ -28,6 +28,9 @@ public:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 	int Index;
+	
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+	bool bIsMaker;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 	FItem ItemData;

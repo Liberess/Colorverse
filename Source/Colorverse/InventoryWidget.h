@@ -23,6 +23,9 @@ public:
 	//UPROPERTY(VisibleAnywhere, BlueprintReadOnly/*, meta=(BindWidget)*/)
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Inventory)
 	UGridPanel* ItemGridPanel;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Inventory)
+	UGridPanel* MakerGridPanel;
 	
 	UFUNCTION(BlueprintCallable, Category=Inventory)
 	void CreateInventory(int Slots);
@@ -35,6 +38,18 @@ public:
 	
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category=Inventory)
 	int DropItemIndex = 0;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category=Inventory)
+	FItem SelectItem;
+	
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category=Inventory)
+	FItem DropItem;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category=Inventory)
+	bool SelectArrayMaker;
+	
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category=Inventory)
+	bool DropArrayMaker;
 	
 	UFUNCTION(BlueprintCallable, Category=Inventory)
 	void MoveItem();

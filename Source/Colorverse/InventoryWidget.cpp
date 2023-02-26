@@ -13,6 +13,8 @@ UInventoryWidget::UInventoryWidget(const FObjectInitializer& ObjectInitializer)
 void UInventoryWidget::CreateInventory(int Slots)
 {
 	ItemGridPanel = Cast<UGridPanel>(GetWidgetFromName(TEXT("GridPanel")));
+	MakerGridPanel = Cast<UGridPanel>(GetWidgetFromName(TEXT("MakerGridPanel")));
+	
 	FStringClassReference WidgetBPClassRef(TEXT("/Game/UI/BP_ItemSlot.BP_ItemSlot_C"));
 	for(int i = 0; i < Slots - 1; i++)
 	{
@@ -41,19 +43,21 @@ void UInventoryWidget::UpdateInventory(TArray<FItem> Inventory)
 			{
 				//ItemSlot->ItemBtn->SetVisibility(ESlateVisibility::Visible);
 				ItemSlot->UpdateItemSlot(Inventory[i]);
-				ItemSlot->ItemBtn->WidgetStyle.Normal.SetResourceObject(Cast<UObject>(Inventory[i].IconImg));
+				ItemSlot->ThumbnailBorder->SetBrushFromTexture(Inventory[i].IconImg);
+				/*ItemSlot->ItemBtn->WidgetStyle.Normal.SetResourceObject(Cast<UObject>(Inventory[i].IconImg));
 				ItemSlot->ItemBtn->WidgetStyle.Hovered.SetResourceObject(Cast<UObject>(Inventory[i].IconImg));
 				ItemSlot->ItemBtn->WidgetStyle.Normal.TintColor = FLinearColor(1.0f, 1.0f, 1.0f, 1.0f);
-				ItemSlot->ItemBtn->WidgetStyle.Hovered.TintColor = FLinearColor(1.0f, 1.0f, 1.0f, 1.0f);
+				ItemSlot->ItemBtn->WidgetStyle.Hovered.TintColor = FLinearColor(1.0f, 1.0f, 1.0f, 1.0f);*/
 			}
 			else
 			{
 				//ItemSlot->ItemBtn->SetVisibility(ESlateVisibility::Hidden);
 				ItemSlot->UpdateItemSlot(FItem());
-				ItemSlot->ItemBtn->WidgetStyle.Normal.SetResourceObject(Cast<UObject>(EmptyImg));
+				ItemSlot->ThumbnailBorder->SetBrushFromTexture(EmptyImg);
+				/*ItemSlot->ItemBtn->WidgetStyle.Normal.SetResourceObject(Cast<UObject>(EmptyImg));
 				ItemSlot->ItemBtn->WidgetStyle.Hovered.SetResourceObject(Cast<UObject>(EmptyImg));
 				ItemSlot->ItemBtn->WidgetStyle.Normal.TintColor = FLinearColor(0.5f, 0.5f, 0.5f, 0.8f);
-				ItemSlot->ItemBtn->WidgetStyle.Hovered.TintColor = FLinearColor(0.5f, 0.5f, 0.5f, 0.8f);
+				ItemSlot->ItemBtn->WidgetStyle.Hovered.TintColor = FLinearColor(0.5f, 0.5f, 0.5f, 0.8f);*/
 			}
 		}
 	}
@@ -61,12 +65,19 @@ void UInventoryWidget::UpdateInventory(TArray<FItem> Inventory)
 
 void UInventoryWidget::MoveItem()
 {
-	return;
 	if(SelectItemIndex != DropItemIndex)
 	{
 		UInventoryManager* InvenMgr = GetWorld()->GetSubsystem<UInventoryManager>();
 		check(InvenMgr);
-		InvenMgr->SetInventoryItem(DropItemIndex, InvenMgr->GetInventoryItem(SelectItemIndex));
-		InvenMgr->SetInventoryItem(SelectItemIndex);
+
+		FItem SrcData = InvenMgr->GetInventoryItem(SelectItemIndex);
+		FItem DesData = InvenMgr->GetInventoryItem(DropItemIndex);
+		
+		if(DesData.bIsValid)
+			InvenMgr->SetInventoryItem(SelectItemIndex, DesData);
+		else
+			InvenMgr->SetInventoryItem(SelectItemIndex);
+
+		InvenMgr->SetInventoryItem(DropItemIndex, SrcData);
 	}
 }
