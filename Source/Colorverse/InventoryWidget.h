@@ -26,6 +26,9 @@ public:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Inventory)
 	UGridPanel* MakerGridPanel;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Transient, meta = (BindWidgetAnim))
+	UWidgetAnimation* InventoryShowAnim;
 	
 	UFUNCTION(BlueprintCallable, Category=Inventory)
 	void CreateInventory(int Slots);

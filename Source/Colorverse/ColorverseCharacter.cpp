@@ -72,6 +72,7 @@ void AColorverseCharacter::SetupPlayerInputComponent(class UInputComponent* Play
 
 	PlayerInputComponent->BindAction("Interact", IE_Pressed, this, &AColorverseCharacter::Interact);
 	PlayerInputComponent->BindAction("Inventory", IE_Pressed, this, &AColorverseCharacter::ControlInventory);
+	PlayerInputComponent->BindAction("Maker", IE_Pressed, this, &AColorverseCharacter::ControlMaker);
 }
 
 #pragma region Movement 
@@ -235,6 +236,11 @@ void AColorverseCharacter::OnOverlapEnd(class UPrimitiveComponent* OverlappedCom
 			}
 		}
 	}
+}
+
+void AColorverseCharacter::ControlMaker_Implementation()
+{
+	InvenMgr->SetInventoryUI();
 }
 
 void AColorverseCharacter::Interact_Implementation()

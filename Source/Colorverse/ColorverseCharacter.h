@@ -79,6 +79,9 @@ public:
 
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
 	void ControlInventory();
+	
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
+	void ControlMaker();
 
 private:
 	bool bIsRunTimer;

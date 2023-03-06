@@ -27,8 +27,8 @@ void UInventoryManager::InitializeManager()
 {
 	for(int i = 0; i < 25; i++)
 		InventoryArray.Add(FItem());
-	
-	FStringClassReference WidgetBPClassRef(TEXT("/Game/UI/BP_InventoryWidget.BP_InventoryWidget_C"));
+
+	const FStringClassReference WidgetBPClassRef(TEXT("/Game/UI/BP_InventoryWidget.BP_InventoryWidget_C"));
 	if(UClass* WidgetClass = WidgetBPClassRef.TryLoadClass<UInventoryWidget>())
 	{
 		InventoryWidget = Cast<UInventoryWidget>(CreateWidget(GetWorld(), WidgetClass));
@@ -52,6 +52,7 @@ void UInventoryManager::SetInventoryUI()
 		PlayerController->SetInputMode(InputModeGameAndUI);
 		PlayerController->SetShowMouseCursor(true);
 		InventoryWidget->AddToViewport();
+		InventoryWidget->PlayAnimation(InventoryWidget->InventoryShowAnim);
 		UpdateInventory();
 	}
 	else
