@@ -20,7 +20,7 @@ protected:
 	bool IsInteractable = true;
 
 public:
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Interactable)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=Interactable)
 	FString InteractWidgetDisplayTxt;
 
 	AInteractObject();

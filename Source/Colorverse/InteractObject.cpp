@@ -43,7 +43,7 @@ void AInteractObject::OnOverlapEnd(AActor* OverlappedActor, AActor* OtherActor)
 
 void AInteractObject::OnEnter()
 {
-	Print(1.0f, TEXT("InteractObject::OnEnter"));
+	//Print(1.0f, TEXT("InteractObject::OnEnter"));
 }
 
 void AInteractObject::OnInteract()
@@ -53,10 +53,10 @@ void AInteractObject::OnInteract()
 
 void AInteractObject::Interact_Implementation()
 {
-	Print(1.0f, TEXT("InteractObject::Interact"));
+	//Print(1.0f, TEXT("InteractObject::Interact"));
 }
 
 void AInteractObject::OnExit()
 {
-	Print(1.0f, TEXT("InteractObject::OnExit"));
+	//Print(1.0f, TEXT("InteractObject::OnExit"));
 }

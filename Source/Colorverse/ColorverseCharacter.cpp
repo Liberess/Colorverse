@@ -249,7 +249,7 @@ void AColorverseCharacter::Interact_Implementation()
 		return;
 
 	InteractObject->OnInteract();
-	Print(1.0f, TEXT("Interact"));
+	//Print(1.0f, TEXT("Interact"));
 }
 
 void AColorverseCharacter::ControlInventory_Implementation()

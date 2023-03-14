@@ -45,6 +45,7 @@ void ACollectObject::BeginPlay()
 		FString RowStr = "Item_";
 		RowStr.Append(FString::FromInt(ItemID));
 		ItemData = *(ItemDataTable->FindRow<FItem>(FName(*RowStr), ""));
+		InteractWidgetDisplayTxt = ItemData.Name.ToString();
 	}
 	catch (...)
 	{

@@ -12,9 +12,6 @@ class COLORVERSE_API UInventoryManager : public UWorldSubsystem
 	GENERATED_BODY()
 
 private:
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta=(AllowPrivateAccess))
-	TArray<FItem> InventoryArray;
-
 	UPROPERTY(BlueprintReadWrite, meta=(AllowPrivateAccess))
 	UInventoryWidget* InventoryWidget;
 
@@ -29,14 +26,16 @@ public:
 
 	void InitializeManager();
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta=(AllowPrivateAccess))
+	TArray<FItem> InventoryArray;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta=(AllowPrivateAccess))
+	TArray<FItem> MakerArray;
+	
 	void SetInventoryUI();
 
-	FItem GetInventoryItem(int Index) { return InventoryArray[Index]; }
-	void SetInventoryItem(int Index);
-	void SetInventoryItem(int Index, const FItem& Item);
-
 	UFUNCTION(BlueprintCallable)
-	void UpdateInventory();
+	void UpdateInventory(bool IsMaker);
 
 	UFUNCTION(BlueprintCallable, Category=Inventory)
 	void AddInventoryItem(const FItem& Item);

@@ -18,6 +18,13 @@ enum class ECollectType : uint8
 	Ore UMETA(DisplayName = "Ore")
 };
 
+UENUM(BlueprintType)
+enum class EItemSlotLocationType : uint8
+{
+	Inventory UMETA(DisplayName = "Inventory"),
+	Maker UMETA(DisplayName = "Maker")
+};
+
 class COLORVERSE_API Enums
 {
 	

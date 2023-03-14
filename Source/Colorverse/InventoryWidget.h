@@ -21,20 +21,20 @@ public:
 	UTexture2D* EmptyImg;
 	
 	//UPROPERTY(VisibleAnywhere, BlueprintReadOnly/*, meta=(BindWidget)*/)
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Inventory)
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Inventory, meta=(BindWidget))
 	UGridPanel* ItemGridPanel;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Inventory)
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Inventory, meta=(BindWidget))
 	UGridPanel* MakerGridPanel;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Transient, meta = (BindWidgetAnim))
 	UWidgetAnimation* InventoryShowAnim;
+
+	UFUNCTION(BlueprintCallable, Category=Inventory)
+	void CreateInventory(int Slots, bool IsMaker);
 	
 	UFUNCTION(BlueprintCallable, Category=Inventory)
-	void CreateInventory(int Slots);
-	
-	UFUNCTION(BlueprintCallable, Category=Inventory)
-	void UpdateInventory(TArray<FItem> Inventory);
+	void UpdateInventory(TArray<FItem> Inventory, bool IsMaker);
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category=Inventory)
 	int SelectItemIndex = 0;
@@ -55,5 +55,8 @@ public:
 	bool DropArrayMaker;
 	
 	UFUNCTION(BlueprintCallable, Category=Inventory)
-	void MoveItem();
+	void MoveItem(TArray<FItem> SelectAry, TArray<FItem> DropAry, bool IsMoveBetween);
+
+	UFUNCTION(BlueprintCallable, Category=Inventory)
+	void SetItemSlotArrays();
 };

@@ -32,7 +32,9 @@ void UInventoryManager::InitializeManager()
 	if(UClass* WidgetClass = WidgetBPClassRef.TryLoadClass<UInventoryWidget>())
 	{
 		InventoryWidget = Cast<UInventoryWidget>(CreateWidget(GetWorld(), WidgetClass));
-		InventoryWidget->CreateInventory(InventoryArray.Num());
+		InventoryWidget->CreateInventory(InventoryArray.Num(), false);
+		InventoryWidget->CreateInventory(InventoryArray.Num(), true);
+		//InventoryWidget->CreateInventory(3, true);
 	}
 }
 
@@ -53,7 +55,7 @@ void UInventoryManager::SetInventoryUI()
 		PlayerController->SetShowMouseCursor(true);
 		InventoryWidget->AddToViewport();
 		InventoryWidget->PlayAnimation(InventoryWidget->InventoryShowAnim);
-		UpdateInventory();
+		UpdateInventory(false);
 	}
 	else
 	{
@@ -64,21 +66,12 @@ void UInventoryManager::SetInventoryUI()
 	}
 }
 
-void UInventoryManager::SetInventoryItem(int Index)
+void UInventoryManager::UpdateInventory(bool IsMaker)
 {
-	InventoryArray[Index] = FItem();
-	UpdateInventory();
-}
-
-void UInventoryManager::SetInventoryItem(int Index, const FItem& Item)
-{
-	InventoryArray[Index] = Item;
-	UpdateInventory();
-}
-
-void UInventoryManager::UpdateInventory()
-{
-	InventoryWidget->UpdateInventory(InventoryArray);
+	if(IsMaker)
+		InventoryWidget->UpdateInventory(MakerArray, IsMaker);
+	else
+		InventoryWidget->UpdateInventory(InventoryArray, IsMaker);
 }
 
 void UInventoryManager::AddInventoryItem(const FItem& Item)
@@ -101,7 +94,7 @@ void UInventoryManager::AddInventoryItem(const FItem& Item)
 		}
 	}
 	
-	UpdateInventory();
+	UpdateInventory(false);
 }
 
 void UInventoryManager::UseInventoryItem(FItem Item)
@@ -117,7 +110,7 @@ void UInventoryManager::UseInventoryItem(FItem Item)
 			InventoryArray[Index] = FItem();
 		}
 
-		UpdateInventory();
+		UpdateInventory(false);
 	}
 }
 

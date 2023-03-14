@@ -1,13 +1,36 @@
 #include "ItemSlotWidget.h"
-#include "InventoryManager.h"
+
+void UItemSlotWidget::NativeConstruct()
+{
+	Super::NativeConstruct();
+
+	InvenMgr = UUserWidget::GetWorld()->GetSubsystem<UInventoryManager>();
+	check(InvenMgr);
+}
+
+void UItemSlotWidget::NativeOnMouseEnter(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent)
+{
+	Super::NativeOnMouseEnter(InGeometry, InMouseEvent);
+
+	if(ItemData.bIsValid)
+	{
+		NameTxt->SetText(ItemData.Name);
+		NameBorder->SetVisibility(ESlateVisibility::Visible);
+	}
+}
+
+void UItemSlotWidget::NativeOnMouseLeave(const FPointerEvent& InMouseEvent)
+{
+	Super::NativeOnMouseLeave(InMouseEvent);
+
+	NameBorder->SetVisibility(ESlateVisibility::Hidden);
+}
 
 void UItemSlotWidget::OnClick_Implementation()
 {
-	if(!ItemData.bIsValid)
+	if(!ItemData.bIsValid || bIsMaker)
 		return;
 
-	UInventoryManager* InvenMgr = GetWorld()->GetSubsystem<UInventoryManager>();
-	check(InvenMgr);
 	InvenMgr->UseInventoryItem(ItemData);
 }
 
