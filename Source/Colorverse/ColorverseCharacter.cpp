@@ -41,8 +41,8 @@ void AColorverseCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 
-	if(IsValid(CharacterMovement))
-		CharacterMovement->MaxWalkSpeed = WalkSpeed;
+	if(IsValid(GetCharacterMovement()))
+		GetCharacterMovement()->MaxWalkSpeed = WalkSpeed;
 
 	InvenMgr = GetWorld()->GetSubsystem<UInventoryManager>();
 	
@@ -121,11 +121,11 @@ void AColorverseCharacter::MoveForward(float Value)
 		}
 		else
 		{
-			if(bIsRunTimer && CharacterMovement->Velocity.IsZero())
+			if(bIsRunTimer && GetCharacterMovement()->Velocity.IsZero())
 			{
 				bIsRunTimer = false;
 				bIsRunning = false;
-				CharacterMovement->MaxWalkSpeed = WalkSpeed;
+				GetCharacterMovement()->MaxWalkSpeed = WalkSpeed;
 				GetWorldTimerManager().ClearTimer(ToggleRunTimer);
 			}
 		}
@@ -152,11 +152,11 @@ void AColorverseCharacter::MoveRight(float Value)
 		}
 		else
 		{
-			if(bIsRunTimer && CharacterMovement->Velocity.IsZero())
+			if(bIsRunTimer && GetCharacterMovement()->Velocity.IsZero())
 			{
 				bIsRunTimer = false;
 				bIsRunning = false;
-				CharacterMovement->MaxWalkSpeed = WalkSpeed;
+				GetCharacterMovement()->MaxWalkSpeed = WalkSpeed;
 				GetWorldTimerManager().ClearTimer(ToggleRunTimer);
 			}
 		}
@@ -166,7 +166,7 @@ void AColorverseCharacter::MoveRight(float Value)
 void AColorverseCharacter::SetEnabledToggleRun()
 {
 	bIsRunning = true;
-	CharacterMovement->MaxWalkSpeed = RunSpeed;
+	GetCharacterMovement()->MaxWalkSpeed = RunSpeed;
 }
 
 void AColorverseCharacter::Roll_Implementation()
@@ -174,7 +174,7 @@ void AColorverseCharacter::Roll_Implementation()
 	if(!bIsRunning || bIsRolling)
 		return;
 
-	if(CharacterMovement->IsFalling())
+	if(GetCharacterMovement()->IsFalling())
 		return;
 	
 	bIsRolling = true;
