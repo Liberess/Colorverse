@@ -27,14 +27,16 @@ void UInventoryManager::InitializeManager()
 {
 	for(int i = 0; i < 25; i++)
 		InventoryArray.Add(FItem());
+	
+	for(int i = 0; i < 3; i++)
+		MakerArray.Add(FItem());
 
 	const FStringClassReference WidgetBPClassRef(TEXT("/Game/UI/BP_InventoryWidget.BP_InventoryWidget_C"));
 	if(UClass* WidgetClass = WidgetBPClassRef.TryLoadClass<UInventoryWidget>())
 	{
 		InventoryWidget = Cast<UInventoryWidget>(CreateWidget(GetWorld(), WidgetClass));
 		InventoryWidget->CreateInventory(InventoryArray.Num(), false);
-		InventoryWidget->CreateInventory(InventoryArray.Num(), true);
-		//InventoryWidget->CreateInventory(3, true);
+		InventoryWidget->CreateInventory(4, true);
 	}
 }
 

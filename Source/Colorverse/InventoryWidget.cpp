@@ -40,8 +40,7 @@ void UInventoryWidget::UpdateInventory(TArray<FItem> Inventory, bool IsMaker)
 
 	for (int i = 0; i < CurrentGrid->GetChildrenCount(); i++)
 	{
-		UItemSlotWidget* ItemSlot = Cast<UItemSlotWidget>(CurrentGrid->GetChildAt(i));
-		if (ItemSlot)
+		if (UItemSlotWidget* ItemSlot = Cast<UItemSlotWidget>(CurrentGrid->GetChildAt(i)))
 		{
 			ItemSlot->Index = i;
 			const FItem& Item = i < Inventory.Num() ? Inventory[i] : FItem();
@@ -51,14 +50,16 @@ void UInventoryWidget::UpdateInventory(TArray<FItem> Inventory, bool IsMaker)
 	}
 }
 
-void UInventoryWidget::MoveItem(TArray<FItem> SelectAry, TArray<FItem> DropAry, bool IsMoveBetween)
+void UInventoryWidget::MoveItem(TArray<FItem>& SelectAry, TArray<FItem>& DropAry, bool IsMoveBetween)
 {	
 	UInventoryManager* InvenMgr = GetWorld()->GetSubsystem<UInventoryManager>();
 	check(InvenMgr)
 	
 	SelectItem = SelectAry[SelectItemIndex];
 	DropItem = DropAry[DropItemIndex];
-	
+
+	GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Cyan, FString::Printf(TEXT("SI : %d, DI : %d"), SelectItemIndex, DropItemIndex));
+
 	if(IsMoveBetween)
 	{
 		if(DropItem.bIsValid)
@@ -68,17 +69,21 @@ void UInventoryWidget::MoveItem(TArray<FItem> SelectAry, TArray<FItem> DropAry, 
 				DropAry[DropItemIndex] = DropItem;
 				DropAry[DropItemIndex].Amount = SelectItem.Amount + DropItem.Amount;
 				SelectAry[SelectItemIndex] = FItem();
+				GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Cyan, TEXT("add inven -> maker"));
 			}
 			else
 			{
 				DropAry[DropItemIndex] = SelectItem;
 				SelectAry[SelectItemIndex] = DropItem;
+				GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Cyan, TEXT("swap inven <-> maker"));
 			}
 		}
 		else
 		{
 			DropAry[DropItemIndex] = SelectItem;
 			SelectAry[SelectItemIndex] = FItem();
+			//InvenMgr->InventoryArray[SelectItemIndex] = FItem();
+			//InvenMgr->MakerArray[DropItemIndex] = SelectItem;
 		}
 	}
 	else
@@ -107,7 +112,7 @@ void UInventoryWidget::MoveItem(TArray<FItem> SelectAry, TArray<FItem> DropAry, 
 		}	
 	}
 	
-	if(SelectItemIndex != DropItemIndex)
+	/*if(SelectItemIndex != DropItemIndex)
 	{
 		const FItem SrcData = InvenMgr->InventoryArray[SelectItemIndex];
 		const FItem DesData = InvenMgr->InventoryArray[DropItemIndex];
@@ -118,7 +123,7 @@ void UInventoryWidget::MoveItem(TArray<FItem> SelectAry, TArray<FItem> DropAry, 
 			InvenMgr->InventoryArray[SelectItemIndex] = FItem();
 
 		InvenMgr->InventoryArray[DropItemIndex] = SrcData;
-	}
+	}*/
 }
 
 void UInventoryWidget::SetItemSlotArrays()

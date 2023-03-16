@@ -55,7 +55,7 @@ public:
 	bool DropArrayMaker;
 	
 	UFUNCTION(BlueprintCallable, Category=Inventory)
-	void MoveItem(TArray<FItem> SelectAry, TArray<FItem> DropAry, bool IsMoveBetween);
+	void MoveItem(TArray<FItem>& SelectAry, TArray<FItem>& DropAry, bool IsMoveBetween);
 
 	UFUNCTION(BlueprintCallable, Category=Inventory)
 	void SetItemSlotArrays();
