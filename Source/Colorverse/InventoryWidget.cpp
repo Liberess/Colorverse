@@ -2,6 +2,8 @@
 #include "InventoryManager.h"
 #include "ItemSlotWidget.h"
 
+#define Print(duration, text) if(GEngine) GEngine->AddOnScreenDebugMessage(-1,duration, FColor::Orange, text)
+
 UInventoryWidget::UInventoryWidget(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)
 {
@@ -17,7 +19,7 @@ void UInventoryWidget::CreateInventory(int Slots, bool IsMaker)
 
 	UGridPanel* CurrentGrid = IsMaker ? MakerGridPanel : ItemGridPanel;
 	
-	FStringClassReference WidgetBPClassRef(TEXT("/Game/UI/BP_ItemSlot.BP_ItemSlot_C"));
+	const FSoftClassPath WidgetBPClassRef(TEXT("/Game/UI/BP_ItemSlot.BP_ItemSlot_C"));
 	for(int i = 0; i < Slots - 1; i++)
 	{
 		if(UClass* WidgetClass = WidgetBPClassRef.TryLoadClass<UItemSlotWidget>())
@@ -54,12 +56,20 @@ void UInventoryWidget::MoveItem(TArray<FItem>& SelectAry, TArray<FItem>& DropAry
 {	
 	UInventoryManager* InvenMgr = GetWorld()->GetSubsystem<UInventoryManager>();
 	check(InvenMgr)
-	
+
 	SelectItem = SelectAry[SelectItemIndex];
 	DropItem = DropAry[DropItemIndex];
 
-	GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Cyan, FString::Printf(TEXT("SI : %d, DI : %d"), SelectItemIndex, DropItemIndex));
+	const static FItem EmptyItem = FItem();
 
+	const bool IsSelectMaker = SelectAry.Num() <= 2;
+	const bool IsSameCombineType = SelectItem.CombineType == DropItem.CombineType;
+
+	//SelectItem이 Src고 Drop할 곳도 Src
+	const bool IsSourceSwap = SelectItem.CombineType == EItemCombineType::Source && DropItemIndex == 0;
+	//SelectItem이 Dest고 Drop할 곳도 Dest
+	const bool IsDestinationSwap = SelectItem.CombineType == EItemCombineType::Destination && DropItemIndex == 1;
+	
 	if(IsMoveBetween)
 	{
 		if(DropItem.bIsValid)
@@ -68,22 +78,26 @@ void UInventoryWidget::MoveItem(TArray<FItem>& SelectAry, TArray<FItem>& DropAry
 			{
 				DropAry[DropItemIndex] = DropItem;
 				DropAry[DropItemIndex].Amount = SelectItem.Amount + DropItem.Amount;
-				SelectAry[SelectItemIndex] = FItem();
-				GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Cyan, TEXT("add inven -> maker"));
+				SelectAry[SelectItemIndex] = EmptyItem;
 			}
-			else
+			else if(IsSameCombineType)
 			{
 				DropAry[DropItemIndex] = SelectItem;
 				SelectAry[SelectItemIndex] = DropItem;
-				GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Cyan, TEXT("swap inven <-> maker"));
+				Print(1.0f, TEXT("1, 2"));
 			}
 		}
-		else
+		else if(IsSelectMaker) //Maker -> Inventory
 		{
 			DropAry[DropItemIndex] = SelectItem;
-			SelectAry[SelectItemIndex] = FItem();
-			//InvenMgr->InventoryArray[SelectItemIndex] = FItem();
-			//InvenMgr->MakerArray[DropItemIndex] = SelectItem;
+			SelectAry[SelectItemIndex] = EmptyItem;
+			Print(1.0f, TEXT("3"));
+		}
+		else if(IsSourceSwap || IsDestinationSwap)
+		{
+			DropAry[DropItemIndex] = SelectItem;
+			SelectAry[SelectItemIndex] = EmptyItem;
+			Print(1.0f, TEXT("4"));
 		}
 	}
 	else
@@ -96,34 +110,24 @@ void UInventoryWidget::MoveItem(TArray<FItem>& SelectAry, TArray<FItem>& DropAry
 				{
 					DropAry[DropItemIndex] = DropItem;
 					DropAry[DropItemIndex].Amount = SelectItem.Amount + DropItem.Amount;
-					SelectAry[SelectItemIndex] = FItem();
+					SelectAry[SelectItemIndex] = EmptyItem;
+					Print(1.0f, TEXT("5"));
 				}
 				else
 				{
 					DropAry[DropItemIndex] = SelectItem;
 					SelectAry[SelectItemIndex] = DropItem;
+					Print(1.0f, TEXT("6"));
 				}
 			}
 			else
 			{
 				DropAry[DropItemIndex] = SelectItem;
-				SelectAry[SelectItemIndex] = FItem();
+				SelectAry[SelectItemIndex] = EmptyItem;
+				Print(1.0f, TEXT("7"));
 			}
 		}	
 	}
-	
-	/*if(SelectItemIndex != DropItemIndex)
-	{
-		const FItem SrcData = InvenMgr->InventoryArray[SelectItemIndex];
-		const FItem DesData = InvenMgr->InventoryArray[DropItemIndex];
-		
-		if(DesData.bIsValid)
-			InvenMgr->InventoryArray[SelectItemIndex] = DesData;
-		else
-			InvenMgr->InventoryArray[SelectItemIndex] = FItem();
-
-		InvenMgr->InventoryArray[DropItemIndex] = SrcData;
-	}*/
 }
 
 void UInventoryWidget::SetItemSlotArrays()
@@ -135,8 +139,9 @@ void UInventoryWidget::SetItemSlotArrays()
 	{
 		if(DropArrayMaker)
 		{
-			MoveItem(InvenMgr->MakerArray, InvenMgr->MakerArray, false);
-			InvenMgr->UpdateInventory(true);
+			//Source Item과 Destination Item은 전화할 수 없다.
+			/*MoveItem(InvenMgr->MakerArray, InvenMgr->MakerArray, false);
+			InvenMgr->UpdateInventory(true);*/
 		}
 		else
 		{
@@ -150,6 +155,7 @@ void UInventoryWidget::SetItemSlotArrays()
 		if(DropArrayMaker)
 		{
 			MoveItem(InvenMgr->InventoryArray,InvenMgr->MakerArray, true);
+			
 			InvenMgr->UpdateInventory(true);
 			InvenMgr->UpdateInventory(false);
 		}

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Enums.h"
 #include "Engine/DataTable.h"
 #include "UObject/Interface.h"
 #include "IItem.generated.h"
@@ -8,13 +9,16 @@
 USTRUCT(BlueprintType, BlueprintType)
 struct FItem : public FTableRowBase
 {
-public:
 	GENERATED_USTRUCT_BODY();
-
-	FItem() : Id(-1), Amount(1), IconImg(), bIsValid(false) {};
+	
+public:
+	FItem() : Id(-1), CombineType(EItemCombineType::Source), Amount(1), IconImg(), bIsValid(false) {};
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item")
 	int Id;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item")
+	EItemCombineType CombineType;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item")
 	FText Name;
@@ -27,6 +31,19 @@ public:
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item")
 	bool bIsValid;
+};
+
+USTRUCT(BlueprintType, BlueprintType)
+struct FCombine : public FTableRowBase
+{
+	GENERATED_USTRUCT_BODY();
+	
+public:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Combine")
+	FText CombineName;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Combine")
+	FText ResultItemName;
 };
 
 UINTERFACE(MinimalAPI)

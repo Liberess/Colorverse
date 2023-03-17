@@ -12,6 +12,8 @@ class COLORVERSE_API UInventoryManager : public UWorldSubsystem
 	GENERATED_BODY()
 
 private:
+	UInventoryManager();
+	
 	UPROPERTY(BlueprintReadWrite, meta=(AllowPrivateAccess))
 	UInventoryWidget* InventoryWidget;
 
@@ -19,6 +21,9 @@ private:
 	bool bIsInventoryOpen;
 
 	bool GetInventoryItemByName(const FText& Name, int& Index);
+
+	UPROPERTY()
+	UDataTable* CombineDataTable;
 	
 public:
 	virtual bool ShouldCreateSubsystem(UObject* Outer) const override;
@@ -42,4 +47,7 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category=Inventory)
 	void UseInventoryItem(FItem Item);
+
+	UFUNCTION(BlueprintCallable, Category=Inventory)
+	void CombineItems();
 };

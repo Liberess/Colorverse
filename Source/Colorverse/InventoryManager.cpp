@@ -18,6 +18,13 @@ bool UInventoryManager::ShouldCreateSubsystem(UObject* Outer) const
 	return false;
 }
 
+UInventoryManager::UInventoryManager()
+{
+	static ConstructorHelpers::FObjectFinder<UDataTable> DataTable(TEXT("/Game/ItemDatas/DT_Combine"));
+	if (DataTable.Succeeded())
+		CombineDataTable = DataTable.Object;
+}
+
 void UInventoryManager::Initialize(FSubsystemCollectionBase& Collection)
 {
 	Super::Initialize(Collection);
@@ -31,7 +38,7 @@ void UInventoryManager::InitializeManager()
 	for(int i = 0; i < 2; i++)
 		MakerArray.Add(FItem());
 
-	const FStringClassReference WidgetBPClassRef(TEXT("/Game/UI/BP_InventoryWidget.BP_InventoryWidget_C"));
+	const FSoftClassPath WidgetBPClassRef(TEXT("/Game/UI/BP_InventoryWidget.BP_InventoryWidget_C"));
 	if(UClass* WidgetClass = WidgetBPClassRef.TryLoadClass<UInventoryWidget>())
 	{
 		InventoryWidget = Cast<UInventoryWidget>(CreateWidget(GetWorld(), WidgetClass));
@@ -128,4 +135,27 @@ bool UInventoryManager::GetInventoryItemByName(const FText& Name, int& Index)
 	}
 
 	return false;
+}
+
+void UInventoryManager::CombineItems()
+{
+	if(!MakerArray[0].bIsValid || !MakerArray[1].bIsValid || CombineDataTable == nullptr)
+		return;
+
+	try
+	{
+		const FString SrcItemName = MakerArray[0].Name.ToString();
+		const FString DestItemName = MakerArray[1].Name.ToString();
+
+		const FCombine* CombineRule = CombineDataTable->FindRow<FCombine>(FName(SrcItemName + DestItemName), "");
+		if(CombineRule != nullptr)
+		{
+			GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Yellow,
+				FString::Printf(TEXT("resultItemName = %s"), *CombineRule->ResultItemName.ToString()));
+		}
+	}
+	catch (...)
+	{
+		
+	}
 }

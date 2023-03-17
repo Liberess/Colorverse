@@ -25,6 +25,13 @@ enum class EItemSlotLocationType : uint8
 	Maker UMETA(DisplayName = "Maker")
 };
 
+UENUM(BlueprintType)
+enum class EItemCombineType : uint8
+{
+	Source UMETA(DisplayName = "Source"),
+	Destination UMETA(DisplayName = "Destination")
+};
+
 class COLORVERSE_API Enums
 {
 	
