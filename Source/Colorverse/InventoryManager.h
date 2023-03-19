@@ -1,6 +1,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "HUDWidget.h"
 #include "IItem.h"
 #include "InventoryWidget.h"
 #include "Subsystems/WorldSubsystem.h"
@@ -16,6 +17,9 @@ private:
 	
 	UPROPERTY(BlueprintReadWrite, meta=(AllowPrivateAccess))
 	UInventoryWidget* InventoryWidget;
+	
+	UPROPERTY(BlueprintReadWrite, meta=(AllowPrivateAccess))
+	UHUDWidget* HUDWidget;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta=(AllowPrivateAccess))
 	bool bIsInventoryOpen;
@@ -24,6 +28,9 @@ private:
 
 	UPROPERTY()
 	UDataTable* CombineDataTable;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta=(AllowPrivateAccess))
+	float GetCombinePaintAmount = 30.0f;
 	
 public:
 	virtual bool ShouldCreateSubsystem(UObject* Outer) const override;
@@ -36,6 +43,9 @@ public:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta=(AllowPrivateAccess))
 	TArray<FItem> MakerArray;
+	
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+	TArray<float> PaintAmountArray;
 	
 	void SetInventoryUI();
 

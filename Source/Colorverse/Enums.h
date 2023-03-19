@@ -32,6 +32,14 @@ enum class EItemCombineType : uint8
 	Destination UMETA(DisplayName = "Destination")
 };
 
+UENUM(BlueprintType)
+enum class ECombineColors : uint8
+{
+	Red UMETA(DisplayName = "Red"),
+	Yellow UMETA(DisplayName = "Yellow"),
+	Blue UMETA(DisplayName = "Blue")
+};
+
 class COLORVERSE_API Enums
 {
 	

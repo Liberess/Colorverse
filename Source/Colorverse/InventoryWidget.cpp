@@ -17,28 +17,40 @@ void UInventoryWidget::CreateInventory(int Slots, bool IsMaker)
 	//ItemGridPanel = Cast<UGridPanel>(GetWidgetFromName(TEXT("ItemGridPanel")));
 	//MakerGridPanel = Cast<UGridPanel>(GetWidgetFromName(TEXT("MakerGridPanel")));
 
-	UGridPanel* CurrentGrid = IsMaker ? MakerGridPanel : ItemGridPanel;
-	
-	const FSoftClassPath WidgetBPClassRef(TEXT("/Game/UI/BP_ItemSlot.BP_ItemSlot_C"));
-	for(int i = 0; i < Slots - 1; i++)
+	if(IsMaker)
 	{
-		if(UClass* WidgetClass = WidgetBPClassRef.TryLoadClass<UItemSlotWidget>())
+		for(int i = 0; i < MakerGridPanel->GetChildrenCount(); i++)
 		{
-			UItemSlotWidget* Widget = Cast<UItemSlotWidget>(CreateWidget(GetWorld(), WidgetClass));
-			Widget->bIsMaker = IsMaker;
-			Widget->Index = i;
-			int Row = i / GridColumnAmount;
-			if(Row == 0)
-				CurrentGrid->AddChildToGrid(Widget, Row, i);
-			else
-				CurrentGrid->AddChildToGrid(Widget, Row, i - (Row * GridColumnAmount));
+			if(UItemSlotWidget* Widget = Cast<UItemSlotWidget>(MakerGridPanel->GetChildAt(i)))
+			{
+				Widget->bIsMaker = IsMaker;
+				Widget->Index = i;
+			}
+		}
+	}
+	else
+	{
+		const FSoftClassPath WidgetBPClassRef(TEXT("/Game/UI/BP_ItemSlot.BP_ItemSlot_C"));
+		for(int i = 0; i < Slots - 1; i++)
+		{
+			if(UClass* WidgetClass = WidgetBPClassRef.TryLoadClass<UItemSlotWidget>())
+			{
+				UItemSlotWidget* Widget = Cast<UItemSlotWidget>(CreateWidget(GetWorld(), WidgetClass));
+				Widget->bIsMaker = IsMaker;
+				Widget->Index = i;
+				int Row = i / GridColumnAmount;
+				if(Row == 0)
+					InventoryGridPanel->AddChildToUniformGrid(Widget, Row, i);
+				else
+					InventoryGridPanel->AddChildToUniformGrid(Widget, Row, i - (Row * GridColumnAmount));
+			}
 		}
 	}
 }
 
 void UInventoryWidget::UpdateInventory(TArray<FItem> Inventory, bool IsMaker)
 {
-	const UGridPanel* CurrentGrid = IsMaker ? MakerGridPanel : ItemGridPanel;
+	const UUniformGridPanel* CurrentGrid = IsMaker ? MakerGridPanel : InventoryGridPanel;
 
 	for (int i = 0; i < CurrentGrid->GetChildrenCount(); i++)
 	{

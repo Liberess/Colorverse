@@ -44,6 +44,9 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Combine")
 	FText ResultItemName;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Combine")
+	ECombineColors CombineColor;
 };
 
 UINTERFACE(MinimalAPI)

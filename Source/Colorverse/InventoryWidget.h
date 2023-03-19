@@ -4,6 +4,7 @@
 #include "IItem.h"
 #include "Blueprint/UserWidget.h"
 #include "Components/GridPanel.h"
+#include "Components/UniformGridPanel.h"
 #include "InventoryWidget.generated.h"
 
 UCLASS(BlueprintType)
@@ -15,17 +16,16 @@ public:
 	UInventoryWidget(const FObjectInitializer& ObjectInitializer);
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=Inventory)
-	int GridColumnAmount = 6;
+	int GridColumnAmount = 4;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=Inventory)
 	UTexture2D* EmptyImg;
-	
-	//UPROPERTY(VisibleAnywhere, BlueprintReadOnly/*, meta=(BindWidget)*/)
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Inventory, meta=(BindWidget))
-	UGridPanel* ItemGridPanel;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Inventory, meta=(BindWidget))
-	UGridPanel* MakerGridPanel;
+	UUniformGridPanel* InventoryGridPanel;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Inventory, meta=(BindWidget))
+	UUniformGridPanel* MakerGridPanel;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Transient, meta = (BindWidgetAnim))
 	UWidgetAnimation* InventoryShowAnim;

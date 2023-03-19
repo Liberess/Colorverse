@@ -82,6 +82,12 @@ public:
 	
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
 	void ControlMaker();
+	
+	UFUNCTION(BlueprintCallable)
+	void ChangeEquipPaint(ECombineColors CombineColor);
+
+	UFUNCTION(BlueprintPure)
+	ECombineColors GetCurrentPaintColor() const { return CurrentPaintColor; };
 
 private:
 	bool bIsRunTimer;
@@ -96,6 +102,9 @@ private:
 	FTimerHandle RollTimer;
 
 	bool bIsWatchingInteractWidget;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Paint, meta=(AllowPrivateAccess))
+	ECombineColors CurrentPaintColor;
 
 	UInventoryManager* InvenMgr;
 

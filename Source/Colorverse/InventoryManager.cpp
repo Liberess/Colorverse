@@ -32,18 +32,28 @@ void UInventoryManager::Initialize(FSubsystemCollectionBase& Collection)
 
 void UInventoryManager::InitializeManager()
 {
-	for(int i = 0; i < 25; i++)
+	for(int i = 0; i < 21; i++)
 		InventoryArray.Add(FItem());
 	
 	for(int i = 0; i < 2; i++)
 		MakerArray.Add(FItem());
 
-	const FSoftClassPath WidgetBPClassRef(TEXT("/Game/UI/BP_InventoryWidget.BP_InventoryWidget_C"));
-	if(UClass* WidgetClass = WidgetBPClassRef.TryLoadClass<UInventoryWidget>())
+	PaintAmountArray = { 0.0f, 0.0f, 0.0f };
+
+	const FSoftClassPath InventoryRef(TEXT("/Game/UI/BP_InventoryWidget.BP_InventoryWidget_C"));
+	if(UClass* WidgetClass = InventoryRef.TryLoadClass<UInventoryWidget>())
 	{
 		InventoryWidget = Cast<UInventoryWidget>(CreateWidget(GetWorld(), WidgetClass));
 		InventoryWidget->CreateInventory(InventoryArray.Num(), false);
-		InventoryWidget->CreateInventory(3, true);
+		InventoryWidget->CreateInventory(MakerArray.Num(), true);
+	}
+
+	const FSoftClassPath HUDRef(TEXT("/Game/UI/BP_HUD.BP_HUD_C"));
+	if(UClass* WidgetClass = HUDRef.TryLoadClass<UHUDWidget>())
+	{
+		HUDWidget = Cast<UHUDWidget>(CreateWidget(GetWorld(), WidgetClass));
+		HUDWidget->InitializedHUD();
+		HUDWidget->AddToViewport();
 	}
 }
 
@@ -71,7 +81,7 @@ void UInventoryManager::SetInventoryUI()
 		const FInputModeGameOnly InputModeGameOnly;
 		PlayerController->SetInputMode(InputModeGameOnly);
 		PlayerController->SetShowMouseCursor(false);
-		InventoryWidget->RemoveFromViewport();
+		InventoryWidget->RemoveFromParent();
 	}
 }
 
@@ -139,19 +149,36 @@ bool UInventoryManager::GetInventoryItemByName(const FText& Name, int& Index)
 
 void UInventoryManager::CombineItems()
 {
-	if(!MakerArray[0].bIsValid || !MakerArray[1].bIsValid || CombineDataTable == nullptr)
+	FItem& SrcItem = MakerArray[0];
+	FItem& DestItem = MakerArray[1];
+	
+	if(!SrcItem.bIsValid || !DestItem.bIsValid || CombineDataTable == nullptr)
 		return;
 
+	const static FItem EmptyItem = FItem();
+	
 	try
 	{
-		const FString SrcItemName = MakerArray[0].Name.ToString();
-		const FString DestItemName = MakerArray[1].Name.ToString();
+		const FString SrcItemName = SrcItem.Name.ToString();
+		const FString DestItemName = DestItem.Name.ToString();
 
 		const FCombine* CombineRule = CombineDataTable->FindRow<FCombine>(FName(SrcItemName + DestItemName), "");
 		if(CombineRule != nullptr)
 		{
-			GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Yellow,
-				FString::Printf(TEXT("resultItemName = %s"), *CombineRule->ResultItemName.ToString()));
+			if(SrcItem.Amount - 1 > 0)
+				--SrcItem.Amount;
+			else
+				SrcItem = EmptyItem;
+
+			if(DestItem.Amount - 1 > 0)
+				--DestItem.Amount;
+			else
+				DestItem = EmptyItem;
+
+			const int ColorNum = static_cast<int>(CombineRule->CombineColor);
+			PaintAmountArray[ColorNum] += GetCombinePaintAmount;
+			HUDWidget->SetPaintBarPercent(ColorNum, PaintAmountArray[ColorNum]);
+			UpdateInventory(true);
 		}
 	}
 	catch (...)

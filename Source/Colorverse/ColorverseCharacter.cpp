@@ -14,7 +14,7 @@ AColorverseCharacter::AColorverseCharacter()
 	GetCapsuleComponent()->InitCapsuleSize(42.f, 96.0f);
 	GetCapsuleComponent()->OnComponentBeginOverlap.AddDynamic(this, &AColorverseCharacter::OnOverlapBegin);
 	GetCapsuleComponent()->OnComponentEndOverlap.AddDynamic(this, &AColorverseCharacter::OnOverlapEnd);
-	
+
 	BaseTurnRate = 45.f;
 	BaseLookUpRate = 45.f;
 
@@ -26,7 +26,7 @@ AColorverseCharacter::AColorverseCharacter()
 	GetCharacterMovement()->RotationRate = FRotator(0.0f, 540.0f, 0.0f);
 	GetCharacterMovement()->JumpZVelocity = 600.f;
 	GetCharacterMovement()->AirControl = 0.2f;
-	
+
 	CameraBoom = CreateDefaultSubobject<USpringArmComponent>(TEXT("CameraBoom"));
 	CameraBoom->SetupAttachment(RootComponent);
 	CameraBoom->TargetArmLength = 300.0f;
@@ -41,11 +41,11 @@ void AColorverseCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 
-	if(IsValid(GetCharacterMovement()))
+	if (IsValid(GetCharacterMovement()))
 		GetCharacterMovement()->MaxWalkSpeed = WalkSpeed;
 
 	InvenMgr = GetWorld()->GetSubsystem<UInventoryManager>();
-	
+
 	bIsDamageable = true;
 }
 
@@ -73,9 +73,16 @@ void AColorverseCharacter::SetupPlayerInputComponent(class UInputComponent* Play
 	PlayerInputComponent->BindAction("Interact", IE_Pressed, this, &AColorverseCharacter::Interact);
 	PlayerInputComponent->BindAction("Inventory", IE_Pressed, this, &AColorverseCharacter::ControlInventory);
 	PlayerInputComponent->BindAction("Maker", IE_Pressed, this, &AColorverseCharacter::ControlMaker);
+
+	PlayerInputComponent->BindAction<TDelegate<void(ECombineColors)>>(
+		TEXT("RedPaint"), IE_Pressed, this, &AColorverseCharacter::ChangeEquipPaint, ECombineColors::Red);
+	PlayerInputComponent->BindAction<TDelegate<void(ECombineColors)>>(
+		TEXT("YellowPaint"), IE_Pressed, this, &AColorverseCharacter::ChangeEquipPaint, ECombineColors::Yellow);
+	PlayerInputComponent->BindAction<TDelegate<void(ECombineColors)>>(
+		TEXT("BluePaint"), IE_Pressed, this, &AColorverseCharacter::ChangeEquipPaint, ECombineColors::Blue);
 }
 
-#pragma region Movement 
+#pragma region Movement
 void AColorverseCharacter::OnResetVR()
 {
 	UHeadMountedDisplayFunctionLibrary::ResetOrientationAndPosition();
@@ -105,7 +112,7 @@ void AColorverseCharacter::MoveForward(float Value)
 {
 	if ((Controller != nullptr))
 	{
-		if(Value != 0.0f)
+		if (Value != 0.0f)
 		{
 			const FRotator Rotation = Controller->GetControlRotation();
 			const FRotator YawRotation(0, Rotation.Yaw, 0);
@@ -113,15 +120,16 @@ void AColorverseCharacter::MoveForward(float Value)
 			const FVector Direction = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X);
 			AddMovementInput(Direction, Value);
 
-			if(!bIsRunTimer)
+			if (!bIsRunTimer)
 			{
 				bIsRunTimer = true;
-				GetWorldTimerManager().SetTimer(ToggleRunTimer, this, &AColorverseCharacter::SetEnabledToggleRun, AutoRunStartDelay, false);
+				GetWorldTimerManager().SetTimer(ToggleRunTimer, this, &AColorverseCharacter::SetEnabledToggleRun,
+				                                AutoRunStartDelay, false);
 			}
 		}
 		else
 		{
-			if(bIsRunTimer && GetCharacterMovement()->Velocity.IsZero())
+			if (bIsRunTimer && GetCharacterMovement()->Velocity.IsZero())
 			{
 				bIsRunTimer = false;
 				bIsRunning = false;
@@ -136,7 +144,7 @@ void AColorverseCharacter::MoveRight(float Value)
 {
 	if ((Controller != nullptr))
 	{
-		if(Value != 0.0f)
+		if (Value != 0.0f)
 		{
 			const FRotator Rotation = Controller->GetControlRotation();
 			const FRotator YawRotation(0, Rotation.Yaw, 0);
@@ -144,15 +152,16 @@ void AColorverseCharacter::MoveRight(float Value)
 			const FVector Direction = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y);
 			AddMovementInput(Direction, Value);
 
-			if(!bIsRunTimer)
+			if (!bIsRunTimer)
 			{
 				bIsRunTimer = true;
-				GetWorldTimerManager().SetTimer(ToggleRunTimer, this, &AColorverseCharacter::SetEnabledToggleRun, AutoRunStartDelay, false);
+				GetWorldTimerManager().SetTimer(ToggleRunTimer, this, &AColorverseCharacter::SetEnabledToggleRun,
+				                                AutoRunStartDelay, false);
 			}
 		}
 		else
 		{
-			if(bIsRunTimer && GetCharacterMovement()->Velocity.IsZero())
+			if (bIsRunTimer && GetCharacterMovement()->Velocity.IsZero())
 			{
 				bIsRunTimer = false;
 				bIsRunning = false;
@@ -171,17 +180,17 @@ void AColorverseCharacter::SetEnabledToggleRun()
 
 void AColorverseCharacter::Roll_Implementation()
 {
-	if(!bIsRunning || bIsRolling)
+	if (!bIsRunning || bIsRolling)
 		return;
 
-	if(GetCharacterMovement()->IsFalling())
+	if (GetCharacterMovement()->IsFalling())
 		return;
-	
+
 	bIsRolling = true;
 	bIsDamageable = false;
 
 	Print(1.0f, TEXT("Roll On"));
-	
+
 	GetWorldTimerManager().ClearTimer(RollTimer);
 	GetWorldTimerManager().SetTimer(RollTimer, this, &AColorverseCharacter::SetDisabledRoll, RollDelay, false);
 }
@@ -194,21 +203,23 @@ void AColorverseCharacter::SetDisabledRoll()
 }
 #pragma endregion Movement
 
-void AColorverseCharacter::OnOverlapBegin(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+void AColorverseCharacter::OnOverlapBegin(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor,
+                                          class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep,
+                                          const FHitResult& SweepResult)
 {
 	if (OtherActor && OtherActor != this)
 	{
 		InteractObject = Cast<AInteractObject>(OtherActor);
-		if(IsValid(InteractObject))
+		if (IsValid(InteractObject))
 		{
 			bIsInteract = true;
 
-			if(!bIsWatchingInteractWidget)
+			if (!bIsWatchingInteractWidget)
 			{
-				if(IsValid(InteractWidgetClass))
+				if (IsValid(InteractWidgetClass))
 				{
 					InteractWidget = Cast<UInteractWidget>(CreateWidget(GetWorld(), InteractWidgetClass));
-					if(InteractWidget != nullptr)
+					if (InteractWidget != nullptr)
 					{
 						InteractWidget->SetInteractText(FText::FromString(InteractObject->InteractWidgetDisplayTxt));
 						bIsWatchingInteractWidget = true;
@@ -220,22 +231,28 @@ void AColorverseCharacter::OnOverlapBegin(class UPrimitiveComponent* OverlappedC
 	}
 }
 
-void AColorverseCharacter::OnOverlapEnd(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
+void AColorverseCharacter::OnOverlapEnd(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor,
+                                        class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
 {
 	if (OtherActor && OtherActor != this)
 	{
-		if(IsValid(InteractObject) && InteractObject == OtherActor)
+		if (IsValid(InteractObject) && InteractObject == OtherActor)
 		{
 			InteractObject = nullptr;
 			bIsInteract = false;
 
-			if(InteractWidget != nullptr)
+			if (InteractWidget != nullptr)
 			{
 				bIsWatchingInteractWidget = false;
 				InteractWidget->RemoveFromParent();
 			}
 		}
 	}
+}
+
+void AColorverseCharacter::ChangeEquipPaint(ECombineColors CombineColor)
+{
+	CurrentPaintColor = CombineColor;
 }
 
 void AColorverseCharacter::ControlMaker_Implementation()
@@ -245,7 +262,7 @@ void AColorverseCharacter::ControlMaker_Implementation()
 
 void AColorverseCharacter::Interact_Implementation()
 {
-	if(!bIsInteract || !IsValid(InteractObject))
+	if (!bIsInteract || !IsValid(InteractObject))
 		return;
 
 	InteractObject->OnInteract();
