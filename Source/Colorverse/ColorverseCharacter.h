@@ -4,6 +4,9 @@
 #include "InteractObject.h"
 #include "InteractWidget.h"
 #include "InventoryManager.h"
+#include "LivingEntity.h"
+#include "CombatSystem.h"
+#include "ColorverseCharacterAnimInstance.h"
 #include "GameFramework/Character.h"
 #include "ColorverseCharacter.generated.h"
 
@@ -17,6 +20,12 @@ class AColorverseCharacter : public ACharacter
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 	class UCameraComponent* FollowCamera;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Combat System", meta = (AllowPrivateAccess = "true"))
+	class UCombatSystem* CombatSystem;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Living Entity", meta = (AllowPrivateAccess = "true"))
+	class ULivingEntity* LivingEntity;
 	
 public:
 	AColorverseCharacter();
@@ -49,6 +58,15 @@ public:
 	
 	UFUNCTION(BlueprintCallable)
 	void SetEnabledToggleRun();
+
+	virtual void Jump() override;
+	virtual void StopJumping() override;
+
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
+	void Attack();
+
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
+	void SetDisabledAttack(UAnimMontage* Montage, bool bInterrupted);
 
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
 	void Roll();
@@ -87,17 +105,26 @@ private:
 	bool bIsRunTimer;
 	FTimerHandle ToggleRunTimer;
 	
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta=(AllowPrivateAccess), Category="LivingEntity")
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta=(AllowPrivateAccess), Category="Living Entity")
 	bool bIsDamageable;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta=(AllowPrivateAccess), Category="Player Movement")
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta=(AllowPrivateAccess), Category="Combat System")
 	bool bIsRolling;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess), Category="Combat System")
+	bool bIsAttacking;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess), Category = "Combat System")
+	bool bIsAttacked;
 	
 	FTimerHandle RollTimer;
 
 	bool bIsWatchingInteractWidget;
 
 	UInventoryManager* InvenMgr;
+
+	UPROPERTY()
+	class UColorverseCharacterAnimInstance* ColorverseAnim;
 
 protected:
 	void OnResetVR();
@@ -114,7 +141,11 @@ protected:
 protected:
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
+	virtual void PostInitializeComponents() override;
+
 public:
 	FORCEINLINE class USpringArmComponent* GetCameraBoom() const { return CameraBoom; }
 	FORCEINLINE class UCameraComponent* GetFollowCamera() const { return FollowCamera; }
+	FORCEINLINE class UCombatSystem* GetCombatSystem() const { return CombatSystem; }
+	FORCEINLINE class ULivingEntity* GetLivingEntity() const { return LivingEntity; }
 };

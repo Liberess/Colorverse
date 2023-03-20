@@ -35,6 +35,10 @@ AColorverseCharacter::AColorverseCharacter()
 	FollowCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("FollowCamera"));
 	FollowCamera->SetupAttachment(CameraBoom, USpringArmComponent::SocketName);
 	FollowCamera->bUsePawnControlRotation = false;
+
+	CombatSystem = CreateDefaultSubobject<UCombatSystem>(TEXT("CombatSystem"));
+
+	LivingEntity = CreateDefaultSubobject<ULivingEntity>(TEXT("LivingEntity"));
 }
 
 void AColorverseCharacter::BeginPlay()
@@ -52,9 +56,10 @@ void AColorverseCharacter::BeginPlay()
 void AColorverseCharacter::SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent)
 {
 	check(PlayerInputComponent);
-	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &ACharacter::Jump);
-	PlayerInputComponent->BindAction("Jump", IE_Released, this, &ACharacter::StopJumping);
+	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &AColorverseCharacter::Jump);
+	PlayerInputComponent->BindAction("Jump", IE_Released, this, &AColorverseCharacter::StopJumping);
 
+	PlayerInputComponent->BindAction("Attack", IE_Pressed, this, &AColorverseCharacter::Attack);
 	PlayerInputComponent->BindAction("Roll", IE_Pressed, this, &AColorverseCharacter::Roll);
 
 	PlayerInputComponent->BindAxis("MoveForward", this, &AColorverseCharacter::MoveForward);
@@ -73,6 +78,40 @@ void AColorverseCharacter::SetupPlayerInputComponent(class UInputComponent* Play
 	PlayerInputComponent->BindAction("Interact", IE_Pressed, this, &AColorverseCharacter::Interact);
 	PlayerInputComponent->BindAction("Inventory", IE_Pressed, this, &AColorverseCharacter::ControlInventory);
 	PlayerInputComponent->BindAction("Maker", IE_Pressed, this, &AColorverseCharacter::ControlMaker);
+}
+
+void AColorverseCharacter::PostInitializeComponents()
+{
+	Super::PostInitializeComponents();
+
+	ColorverseAnim = Cast<UColorverseCharacterAnimInstance>(GetMesh()->GetAnimInstance());
+
+	ColorverseAnim->OnMontageEnded.AddDynamic(this, &AColorverseCharacter::SetDisabledAttack);
+	
+	ColorverseAnim->OnNextAttackCheck.AddLambda([this]() -> void 
+		{
+			CombatSystem->bCanNextCombo = false;
+
+			if (CombatSystem->bIsComboInputOn)
+			{
+				CombatSystem->AttackStartComboState();
+
+				ColorverseAnim->JumpToAttackMontageSection(CombatSystem->CurrentCombo);
+			}
+		}
+	);
+
+	ColorverseAnim->OnStartAttackJudg.AddLambda([this]() -> void
+		{
+			CombatSystem->bIsCanAttackTrace = true;
+		}
+	);
+
+	ColorverseAnim->OnEndAttackJudg.AddLambda([this]() -> void
+		{
+			CombatSystem->bIsCanAttackTrace = false;
+		}
+	);
 }
 
 #pragma region Movement 
@@ -103,6 +142,9 @@ void AColorverseCharacter::LookUpAtRate(float Rate)
 
 void AColorverseCharacter::MoveForward(float Value)
 {
+	if (bIsAttacking || bIsAttacked)
+		return;
+
 	if ((Controller != nullptr))
 	{
 		if(Value != 0.0f)
@@ -134,6 +176,9 @@ void AColorverseCharacter::MoveForward(float Value)
 
 void AColorverseCharacter::MoveRight(float Value)
 {
+	if (bIsAttacking || bIsAttacked)
+		return;
+
 	if ((Controller != nullptr))
 	{
 		if(Value != 0.0f)
@@ -167,6 +212,51 @@ void AColorverseCharacter::SetEnabledToggleRun()
 {
 	bIsRunning = true;
 	GetCharacterMovement()->MaxWalkSpeed = RunSpeed;
+}
+
+void AColorverseCharacter::Jump()
+{
+	if (bIsAttacking || bIsAttacked)
+		return;
+
+	Super::Jump();
+}
+
+void AColorverseCharacter::StopJumping()
+{
+	if (bIsAttacking || bIsAttacked)
+		return;
+
+	Super::StopJumping();
+}
+
+void AColorverseCharacter::Attack_Implementation()
+{
+	if (bIsRolling)
+		return;
+
+	if (GetCharacterMovement()->IsFalling())
+		return;
+
+	if (bIsAttacking == true)
+	{
+		if (CombatSystem->bCanNextCombo)
+		{
+			CombatSystem->bIsComboInputOn = true;
+		}
+	}
+	else
+	{
+		CombatSystem->AttackStartComboState();
+		ColorverseAnim->PlayAttackMontage();
+		bIsAttacking = true;
+	}
+}
+
+void AColorverseCharacter::SetDisabledAttack_Implementation(UAnimMontage* Montage, bool bInterrupted)
+{
+	bIsAttacking = false;
+	CombatSystem->AttackEndComboState();
 }
 
 void AColorverseCharacter::Roll_Implementation()
