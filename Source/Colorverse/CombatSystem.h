@@ -22,7 +22,7 @@ protected:
 	virtual void InitializeComponent() override;
 
 public:
-	// ÇÃ·¹ÀÌ¾î ´É·ÂÄ¡
+	// í”Œë ˆì´ì–´ ëŠ¥ë ¥ì¹˜
 	UPROPERTY(Category = "Character Status (General Settings)", EditAnywhere, BlueprintReadWrite)
 	float ATK;
 
@@ -32,7 +32,7 @@ public:
 	UPROPERTY(Category = "Character Status (General Settings)", EditAnywhere, BlueprintReadWrite)
 	float EXP;
 
-	// ÄŞº¸ °ü·Ã
+	// ì½¤ë³´ ê´€ë ¨
 	UPROPERTY(Category = "Character Combo", EditAnywhere, BlueprintReadWrite)
 	int32 MaxCombo;
 

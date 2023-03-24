@@ -98,30 +98,30 @@ void AColorverseCharacter::PostInitializeComponents()
 
 	ColorverseAnim->OnMontageEnded.AddDynamic(this, &AColorverseCharacter::SetDisabledAttack);
 	
-	ColorverseAnim->OnNextAttackCheck.AddLambda([this]() -> void 
-		{
-			CombatSystem->bCanNextCombo = false;
+	ColorverseAnim->OnNextAttackCheck.AddDynamic(this, &AColorverseCharacter::SetNextAttackCheck);
+	ColorverseAnim->OnStartAttackJudg.AddDynamic(this, &AColorverseCharacter::SetEnableCanAttackTrace);
+	ColorverseAnim->OnEndAttackJudg.AddDynamic(this, &AColorverseCharacter::SetDisableCanAttackTrace);
+}
 
-			if (CombatSystem->bIsComboInputOn)
-			{
-				CombatSystem->AttackStartComboState();
+void AColorverseCharacter::SetNextAttackCheck()
+{
+	CombatSystem->bCanNextCombo = false;
 
-				ColorverseAnim->JumpToAttackMontageSection(CombatSystem->CurrentCombo);
-			}
-		}
-	);
+	if (CombatSystem->bIsComboInputOn)
+	{
+		CombatSystem->AttackStartComboState();
+		ColorverseAnim->JumpToAttackMontageSection(CombatSystem->CurrentCombo);
+	}
+}
 
-	ColorverseAnim->OnStartAttackJudg.AddLambda([this]() -> void
-		{
-			CombatSystem->bIsCanAttackTrace = true;
-		}
-	);
+void AColorverseCharacter::SetEnableCanAttackTrace()
+{
+	CombatSystem->bIsCanAttackTrace = true;
+}
 
-	ColorverseAnim->OnEndAttackJudg.AddLambda([this]() -> void
-		{
-			CombatSystem->bIsCanAttackTrace = false;
-		}
-	);
+void AColorverseCharacter::SetDisableCanAttackTrace()
+{
+	CombatSystem->bIsCanAttackTrace = false;
 }
 
 #pragma region Movement 
@@ -247,8 +247,8 @@ void AColorverseCharacter::Attack_Implementation()
 	if (bIsRolling)
 		return;
 
-	if (GetCharacterMovement()->IsFalling())
-		return;
+	/*if (GetCharacterMovement()->IsFalling())
+		return;*/
 
 	if (bIsAttacking == true)
 	{

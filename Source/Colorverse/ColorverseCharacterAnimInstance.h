@@ -6,8 +6,8 @@
 #include "Animation/AnimInstance.h"
 #include "ColorverseCharacterAnimInstance.generated.h"
 
-DECLARE_MULTICAST_DELEGATE(FOnNextAttackCheckDelegate);
-DECLARE_MULTICAST_DELEGATE(FOnEndAttackJudgDelegate);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnNextAttackCheckDelegate);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnEndAttackJudgDelegate);
 
 UCLASS()
 class COLORVERSE_API UColorverseCharacterAnimInstance : public UAnimInstance
@@ -28,8 +28,13 @@ public:
 	void JumpToAttackMontageSection(int32 NewSection);
 
 public:
+	UPROPERTY(BlueprintAssignable, BlueprintCallable)
 	FOnNextAttackCheckDelegate OnNextAttackCheck;
+	
+	UPROPERTY(BlueprintAssignable, BlueprintCallable)
 	FOnEndAttackJudgDelegate OnStartAttackJudg;
+	
+	UPROPERTY(BlueprintAssignable, BlueprintCallable)
 	FOnEndAttackJudgDelegate OnEndAttackJudg;
 
 	UFUNCTION()

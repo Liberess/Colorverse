@@ -107,6 +107,15 @@ public:
 	UFUNCTION(BlueprintPure)
 	ECombineColors GetCurrentPaintColor() const { return CurrentPaintColor; };
 
+	UFUNCTION(BlueprintCallable)
+	void SetNextAttackCheck();
+
+	UFUNCTION(BlueprintCallable)
+	void SetEnableCanAttackTrace();
+
+	UFUNCTION(BlueprintCallable)
+	void SetDisableCanAttackTrace();
+
 private:
 	bool bIsRunTimer;
 	FTimerHandle ToggleRunTimer;
@@ -132,8 +141,8 @@ private:
 
 	UInventoryManager* InvenMgr;
 
-	UPROPERTY()
-	class UColorverseCharacterAnimInstance* ColorverseAnim;
+	UPROPERTY(BlueprintReadWrite, meta=(AllowPrivateAccess))
+	UColorverseCharacterAnimInstance* ColorverseAnim;
 
 protected:
 	void OnResetVR();
@@ -149,7 +158,6 @@ protected:
 
 protected:
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
-
 	virtual void PostInitializeComponents() override;
 
 public:
