@@ -5,7 +5,7 @@
 #include "Components/ActorComponent.h"
 #include "LivingEntity.generated.h"
 
-UCLASS()
+UCLASS(ClassGroup = (Custom), meta = (BlueprintSpawnableComponent))
 class COLORVERSE_API ULivingEntity : public UActorComponent, public IIDamageable
 {
 	GENERATED_BODY()

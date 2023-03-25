@@ -13,8 +13,6 @@ UColorverseCharacterAnimInstance::UColorverseCharacterAnimInstance()
 	{
 		AttackMontage = Attack_MONTAGE.Object;
 	}
-
-	// OnNextAttackCheck
 }
 
 void UColorverseCharacterAnimInstance::NativeUpdateAnimation(float DeltaSeconds)

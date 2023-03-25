@@ -117,6 +117,7 @@ void AColorverseCharacter::SetNextAttackCheck()
 void AColorverseCharacter::SetEnableCanAttackTrace()
 {
 	CombatSystem->bIsCanAttackTrace = true;
+	AttackHitResults.Empty();
 }
 
 void AColorverseCharacter::SetDisableCanAttackTrace()
