@@ -22,11 +22,7 @@ EBTNodeResult::Type UBTTask_Attack::ExecuteTask(UBehaviorTreeComponent& OwnerCom
 	ColorverseCharacter->Attack();
 	IsAttacking = true;
 
-	//ColorverseCharacter->OnAttackEnd.AddLambda([this]() -> void 
-	//	{
-	//		IsAttacking = false;
-	//	}
-	//);
+	ColorverseCharacter->GetColorverseAnim()->OnEndAttackJudg.AddDynamic(this, &UBTTask_Attack::SetIsAttackingFalse);
 
 	return EBTNodeResult::InProgress;
 }

@@ -344,7 +344,7 @@ void AColorverseCharacter::OnOverlapEnd(class UPrimitiveComponent* OverlappedCom
 	}
 }
 
-void AColorverseCharacter::ChangeEquipPaint(ECombineColors CombineColor)
+void AColorverseCharacter::ChangeEquipPaint_Implementation(ECombineColors CombineColor)
 {
 	CurrentPaintColor = CombineColor;
 }

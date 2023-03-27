@@ -104,7 +104,7 @@ public:
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
 	void ControlMaker();
 	
-	UFUNCTION(BlueprintCallable)
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
 	void ChangeEquipPaint(ECombineColors CombineColor);
 
 	UFUNCTION(BlueprintPure)
@@ -168,4 +168,5 @@ public:
 	FORCEINLINE class UCameraComponent* GetFollowCamera() const { return FollowCamera; }
 	FORCEINLINE class UCombatSystem* GetCombatSystem() const { return CombatSystem; }
 	FORCEINLINE class ULivingEntity* GetLivingEntity() const { return LivingEntity; }
+	FORCEINLINE class UColorverseCharacterAnimInstance* GetColorverseAnim() const { return ColorverseAnim; }
 };

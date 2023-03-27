@@ -24,4 +24,6 @@ protected:
 
 private:
 	bool IsAttacking = false;
+
+	FORCEINLINE void SetIsAttackingFalse() { IsAttacking = false; }
 };

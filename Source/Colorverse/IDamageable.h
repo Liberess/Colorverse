@@ -14,7 +14,7 @@ public:
 	AActor* damager;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Damage Message")
-	int damageAmount;
+	float damageAmount;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Damage Message")
 	FVector hitPoint;

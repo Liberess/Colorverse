@@ -8,6 +8,8 @@ ULivingEntity::ULivingEntity()
 void ULivingEntity::BeginPlay()
 {
 	Super::BeginPlay();
+
+	CurrentHealth = OriginHealth;
 }
 
 void ULivingEntity::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
@@ -17,7 +19,8 @@ void ULivingEntity::TickComponent(float DeltaTime, ELevelTick TickType, FActorCo
 
 void ULivingEntity::ApplyDamage_Implementation(FDamageMessage dmgMsg)
 {
-	//IIDamageable::ApplyDamage_Implementation(dmgMsg);
-	
+	CurrentHealth -= dmgMsg.damageAmount;
+
+	GEngine->AddOnScreenDebugMessage(-1, 3.0f, FColor::Blue, FString::Printf(TEXT("HP : %d"), CurrentHealth));
 }
 
