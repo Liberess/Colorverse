@@ -1,5 +1,6 @@
 #include "ColorverseCharacter.h"
 #include "HeadMountedDisplayFunctionLibrary.h"
+#include "TimerManager.h"
 #include "Camera/CameraComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "Components/InputComponent.h"
@@ -343,7 +344,7 @@ void AColorverseCharacter::OnOverlapEnd(class UPrimitiveComponent* OverlappedCom
 	}
 }
 
-void AColorverseCharacter::ChangeEquipPaint(ECombineColors CombineColor)
+void AColorverseCharacter::ChangeEquipPaint_Implementation(ECombineColors CombineColor)
 {
 	CurrentPaintColor = CombineColor;
 }

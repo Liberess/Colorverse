@@ -101,7 +101,7 @@ public:
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
 	void ControlMaker();
 	
-	UFUNCTION(BlueprintCallable)
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
 	void ChangeEquipPaint(ECombineColors CombineColor);
 
 	UFUNCTION(BlueprintPure)
