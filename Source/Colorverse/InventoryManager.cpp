@@ -44,14 +44,14 @@ void UInventoryManager::InitializeManager()
 	if(UClass* WidgetClass = InventoryRef.TryLoadClass<UInventoryWidget>())
 	{
 		InventoryWidget = Cast<UInventoryWidget>(CreateWidget(GetWorld(), WidgetClass));
-		InventoryWidget->CreateInventory(InventoryArray.Num());
+		InventoryWidget->CreateContainer(InventoryArray.Num());
 	}
 
 	const FSoftClassPath MakerRef(TEXT("/Game/UI/BP_MakerWidget.BP_MakerWidget_C"));
 	if(UClass* WidgetClass = MakerRef.TryLoadClass<UMakerWidget>())
 	{
 		MakerWidget = Cast<UMakerWidget>(CreateWidget(GetWorld(), WidgetClass));
-		MakerWidget->CreateMaker(MakerArray.Num());
+		MakerWidget->CreateContainer(MakerArray.Num());
 	}
 
 	const FSoftClassPath StatueRef(TEXT("/Game/UI/BP_StatueWidget.BP_StatueWidget_C"));
@@ -132,12 +132,12 @@ void UInventoryManager::SetMakerUI()
 
 void UInventoryManager::UpdateInventory()
 {
-	InventoryWidget->UpdateInventory(InventoryArray);
+	InventoryWidget->UpdateContainer(InventoryArray);
 }
 
 void UInventoryManager::UpdateMaker()
 {
-	MakerWidget->UpdateMaker(MakerArray);
+	MakerWidget->UpdateContainer(MakerArray);
 }
 
 void UInventoryManager::AddInventoryItem(const FItem& Item)

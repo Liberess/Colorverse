@@ -22,7 +22,8 @@ UENUM(BlueprintType)
 enum class EItemSlotLocationType : uint8
 {
 	Inventory UMETA(DisplayName = "Inventory"),
-	Maker UMETA(DisplayName = "Maker")
+	Maker UMETA(DisplayName = "Maker"),
+	Statue UMETA(DisplayName = "Statue")
 };
 
 UENUM(BlueprintType)
