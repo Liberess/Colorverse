@@ -45,11 +45,6 @@ void UInventoryManager::InitializeManager()
 	{
 		InventoryWidget = Cast<UInventoryWidget>(CreateWidget(GetWorld(), WidgetClass));
 		InventoryWidget->CreateInventory(InventoryArray.Num());
-		GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Red, TEXT("1"));
-	}
-	else
-	{
-		GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Red, TEXT("-1"));
 	}
 
 	const FSoftClassPath MakerRef(TEXT("/Game/UI/BP_MakerWidget.BP_MakerWidget_C"));
@@ -57,11 +52,13 @@ void UInventoryManager::InitializeManager()
 	{
 		MakerWidget = Cast<UMakerWidget>(CreateWidget(GetWorld(), WidgetClass));
 		MakerWidget->CreateMaker(MakerArray.Num());
-		GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Red, TEXT("2"));
 	}
-	else
+
+	const FSoftClassPath StatueRef(TEXT("/Game/UI/BP_StatueWidget.BP_StatueWidget_C"));
+	if(UClass* WidgetClass = StatueRef.TryLoadClass<UStatueWidget>())
 	{
-		GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Red, TEXT("-2"));
+		StatueWidget = Cast<UStatueWidget>(CreateWidget(GetWorld(), WidgetClass));
+		//StatueWidget->CreateMaker(MakerArray.Num());
 	}
 
 	const FSoftClassPath HUDRef(TEXT("/Game/UI/BP_HUD.BP_HUD_C"));

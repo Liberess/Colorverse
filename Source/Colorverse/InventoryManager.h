@@ -5,6 +5,7 @@
 #include "IItem.h"
 #include "InventoryWidget.h"
 #include "MakerWidget.h"
+#include "StatueWidget.h"
 #include "Subsystems/WorldSubsystem.h"
 #include "InventoryManager.generated.h"
 
@@ -21,6 +22,9 @@ private:
 
 	UPROPERTY(BlueprintReadWrite, meta=(AllowPrivateAccess))
 	UMakerWidget* MakerWidget;
+
+	UPROPERTY(BlueprintReadWrite, meta=(AllowPrivateAccess))
+	UStatueWidget* StatueWidget;
 	
 	UPROPERTY(BlueprintReadWrite, meta=(AllowPrivateAccess))
 	UHUDWidget* HUDWidget;
