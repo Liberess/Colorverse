@@ -4,6 +4,7 @@
 #include "HUDWidget.h"
 #include "IItem.h"
 #include "InventoryWidget.h"
+#include "MakerWidget.h"
 #include "Subsystems/WorldSubsystem.h"
 #include "InventoryManager.generated.h"
 
@@ -17,12 +18,18 @@ private:
 	
 	UPROPERTY(BlueprintReadWrite, meta=(AllowPrivateAccess))
 	UInventoryWidget* InventoryWidget;
+
+	UPROPERTY(BlueprintReadWrite, meta=(AllowPrivateAccess))
+	UMakerWidget* MakerWidget;
 	
 	UPROPERTY(BlueprintReadWrite, meta=(AllowPrivateAccess))
 	UHUDWidget* HUDWidget;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta=(AllowPrivateAccess))
-	bool bIsInventoryOpen;
+	bool bIsInventoryOpen = false;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta=(AllowPrivateAccess))
+	bool bIsMakerOpen = false;
 
 	bool GetInventoryItemByName(const FText& Name, int& Index);
 
@@ -46,11 +53,18 @@ public:
 	
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 	TArray<float> PaintAmountArray;
-	
+
+	UFUNCTION()
 	void SetInventoryUI();
+	
+	UFUNCTION()
+	void SetMakerUI();
+	
+	UFUNCTION(BlueprintCallable)
+	void UpdateInventory();
 
 	UFUNCTION(BlueprintCallable)
-	void UpdateInventory(bool IsMaker);
+	void UpdateMaker();
 
 	UFUNCTION(BlueprintCallable, Category=Inventory)
 	void AddInventoryItem(const FItem& Item);

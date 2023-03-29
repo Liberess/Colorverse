@@ -12,49 +12,33 @@ UInventoryWidget::UInventoryWidget(const FObjectInitializer& ObjectInitializer)
 		EmptyImg = EmptyImgObj.Object;
 }
 
-void UInventoryWidget::CreateInventory(int Slots, bool IsMaker)
+void UInventoryWidget::CreateInventory(int Slots)
 {
 	//ItemGridPanel = Cast<UGridPanel>(GetWidgetFromName(TEXT("ItemGridPanel")));
 	//MakerGridPanel = Cast<UGridPanel>(GetWidgetFromName(TEXT("MakerGridPanel")));
 
-	if(IsMaker)
+	const FSoftClassPath WidgetBPClassRef(TEXT("/Game/UI/BP_ItemSlot.BP_ItemSlot_C"));
+	for(int i = 0; i < Slots - 1; i++)
 	{
-		for(int i = 0; i < MakerGridPanel->GetChildrenCount(); i++)
+		if(UClass* WidgetClass = WidgetBPClassRef.TryLoadClass<UItemSlotWidget>())
 		{
-			if(UItemSlotWidget* Widget = Cast<UItemSlotWidget>(MakerGridPanel->GetChildAt(i)))
-			{
-				Widget->bIsMaker = IsMaker;
-				Widget->Index = i;
-			}
-		}
-	}
-	else
-	{
-		const FSoftClassPath WidgetBPClassRef(TEXT("/Game/UI/BP_ItemSlot.BP_ItemSlot_C"));
-		for(int i = 0; i < Slots - 1; i++)
-		{
-			if(UClass* WidgetClass = WidgetBPClassRef.TryLoadClass<UItemSlotWidget>())
-			{
-				UItemSlotWidget* Widget = Cast<UItemSlotWidget>(CreateWidget(GetWorld(), WidgetClass));
-				Widget->bIsMaker = IsMaker;
-				Widget->Index = i;
-				int Row = i / GridColumnAmount;
-				if(Row == 0)
-					InventoryGridPanel->AddChildToUniformGrid(Widget, Row, i);
-				else
-					InventoryGridPanel->AddChildToUniformGrid(Widget, Row, i - (Row * GridColumnAmount));
-			}
+			UItemSlotWidget* Widget = Cast<UItemSlotWidget>(CreateWidget(GetWorld(), WidgetClass));
+			Widget->bIsMaker = false;
+			Widget->Index = i;
+			int Row = i / GridColumnAmount;
+			if(Row == 0)
+				InventoryGridPanel->AddChildToUniformGrid(Widget, Row, i);
+			else
+				InventoryGridPanel->AddChildToUniformGrid(Widget, Row, i - (Row * GridColumnAmount));
 		}
 	}
 }
 
-void UInventoryWidget::UpdateInventory(TArray<FItem> Inventory, bool IsMaker)
+void UInventoryWidget::UpdateInventory(TArray<FItem> Inventory)
 {
-	const UUniformGridPanel* CurrentGrid = IsMaker ? MakerGridPanel : InventoryGridPanel;
-
-	for (int i = 0; i < CurrentGrid->GetChildrenCount(); i++)
+	for (int i = 0; i < InventoryGridPanel->GetChildrenCount(); i++)
 	{
-		if (UItemSlotWidget* ItemSlot = Cast<UItemSlotWidget>(CurrentGrid->GetChildAt(i)))
+		if (UItemSlotWidget* ItemSlot = Cast<UItemSlotWidget>(InventoryGridPanel->GetChildAt(i)))
 		{
 			ItemSlot->Index = i;
 			const FItem& Item = i < Inventory.Num() ? Inventory[i] : FItem();
@@ -158,8 +142,8 @@ void UInventoryWidget::SetItemSlotArrays()
 		else
 		{
 			MoveItem(InvenMgr->MakerArray, InvenMgr->InventoryArray, true);
-			InvenMgr->UpdateInventory(true);
-			InvenMgr->UpdateInventory(false);
+			InvenMgr->UpdateInventory();
+			InvenMgr->UpdateMaker();
 		}
 	}
 	else
@@ -168,13 +152,13 @@ void UInventoryWidget::SetItemSlotArrays()
 		{
 			MoveItem(InvenMgr->InventoryArray,InvenMgr->MakerArray, true);
 			
-			InvenMgr->UpdateInventory(true);
-			InvenMgr->UpdateInventory(false);
+			InvenMgr->UpdateInventory();
+			InvenMgr->UpdateMaker();
 		}
 		else
 		{
 			MoveItem(InvenMgr->InventoryArray, InvenMgr->InventoryArray, false);
-			InvenMgr->UpdateInventory(false);
+			InvenMgr->UpdateInventory();
 		}
 	}
 }

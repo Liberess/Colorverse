@@ -3,6 +3,7 @@
 #include "CoreMinimal.h"
 #include "IItem.h"
 #include "Blueprint/UserWidget.h"
+#include "Components/UniformGridPanel.h"
 #include "MakerWidget.generated.h"
 
 UCLASS()
@@ -13,13 +14,13 @@ class COLORVERSE_API UMakerWidget : public UUserWidget
 public:
 	UMakerWidget(const FObjectInitializer& ObjectInitializer);
 	
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=Inventory)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=Maker)
 	int GridColumnAmount = 4;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=Inventory)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=Maker)
 	UTexture2D* EmptyImg;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Inventory, meta=(BindWidget))
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Maker, meta=(BindWidget))
 	UUniformGridPanel* MakerGridPanel;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Transient, meta = (BindWidgetAnim))
@@ -29,7 +30,7 @@ public:
 	UWidgetAnimation* MakerHideAnim;
 
 	UFUNCTION(BlueprintCallable, Category=Inventory)
-	void CreateInventory(int Slots);
+	void CreateMaker(int Slots);
 	
 	UFUNCTION(BlueprintCallable, Category=Inventory)
 	void UpdateMaker(TArray<FItem> Maker);

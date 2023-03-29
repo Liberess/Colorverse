@@ -3,7 +3,6 @@
 #include "CoreMinimal.h"
 #include "IItem.h"
 #include "Blueprint/UserWidget.h"
-#include "Components/GridPanel.h"
 #include "Components/UniformGridPanel.h"
 #include "InventoryWidget.generated.h"
 
@@ -23,21 +22,15 @@ public:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Inventory, meta=(BindWidget))
 	UUniformGridPanel* InventoryGridPanel;
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Inventory, meta=(BindWidget))
-	UUniformGridPanel* MakerGridPanel;
-
+	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Transient, meta = (BindWidgetAnim))
 	UWidgetAnimation* InventoryShowAnim;
-	
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Transient, meta = (BindWidgetAnim))
-	UWidgetAnimation* MakerShowAnim;
 
 	UFUNCTION(BlueprintCallable, Category=Inventory)
-	void CreateInventory(int Slots, bool IsMaker);
+	void CreateInventory(int Slots);
 	
 	UFUNCTION(BlueprintCallable, Category=Inventory)
-	void UpdateInventory(TArray<FItem> Inventory, bool IsMaker);
+	void UpdateInventory(TArray<FItem> Inventory);
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category=Inventory)
 	int SelectItemIndex = 0;

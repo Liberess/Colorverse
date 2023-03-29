@@ -44,8 +44,24 @@ void UInventoryManager::InitializeManager()
 	if(UClass* WidgetClass = InventoryRef.TryLoadClass<UInventoryWidget>())
 	{
 		InventoryWidget = Cast<UInventoryWidget>(CreateWidget(GetWorld(), WidgetClass));
-		InventoryWidget->CreateInventory(InventoryArray.Num(), false);
-		InventoryWidget->CreateInventory(MakerArray.Num(), true);
+		InventoryWidget->CreateInventory(InventoryArray.Num());
+		GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Red, TEXT("1"));
+	}
+	else
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Red, TEXT("-1"));
+	}
+
+	const FSoftClassPath MakerRef(TEXT("/Game/UI/BP_MakerWidget.BP_MakerWidget_C"));
+	if(UClass* WidgetClass = MakerRef.TryLoadClass<UMakerWidget>())
+	{
+		MakerWidget = Cast<UMakerWidget>(CreateWidget(GetWorld(), WidgetClass));
+		MakerWidget->CreateMaker(MakerArray.Num());
+		GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Red, TEXT("2"));
+	}
+	else
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Red, TEXT("-2"));
 	}
 
 	const FSoftClassPath HUDRef(TEXT("/Game/UI/BP_HUD.BP_HUD_C"));
@@ -59,7 +75,8 @@ void UInventoryManager::InitializeManager()
 
 void UInventoryManager::SetInventoryUI()
 {
-	check(InventoryWidget);
+	if(!IsValid(InventoryWidget))
+		return;;
 	
 	bIsInventoryOpen = !bIsInventoryOpen;
 
@@ -74,7 +91,8 @@ void UInventoryManager::SetInventoryUI()
 		PlayerController->SetShowMouseCursor(true);
 		InventoryWidget->AddToViewport();
 		InventoryWidget->PlayAnimation(InventoryWidget->InventoryShowAnim);
-		UpdateInventory(false);
+		UpdateInventory();
+		UpdateMaker();
 	}
 	else
 	{
@@ -85,12 +103,44 @@ void UInventoryManager::SetInventoryUI()
 	}
 }
 
-void UInventoryManager::UpdateInventory(bool IsMaker)
+void UInventoryManager::SetMakerUI()
 {
-	if(IsMaker)
-		InventoryWidget->UpdateInventory(MakerArray, IsMaker);
+	if(!IsValid(MakerWidget))
+		return;;
+	
+	bIsMakerOpen = !bIsMakerOpen;
+
+	APlayerController* PlayerController = UGameplayStatics::GetPlayerController(GetWorld(), 0);
+	if(bIsMakerOpen)
+	{
+		FInputModeGameAndUI InputModeGameAndUI;
+		InputModeGameAndUI.SetWidgetToFocus(MakerWidget->TakeWidget());
+		InputModeGameAndUI.SetLockMouseToViewportBehavior(EMouseLockMode::DoNotLock);
+		InputModeGameAndUI.SetHideCursorDuringCapture(true);
+		PlayerController->SetInputMode(InputModeGameAndUI);
+		PlayerController->SetShowMouseCursor(true);
+		MakerWidget->AddToViewport();
+		MakerWidget->PlayAnimation(MakerWidget->MakerShowAnim);
+		UpdateInventory();
+		UpdateMaker();
+	}
 	else
-		InventoryWidget->UpdateInventory(InventoryArray, IsMaker);
+	{
+		const FInputModeGameOnly InputModeGameOnly;
+		PlayerController->SetInputMode(InputModeGameOnly);
+		PlayerController->SetShowMouseCursor(false);
+		MakerWidget->RemoveFromParent();
+	}
+}
+
+void UInventoryManager::UpdateInventory()
+{
+	InventoryWidget->UpdateInventory(InventoryArray);
+}
+
+void UInventoryManager::UpdateMaker()
+{
+	MakerWidget->UpdateMaker(MakerArray);
 }
 
 void UInventoryManager::AddInventoryItem(const FItem& Item)
@@ -113,7 +163,7 @@ void UInventoryManager::AddInventoryItem(const FItem& Item)
 		}
 	}
 	
-	UpdateInventory(false);
+	UpdateInventory();
 }
 
 void UInventoryManager::UseInventoryItem(FItem Item)
@@ -129,7 +179,7 @@ void UInventoryManager::UseInventoryItem(FItem Item)
 			InventoryArray[Index] = FItem();
 		}
 
-		UpdateInventory(false);
+		UpdateInventory();
 	}
 }
 
@@ -178,7 +228,7 @@ void UInventoryManager::CombineItems()
 			const int ColorNum = static_cast<int>(CombineRule->CombineColor);
 			PaintAmountArray[ColorNum] += GetCombinePaintAmount;
 			HUDWidget->SetPaintBarPercent(ColorNum, PaintAmountArray[ColorNum]);
-			UpdateInventory(true);
+			UpdateMaker();
 		}
 	}
 	catch (...)

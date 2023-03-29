@@ -11,7 +11,7 @@ UMakerWidget::UMakerWidget(const FObjectInitializer& ObjectInitializer)
 		EmptyImg = EmptyImgObj.Object;
 }
 
-void UMakerWidget::CreateInventory(int Slots)
+void UMakerWidget::CreateMaker(int Slots)
 {
 	for(int i = 0; i < MakerGridPanel->GetChildrenCount(); i++)
 	{
@@ -131,8 +131,8 @@ void UMakerWidget::SetItemSlotArrays()
 		else
 		{
 			MoveItem(InvenMgr->MakerArray, InvenMgr->InventoryArray, true);
-			InvenMgr->UpdateInventory(true);
-			InvenMgr->UpdateInventory(false);
+			InvenMgr->UpdateInventory();
+			InvenMgr->UpdateMaker();
 		}
 	}
 	else
@@ -141,13 +141,13 @@ void UMakerWidget::SetItemSlotArrays()
 		{
 			MoveItem(InvenMgr->InventoryArray,InvenMgr->MakerArray, true);
 			
-			InvenMgr->UpdateInventory(true);
-			InvenMgr->UpdateInventory(false);
+			InvenMgr->UpdateInventory();
+			InvenMgr->UpdateMaker();
 		}
 		else
 		{
 			MoveItem(InvenMgr->InventoryArray, InvenMgr->InventoryArray, false);
-			InvenMgr->UpdateInventory(false);
+			InvenMgr->UpdateInventory();
 		}
 	}
 }

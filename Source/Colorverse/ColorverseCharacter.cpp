@@ -350,7 +350,7 @@ void AColorverseCharacter::ChangeEquipPaint_Implementation(ECombineColors Combin
 
 void AColorverseCharacter::ControlMaker_Implementation()
 {
-	InvenMgr->SetInventoryUI();
+	InvenMgr->SetMakerUI();
 }
 
 void AColorverseCharacter::Interact_Implementation()
