@@ -27,7 +27,7 @@ AColorverseCharacter::AColorverseCharacter()
 	GetCharacterMovement()->RotationRate = FRotator(0.0f, 540.0f, 0.0f);
 	GetCharacterMovement()->JumpZVelocity = 600.f;
 	GetCharacterMovement()->AirControl = 0.2f;
-
+	
 	CameraBoom = CreateDefaultSubobject<USpringArmComponent>(TEXT("CameraBoom"));
 	CameraBoom->SetupAttachment(RootComponent);
 	CameraBoom->TargetArmLength = 300.0f;
@@ -38,7 +38,6 @@ AColorverseCharacter::AColorverseCharacter()
 	FollowCamera->bUsePawnControlRotation = false;
 
 	CombatSystem = CreateDefaultSubobject<UCombatSystem>(TEXT("CombatSystem"));
-
 	LivingEntity = CreateDefaultSubobject<ULivingEntity>(TEXT("LivingEntity"));
 }
 

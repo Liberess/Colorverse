@@ -29,6 +29,9 @@ public:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Transient, meta = (BindWidgetAnim))
 	UWidgetAnimation* InventoryShowAnim;
+	
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Transient, meta = (BindWidgetAnim))
+	UWidgetAnimation* MakerShowAnim;
 
 	UFUNCTION(BlueprintCallable, Category=Inventory)
 	void CreateInventory(int Slots, bool IsMaker);

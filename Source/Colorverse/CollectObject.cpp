@@ -6,9 +6,6 @@ ACollectObject::ACollectObject()
 {
 	PrimaryActorTick.bCanEverTick = true;
 
-	OnActorBeginOverlap.AddDynamic(this, &AInteractObject::OnOverlapBegin);
-	OnActorEndOverlap.AddDynamic(this, &AInteractObject::OnOverlapEnd);
-
 	ItemMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("ItemMesh"));
 	static ConstructorHelpers::FObjectFinder<UStaticMesh> _ItemMesh(
 		TEXT("StaticMesh'/Engine/BasicShapes/Sphere.Sphere'"));

@@ -27,9 +27,6 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=Effect)
 	APostProcessVolume* PostVolume;
 
-	UPROPERTY(VisibleAnywhere)
-	UBoxComponent* BoxCol;
-
 	UFUNCTION(BlueprintCallable)
 	void SetEnabledPostProcess(bool Active);
 
