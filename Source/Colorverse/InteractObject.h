@@ -13,6 +13,9 @@ class COLORVERSE_API AInteractObject : public AActor, public IIInteractable
 protected:
 	virtual void BeginPlay() override;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+	USceneComponent* DefaultRoot = nullptr;
+
 	UPROPERTY(EditAnywhere,
 		BlueprintGetter=GetInteractable,
 		BlueprintSetter=SetInteractable,

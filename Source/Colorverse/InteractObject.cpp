@@ -6,6 +6,9 @@
 AInteractObject::AInteractObject()
 {
 	PrimaryActorTick.bCanEverTick = true;
+	
+	DefaultRoot = CreateDefaultSubobject<USceneComponent>(TEXT("DefaultRoot"));
+	SetRootComponent(DefaultRoot);
 
 	OnActorBeginOverlap.AddDynamic(this, &AInteractObject::OnOverlapBegin);
 	OnActorEndOverlap.AddDynamic(this, &AInteractObject::OnOverlapEnd);
