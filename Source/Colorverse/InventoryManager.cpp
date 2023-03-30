@@ -70,16 +70,32 @@ void UInventoryManager::InitializeManager()
 	}
 }
 
-void UInventoryManager::SetInventoryUI()
+void UInventoryManager::SetInventoryUI(bool IsActive, bool IsFlip)
 {
 	if(!IsValid(InventoryWidget))
 		return;;
-	
-	bIsInventoryOpen = !bIsInventoryOpen;
 
+	if(IsFlip)
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Cyan, TEXT("flip"));
+		bIsInventoryOpen = !bIsInventoryOpen;
+	}
+	else
+	{
+		if(bIsInventoryOpen && bIsInventoryOpen == IsActive)
+		{
+			GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Cyan, TEXT("same"));
+			return;
+		}
+
+		GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Cyan, TEXT("another"));
+		bIsInventoryOpen = IsActive;
+	}
+	
 	APlayerController* PlayerController = UGameplayStatics::GetPlayerController(GetWorld(), 0);
 	if(bIsInventoryOpen)
 	{
+		GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Cyan, TEXT("open"));
 		FInputModeGameAndUI InputModeGameAndUI;
 		InputModeGameAndUI.SetWidgetToFocus(InventoryWidget->TakeWidget());
 		InputModeGameAndUI.SetLockMouseToViewportBehavior(EMouseLockMode::DoNotLock);
@@ -93,6 +109,7 @@ void UInventoryManager::SetInventoryUI()
 	}
 	else
 	{
+		GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Cyan, TEXT("close"));
 		const FInputModeGameOnly InputModeGameOnly;
 		PlayerController->SetInputMode(InputModeGameOnly);
 		PlayerController->SetShowMouseCursor(false);

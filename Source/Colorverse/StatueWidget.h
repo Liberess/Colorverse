@@ -2,6 +2,7 @@
 
 #include "CoreMinimal.h"
 #include "ContainerWidget.h"
+#include "Components/UniformGridPanel.h"
 #include "StatueWidget.generated.h"
 
 UCLASS(BlueprintType)

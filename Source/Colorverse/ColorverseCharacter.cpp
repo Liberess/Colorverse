@@ -1,5 +1,6 @@
 #include "ColorverseCharacter.h"
 #include "HeadMountedDisplayFunctionLibrary.h"
+#include "Statue.h"
 #include "TimerManager.h"
 #include "Camera/CameraComponent.h"
 #include "Components/CapsuleComponent.h"
@@ -331,6 +332,12 @@ void AColorverseCharacter::OnOverlapEnd(class UPrimitiveComponent* OverlappedCom
 	{
 		if (IsValid(InteractObject) && InteractObject == OtherActor)
 		{
+			if(IsValid(Cast<AStatue>(InteractObject)))
+			{
+				Print(1.0f, TEXT("!!"));				
+				InvenMgr->SetInventoryUI(false);
+			}
+			
 			InteractObject = nullptr;
 			bIsInteract = false;
 
@@ -348,6 +355,11 @@ void AColorverseCharacter::ChangeEquipPaint_Implementation(ECombineColors Combin
 	CurrentPaintColor = CombineColor;
 }
 
+void AColorverseCharacter::ControlInventory_Implementation()
+{
+	InvenMgr->SetInventoryUI(true, true);
+}
+
 void AColorverseCharacter::ControlMaker_Implementation()
 {
 	InvenMgr->SetMakerUI();
@@ -360,9 +372,4 @@ void AColorverseCharacter::Interact_Implementation()
 
 	InteractObject->OnInteract();
 	//Print(1.0f, TEXT("Interact"));
-}
-
-void AColorverseCharacter::ControlInventory_Implementation()
-{
-	InvenMgr->SetInventoryUI();
 }

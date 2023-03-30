@@ -66,5 +66,5 @@ void AInteractObject::Interact_Implementation()
 
 void AInteractObject::OnExit()
 {
-	//Print(1.0f, TEXT("InteractObject::OnExit"));
+	Print(1.0f, TEXT("InteractObject::OnExit"));
 }
