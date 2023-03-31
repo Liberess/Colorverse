@@ -21,4 +21,7 @@ public:
 	virtual void OnEnter() override;
 	virtual void OnInteract() override;
 	virtual void OnExit() override;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	bool bIsOpenInventoryByStatue;
 };

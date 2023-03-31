@@ -13,6 +13,7 @@ void UStatueWidget::CreateContainer(int Slots)
 	{
 		if(UItemSlotWidget* Widget = Cast<UItemSlotWidget>(UnlockGridPanel->GetChildAt(i)))
 		{
+			GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Yellow, TEXT("1"));
 			Widget->bIsMaker = true;
 			Widget->Index = i;
 		}
@@ -30,6 +31,20 @@ void UStatueWidget::UpdateContainer(TArray<FItem> Items)
 			ItemSlot->UpdateItemSlot(Item);
 			ItemSlot->ThumbnailBorder->SetBrushFromTexture(Item.bIsValid ? Item.IconImg : EmptyImg);
 		}
+	}
+}
+
+void UStatueWidget::SetActiveCanvasPanel(bool IsUnlockPanel)
+{
+	if(IsUnlockPanel)
+	{
+		UnlockCanvasPanel->SetVisibility(ESlateVisibility::Visible);
+		RecoveryCanvasPanel->SetVisibility(ESlateVisibility::Hidden);
+	}
+	else
+	{
+		UnlockCanvasPanel->SetVisibility(ESlateVisibility::Hidden);
+		RecoveryCanvasPanel->SetVisibility(ESlateVisibility::Visible);
 	}
 }
 

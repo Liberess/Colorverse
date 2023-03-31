@@ -39,6 +39,8 @@ public:
 	
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category=Container)
 	bool DropArrayMaker;
+
+	
 	
 	UFUNCTION(BlueprintCallable, Category=Container)
 	virtual void MoveItem(TArray<FItem>& SelectAry, TArray<FItem>& DropAry, bool IsMoveBetween);

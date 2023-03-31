@@ -38,6 +38,9 @@ void UInventoryManager::InitializeManager()
 	for(int i = 0; i < 2; i++)
 		MakerArray.Add(FItem());
 
+	for(int i = 0; i < 1; i++)
+		StatueArray.Add(FItem());
+
 	PaintAmountArray = { 0.0f, 0.0f, 0.0f };
 
 	const FSoftClassPath InventoryRef(TEXT("/Game/UI/BP_InventoryWidget.BP_InventoryWidget_C"));
@@ -58,7 +61,7 @@ void UInventoryManager::InitializeManager()
 	if(UClass* WidgetClass = StatueRef.TryLoadClass<UStatueWidget>())
 	{
 		StatueWidget = Cast<UStatueWidget>(CreateWidget(GetWorld(), WidgetClass));
-		//StatueWidget->CreateMaker(MakerArray.Num());
+		StatueWidget->CreateContainer(StatueArray.Num());
 	}
 
 	const FSoftClassPath HUDRef(TEXT("/Game/UI/BP_HUD.BP_HUD_C"));
@@ -77,25 +80,19 @@ void UInventoryManager::SetInventoryUI(bool IsActive, bool IsFlip)
 
 	if(IsFlip)
 	{
-		GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Cyan, TEXT("flip"));
 		bIsInventoryOpen = !bIsInventoryOpen;
 	}
 	else
 	{
 		if(bIsInventoryOpen && bIsInventoryOpen == IsActive)
-		{
-			GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Cyan, TEXT("same"));
 			return;
-		}
 
-		GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Cyan, TEXT("another"));
 		bIsInventoryOpen = IsActive;
 	}
 	
 	APlayerController* PlayerController = UGameplayStatics::GetPlayerController(GetWorld(), 0);
 	if(bIsInventoryOpen)
 	{
-		GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Cyan, TEXT("open"));
 		FInputModeGameAndUI InputModeGameAndUI;
 		InputModeGameAndUI.SetWidgetToFocus(InventoryWidget->TakeWidget());
 		InputModeGameAndUI.SetLockMouseToViewportBehavior(EMouseLockMode::DoNotLock);
@@ -105,11 +102,9 @@ void UInventoryManager::SetInventoryUI(bool IsActive, bool IsFlip)
 		InventoryWidget->AddToViewport();
 		InventoryWidget->PlayAnimation(InventoryWidget->InventoryShowAnim);
 		UpdateInventory();
-		UpdateMaker();
 	}
 	else
 	{
-		GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Cyan, TEXT("close"));
 		const FInputModeGameOnly InputModeGameOnly;
 		PlayerController->SetInputMode(InputModeGameOnly);
 		PlayerController->SetShowMouseCursor(false);
@@ -117,12 +112,22 @@ void UInventoryManager::SetInventoryUI(bool IsActive, bool IsFlip)
 	}
 }
 
-void UInventoryManager::SetMakerUI()
+void UInventoryManager::SetMakerUI(bool IsActive, bool IsFlip)
 {
 	if(!IsValid(MakerWidget))
 		return;;
-	
-	bIsMakerOpen = !bIsMakerOpen;
+
+	if(IsFlip)
+	{
+		bIsMakerOpen = !bIsMakerOpen;
+	}
+	else
+	{
+		if(bIsMakerOpen && bIsMakerOpen == IsActive)
+			return;
+
+		bIsMakerOpen = IsActive;
+	}
 
 	APlayerController* PlayerController = UGameplayStatics::GetPlayerController(GetWorld(), 0);
 	if(bIsMakerOpen)
@@ -135,7 +140,6 @@ void UInventoryManager::SetMakerUI()
 		PlayerController->SetShowMouseCursor(true);
 		MakerWidget->AddToViewport();
 		MakerWidget->PlayAnimation(MakerWidget->MakerShowAnim);
-		UpdateInventory();
 		UpdateMaker();
 	}
 	else
@@ -147,6 +151,36 @@ void UInventoryManager::SetMakerUI()
 	}
 }
 
+void UInventoryManager::SetStatueUI(bool IsActive, bool IsUnlockPanel)
+{
+	if(!IsValid(StatueWidget))
+		return;
+
+	GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Green, FString::Printf(TEXT("%d"), IsUnlockPanel));
+
+	APlayerController* PlayerController = UGameplayStatics::GetPlayerController(GetWorld(), 0);
+	if(IsActive)
+	{
+		FInputModeGameAndUI InputModeGameAndUI;
+		InputModeGameAndUI.SetWidgetToFocus(StatueWidget->TakeWidget());
+		InputModeGameAndUI.SetLockMouseToViewportBehavior(EMouseLockMode::DoNotLock);
+		InputModeGameAndUI.SetHideCursorDuringCapture(true);
+		PlayerController->SetInputMode(InputModeGameAndUI);
+		PlayerController->SetShowMouseCursor(true);
+		StatueWidget->AddToViewport();
+		StatueWidget->SetActiveCanvasPanel(IsUnlockPanel);
+		//StatueWidget->PlayAnimation(StatueWidget->MakerShowAnim);
+		UpdateStatue();
+	}
+	else
+	{
+		const FInputModeGameOnly InputModeGameOnly;
+		PlayerController->SetInputMode(InputModeGameOnly);
+		PlayerController->SetShowMouseCursor(false);
+		StatueWidget->RemoveFromParent();
+	}
+}
+
 void UInventoryManager::UpdateInventory()
 {
 	InventoryWidget->UpdateContainer(InventoryArray);
@@ -155,6 +189,11 @@ void UInventoryManager::UpdateInventory()
 void UInventoryManager::UpdateMaker()
 {
 	MakerWidget->UpdateContainer(MakerArray);
+}
+
+void UInventoryManager::UpdateStatue()
+{
+	StatueWidget->UpdateContainer(StatueArray);
 }
 
 void UInventoryManager::AddInventoryItem(const FItem& Item)

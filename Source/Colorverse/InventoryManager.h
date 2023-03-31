@@ -54,21 +54,30 @@ public:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta=(AllowPrivateAccess))
 	TArray<FItem> MakerArray;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta=(AllowPrivateAccess))
+	TArray<FItem> StatueArray;
 	
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 	TArray<float> PaintAmountArray;
 
 	UFUNCTION()
-	void SetInventoryUI(bool IsFlip = false, bool IsActive = true);
+	void SetInventoryUI(bool IsActive, bool IsFlip = false);
 	
 	UFUNCTION()
-	void SetMakerUI();
+	void SetMakerUI(bool IsActive, bool IsFlip = false);
+
+	UFUNCTION()
+	void SetStatueUI(bool IsActive, bool IsUnlockPanel = true);
 	
 	UFUNCTION(BlueprintCallable)
 	void UpdateInventory();
 
 	UFUNCTION(BlueprintCallable)
 	void UpdateMaker();
+	
+	UFUNCTION(BlueprintCallable)
+	void UpdateStatue();
 
 	UFUNCTION(BlueprintCallable, Category=Inventory)
 	void AddInventoryItem(const FItem& Item);

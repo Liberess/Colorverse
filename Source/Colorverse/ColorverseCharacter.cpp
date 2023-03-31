@@ -332,10 +332,14 @@ void AColorverseCharacter::OnOverlapEnd(class UPrimitiveComponent* OverlappedCom
 	{
 		if (IsValid(InteractObject) && InteractObject == OtherActor)
 		{
-			if(IsValid(Cast<AStatue>(InteractObject)))
+		 	AStatue* Statue = Cast<AStatue>(InteractObject);
+			if(IsValid(Statue))
 			{
-				Print(1.0f, TEXT("!!"));				
-				InvenMgr->SetInventoryUI(false);
+				if(Statue->bIsOpenInventoryByStatue)
+					InvenMgr->SetInventoryUI(false);
+				InvenMgr->SetStatueUI(false);
+				
+				Statue->bIsOpenInventoryByStatue = false;
 			}
 			
 			InteractObject = nullptr;
@@ -345,6 +349,7 @@ void AColorverseCharacter::OnOverlapEnd(class UPrimitiveComponent* OverlappedCom
 			{
 				bIsWatchingInteractWidget = false;
 				InteractWidget->RemoveFromParent();
+				InteractWidget = nullptr;
 			}
 		}
 	}
@@ -362,7 +367,7 @@ void AColorverseCharacter::ControlInventory_Implementation()
 
 void AColorverseCharacter::ControlMaker_Implementation()
 {
-	InvenMgr->SetMakerUI();
+	InvenMgr->SetMakerUI(true, true);
 }
 
 void AColorverseCharacter::Interact_Implementation()
@@ -371,5 +376,13 @@ void AColorverseCharacter::Interact_Implementation()
 		return;
 
 	InteractObject->OnInteract();
+
+	if (bIsWatchingInteractWidget && InteractWidget != nullptr)
+	{
+		bIsWatchingInteractWidget = false;
+		InteractWidget->RemoveFromParent();
+		InteractWidget = nullptr;
+	}
+
 	//Print(1.0f, TEXT("Interact"));
 }
