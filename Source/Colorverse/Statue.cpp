@@ -24,8 +24,10 @@ void AStatue::OnInteract()
 
 	UInventoryManager* InvenMgr = GetWorld()->GetSubsystem<UInventoryManager>();
 	InvenMgr->SetInventoryUI(true);
+	InvenMgr->SetMakerUI(false);
 	InvenMgr->SetStatueUI(true, !bIsUnlock);
-
+	InvenMgr->CurrentStatue = this;
+	InvenMgr->UpdateStatueUI();
 	bIsOpenInventoryByStatue = true;
 }
 

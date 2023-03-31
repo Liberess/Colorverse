@@ -40,7 +40,11 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category=Container)
 	bool DropArrayMaker;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category=Container)
+	EItemSlotLocationType SelectLocation;
 	
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category=Container)
+	EItemSlotLocationType DropLocation;
 	
 	UFUNCTION(BlueprintCallable, Category=Container)
 	virtual void MoveItem(TArray<FItem>& SelectAry, TArray<FItem>& DropAry, bool IsMoveBetween);

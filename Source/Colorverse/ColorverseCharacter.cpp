@@ -340,6 +340,7 @@ void AColorverseCharacter::OnOverlapEnd(class UPrimitiveComponent* OverlappedCom
 				InvenMgr->SetStatueUI(false);
 				
 				Statue->bIsOpenInventoryByStatue = false;
+				InvenMgr->CurrentStatue = nullptr;
 			}
 			
 			InteractObject = nullptr;

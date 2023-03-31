@@ -38,6 +38,9 @@ public:
 	bool bIsMaker;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+	EItemSlotLocationType ItemLocation;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 	FItem ItemData;
 
 	UPROPERTY(BlueprintReadOnly)

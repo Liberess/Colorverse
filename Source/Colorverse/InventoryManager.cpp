@@ -114,7 +114,7 @@ void UInventoryManager::SetInventoryUI(bool IsActive, bool IsFlip)
 
 void UInventoryManager::SetMakerUI(bool IsActive, bool IsFlip)
 {
-	if(!IsValid(MakerWidget))
+	if(!IsValid(MakerWidget) || IsActive && bIsStatueOpen)
 		return;;
 
 	if(IsFlip)
@@ -144,6 +144,18 @@ void UInventoryManager::SetMakerUI(bool IsActive, bool IsFlip)
 	}
 	else
 	{
+		for(int i = 0; i < MakerArray.Num(); i++)
+		{
+			if(MakerArray[i].bIsValid)
+			{
+				AddInventoryItem(MakerArray[i]);
+				MakerArray[i] = FItem();
+			}
+		}
+
+		UpdateMaker();
+		UpdateInventory();
+		
 		const FInputModeGameOnly InputModeGameOnly;
 		PlayerController->SetInputMode(InputModeGameOnly);
 		PlayerController->SetShowMouseCursor(false);
@@ -156,8 +168,8 @@ void UInventoryManager::SetStatueUI(bool IsActive, bool IsUnlockPanel)
 	if(!IsValid(StatueWidget))
 		return;
 
-	GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Green, FString::Printf(TEXT("%d"), IsUnlockPanel));
-
+	bIsStatueOpen = IsActive;
+	
 	APlayerController* PlayerController = UGameplayStatics::GetPlayerController(GetWorld(), 0);
 	if(IsActive)
 	{
@@ -174,6 +186,18 @@ void UInventoryManager::SetStatueUI(bool IsActive, bool IsUnlockPanel)
 	}
 	else
 	{
+		for(int i = 0; i < StatueArray.Num(); i++)
+		{
+			if(StatueArray[i].bIsValid)
+			{
+				AddInventoryItem(StatueArray[i]);
+				StatueArray[i] = FItem();
+			}
+		}
+
+		UpdateStatue();
+		UpdateInventory();
+		
 		const FInputModeGameOnly InputModeGameOnly;
 		PlayerController->SetInputMode(InputModeGameOnly);
 		PlayerController->SetShowMouseCursor(false);
@@ -288,4 +312,79 @@ void UInventoryManager::CombineItems()
 	{
 		
 	}
+}
+
+void UInventoryManager::SacrificeItems(ESacrificeType SacrificeType)
+{
+	const FItem& EmptyItem = FItem();
+	
+	// 제물로 바쳐진 아이템이 "해금"하는데 사용되는 것이라면
+	if(SacrificeType == ESacrificeType::Unlock)
+	{
+		for(auto& Item : StatueArray)
+		{
+			int MergeValue = Item.Amount + CurrentStatue->UnlockCount;
+			if(MergeValue >= CurrentStatue->UnlockCapacity)
+			{
+				int DecreaseAmount = CurrentStatue->UnlockCapacity - CurrentStatue->UnlockCount;
+				CurrentStatue->UnlockCount += DecreaseAmount;
+				
+				Item.Amount -= DecreaseAmount;
+				if(Item.Amount <= 0)
+					Item = EmptyItem;
+
+				if(CurrentStatue->UnlockCount >= CurrentStatue->UnlockCapacity)
+					break;
+			}
+			else
+			{
+				CurrentStatue->UnlockCount += Item.Amount;
+				Item = EmptyItem;
+			}
+		}
+
+		if(CurrentStatue->UnlockCount >= CurrentStatue->UnlockCapacity)
+		{
+			CurrentStatue->UnlockCount = CurrentStatue->UnlockCapacity;
+			StatueWidget->SetActiveCanvasPanel(false);
+		}
+	}
+	else
+	{
+		for(auto& Item : StatueArray)
+		{
+			int MergeValue = (Item.Amount * 10.0f) + CurrentStatue->RecoveryAmount;
+			if(MergeValue >= CurrentStatue->RecoveryCapacity)
+			{
+				int DecreaseAmount = CurrentStatue->RecoveryCapacity - CurrentStatue->RecoveryAmount;
+				CurrentStatue->RecoveryAmount += DecreaseAmount;
+				
+				Item.Amount -= (DecreaseAmount / 10.0f);
+				if(Item.Amount <= 0)
+					Item = EmptyItem;
+				
+				if(CurrentStatue->RecoveryAmount >= CurrentStatue->RecoveryCapacity)
+					break;
+			}
+			else
+			{
+				CurrentStatue->RecoveryAmount += Item.Amount * 10.0f;
+				Item = EmptyItem;
+			}
+		}
+
+		if(CurrentStatue->RecoveryAmount >= CurrentStatue->RecoveryCapacity)
+		{
+			CurrentStatue->RecoveryAmount = CurrentStatue->RecoveryCapacity;
+			//StatueWidget->SetActiveCanvasPanel(false);
+		}
+	}
+
+	StatueWidget->UpdateStatueUI(CurrentStatue);
+}
+
+void UInventoryManager::UpdateStatueUI()
+{
+	if(IsValid(CurrentStatue))
+		StatueWidget->UpdateStatueUI(CurrentStatue);
 }

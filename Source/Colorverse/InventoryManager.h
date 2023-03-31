@@ -35,6 +35,9 @@ private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta=(AllowPrivateAccess))
 	bool bIsMakerOpen = false;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta=(AllowPrivateAccess))
+	bool bIsStatueOpen = false;
+
 	bool GetInventoryItemByName(const FText& Name, int& Index);
 
 	UPROPERTY()
@@ -60,6 +63,9 @@ public:
 	
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 	TArray<float> PaintAmountArray;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+	AStatue* CurrentStatue;
 
 	UFUNCTION()
 	void SetInventoryUI(bool IsActive, bool IsFlip = false);
@@ -87,4 +93,10 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category=Inventory)
 	void CombineItems();
+
+	UFUNCTION(BlueprintCallable, Category=Statue)
+	void SacrificeItems(ESacrificeType SacrificeType);
+
+	UFUNCTION(BlueprintCallable, Category=Statue)
+	void UpdateStatueUI();
 };

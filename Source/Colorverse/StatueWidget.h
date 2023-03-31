@@ -2,6 +2,7 @@
 
 #include "CoreMinimal.h"
 #include "ContainerWidget.h"
+#include "Statue.h"
 #include "Components/CanvasPanel.h"
 #include "Components/ProgressBar.h"
 #include "Components/TextBlock.h"
@@ -34,9 +35,15 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Statue, meta=(BindWidget))
 	UProgressBar* RecoveryProgressBar;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Statue, meta=(BindWidget))
+	float RecoveryBarAmount;
+
 	virtual void CreateContainer(int Slots) override;
 	virtual void UpdateContainer(TArray<FItem> Items) override;
 
 	UFUNCTION()
 	void SetActiveCanvasPanel(bool IsUnlockPanel = true);
+	
+	UFUNCTION()
+	void UpdateStatueUI(const AStatue* Statue);
 };

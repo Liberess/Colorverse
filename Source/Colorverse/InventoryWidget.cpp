@@ -18,6 +18,7 @@ void UInventoryWidget::CreateContainer(int Slots)
 		{
 			UItemSlotWidget* Widget = Cast<UItemSlotWidget>(CreateWidget(GetWorld(), WidgetClass));
 			Widget->bIsMaker = false;
+			Widget->ItemLocation = EItemSlotLocationType::Inventory;
 			Widget->Index = i;
 			int Row = i / GridColumnAmount;
 			if(Row == 0)

@@ -16,6 +16,7 @@ void UMakerWidget::CreateContainer(int Slots)
 		if(UItemSlotWidget* Widget = Cast<UItemSlotWidget>(MakerGridPanel->GetChildAt(i)))
 		{
 			Widget->bIsMaker = true;
+			Widget->ItemLocation = EItemSlotLocationType::Maker;
 			Widget->Index = i;
 		}
 	}

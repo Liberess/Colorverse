@@ -14,7 +14,7 @@ void UStatueWidget::CreateContainer(int Slots)
 		if(UItemSlotWidget* Widget = Cast<UItemSlotWidget>(UnlockGridPanel->GetChildAt(i)))
 		{
 			GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Yellow, TEXT("1"));
-			Widget->bIsMaker = true;
+			Widget->ItemLocation = EItemSlotLocationType::Statue;
 			Widget->Index = i;
 		}
 	}
@@ -34,6 +34,10 @@ void UStatueWidget::UpdateContainer(TArray<FItem> Items)
 	}
 }
 
+/**
+ * @brief 
+ * @param IsUnlockPanel 이 true라면 UnlockCanvasPanel을 Visible로
+ */
 void UStatueWidget::SetActiveCanvasPanel(bool IsUnlockPanel)
 {
 	if(IsUnlockPanel)
@@ -45,6 +49,20 @@ void UStatueWidget::SetActiveCanvasPanel(bool IsUnlockPanel)
 	{
 		UnlockCanvasPanel->SetVisibility(ESlateVisibility::Hidden);
 		RecoveryCanvasPanel->SetVisibility(ESlateVisibility::Visible);
+	}
+}
+
+void UStatueWidget::UpdateStatueUI(const AStatue* Statue)
+{
+	// 성소가 해금된 상태라면, 색을 되찾는 UI로 세팅
+	if(Statue->bIsUnlock)
+	{
+		RecoveryBarAmount = Statue->RecoveryAmount / Statue->RecoveryCapacity;
+	}
+	else
+	{
+		FString UnlockTxt = FString::Printf(TEXT("%d/%d"), Statue->UnlockCount, Statue->UnlockCapacity);
+		UnlockAmountTxt->SetText(FText::FromString(UnlockTxt));
 	}
 }
 

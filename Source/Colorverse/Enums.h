@@ -30,7 +30,8 @@ UENUM(BlueprintType)
 enum class EItemCombineType : uint8
 {
 	Source UMETA(DisplayName = "Source"),
-	Destination UMETA(DisplayName = "Destination")
+	Destination UMETA(DisplayName = "Destination"),
+	Sacrifice UMETA(DisplayName = "Sacrifice")
 };
 
 UENUM(BlueprintType)
@@ -39,6 +40,13 @@ enum class ECombineColors : uint8
 	Red UMETA(DisplayName = "Red"),
 	Yellow UMETA(DisplayName = "Yellow"),
 	Blue UMETA(DisplayName = "Blue")
+};
+
+UENUM(BlueprintType)
+enum class ESacrificeType : uint8
+{
+	Unlock UMETA(DisplayName = "Unlock"),
+	Recovery UMETA(DisplayName = "Recovery")
 };
 
 class COLORVERSE_API Enums
