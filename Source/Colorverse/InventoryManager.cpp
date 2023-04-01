@@ -2,6 +2,8 @@
 #include "ColorverseWorldSettings.h"
 #include "Kismet/GameplayStatics.h"
 
+#define Print(duration, text) if(GEngine) GEngine->AddOnScreenDebugMessage(-1,duration, FColor::Yellow, text);
+
 bool UInventoryManager::ShouldCreateSubsystem(UObject* Outer) const
 {
 	if (!Super::ShouldCreateSubsystem(Outer))
@@ -323,6 +325,9 @@ void UInventoryManager::SacrificeItems(ESacrificeType SacrificeType)
 	{
 		for(auto& Item : StatueArray)
 		{
+			if(!Item.bIsValid && Item.CombineType != EItemCombineType::SacrificeUnlock)
+				continue;
+			
 			int MergeValue = Item.Amount + CurrentStatue->UnlockCount;
 			if(MergeValue >= CurrentStatue->UnlockCapacity)
 			{
@@ -334,7 +339,14 @@ void UInventoryManager::SacrificeItems(ESacrificeType SacrificeType)
 					Item = EmptyItem;
 
 				if(CurrentStatue->UnlockCount >= CurrentStatue->UnlockCapacity)
+				{
+					if(Item.bIsValid)
+					{
+						AddInventoryItem(Item);
+						Item = EmptyItem;
+					}
 					break;
+				}
 			}
 			else
 			{
@@ -346,6 +358,7 @@ void UInventoryManager::SacrificeItems(ESacrificeType SacrificeType)
 		if(CurrentStatue->UnlockCount >= CurrentStatue->UnlockCapacity)
 		{
 			CurrentStatue->UnlockCount = CurrentStatue->UnlockCapacity;
+			CurrentStatue->bIsUnlockComplete = true;
 			StatueWidget->SetActiveCanvasPanel(false);
 		}
 	}
@@ -353,22 +366,32 @@ void UInventoryManager::SacrificeItems(ESacrificeType SacrificeType)
 	{
 		for(auto& Item : StatueArray)
 		{
-			int MergeValue = (Item.Amount * 10.0f) + CurrentStatue->RecoveryAmount;
+			if(!Item.bIsValid && Item.CombineType != EItemCombineType::SacrificeRecovery)
+				continue;
+			
+			int MergeValue = (Item.Amount * Item.RecoveryAmount) + CurrentStatue->RecoveryAmount;
 			if(MergeValue >= CurrentStatue->RecoveryCapacity)
 			{
 				int DecreaseAmount = CurrentStatue->RecoveryCapacity - CurrentStatue->RecoveryAmount;
 				CurrentStatue->RecoveryAmount += DecreaseAmount;
 				
-				Item.Amount -= (DecreaseAmount / 10.0f);
+				Item.Amount -= (DecreaseAmount / Item.RecoveryAmount);
 				if(Item.Amount <= 0)
 					Item = EmptyItem;
-				
+
 				if(CurrentStatue->RecoveryAmount >= CurrentStatue->RecoveryCapacity)
+				{
+					if(Item.bIsValid)
+					{
+						AddInventoryItem(Item);
+						Item = EmptyItem;
+					}
 					break;
+				}
 			}
 			else
 			{
-				CurrentStatue->RecoveryAmount += Item.Amount * 10.0f;
+				CurrentStatue->RecoveryAmount += Item.Amount * Item.RecoveryAmount;
 				Item = EmptyItem;
 			}
 		}
@@ -376,11 +399,12 @@ void UInventoryManager::SacrificeItems(ESacrificeType SacrificeType)
 		if(CurrentStatue->RecoveryAmount >= CurrentStatue->RecoveryCapacity)
 		{
 			CurrentStatue->RecoveryAmount = CurrentStatue->RecoveryCapacity;
-			//StatueWidget->SetActiveCanvasPanel(false);
+			CurrentStatue->bIsRecoveryComplete = true;
 		}
 	}
 
 	StatueWidget->UpdateStatueUI(CurrentStatue);
+	UpdateStatue();
 }
 
 void UInventoryManager::UpdateStatueUI()

@@ -12,7 +12,7 @@ struct FItem : public FTableRowBase
 	GENERATED_USTRUCT_BODY();
 	
 public:
-	FItem() : Id(-1), CombineType(EItemCombineType::Source), Amount(1), IconImg(), bIsValid(false) {};
+	FItem() : Id(-1), CombineType(EItemCombineType::Source), Amount(1), RecoveryAmount(0.0f), IconImg(), bIsValid(false) {};
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item")
 	int Id;
@@ -25,6 +25,9 @@ public:
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item")
 	int Amount;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item")
+	float RecoveryAmount;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item")
 	UTexture2D* IconImg;

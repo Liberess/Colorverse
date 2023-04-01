@@ -2,6 +2,7 @@
 
 #include "CoreMinimal.h"
 #include "ContainerWidget.h"
+#include "ItemSlotWidget.h"
 #include "Statue.h"
 #include "Components/CanvasPanel.h"
 #include "Components/ProgressBar.h"
@@ -34,9 +35,21 @@ public:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Statue, meta=(BindWidget))
 	UProgressBar* RecoveryProgressBar;
-
+	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Statue, meta=(BindWidget))
+	UProgressBar* WorldProgressBar;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Statue)
+	TArray<UItemSlotWidget*> UnlockItemSlots;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Statue)
+	TArray<UItemSlotWidget*> RecoveryItemSlots;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Statue)
 	float RecoveryBarAmount;
+	
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Statue)
+	float MaxRecoveryBarAmount;
 
 	virtual void CreateContainer(int Slots) override;
 	virtual void UpdateContainer(TArray<FItem> Items) override;

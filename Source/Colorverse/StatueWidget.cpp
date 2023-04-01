@@ -13,24 +13,39 @@ void UStatueWidget::CreateContainer(int Slots)
 	{
 		if(UItemSlotWidget* Widget = Cast<UItemSlotWidget>(UnlockGridPanel->GetChildAt(i)))
 		{
-			GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Yellow, TEXT("1"));
-			Widget->ItemLocation = EItemSlotLocationType::Statue;
+			Widget->ItemLocation = EItemSlotLocationType::StatueUnlock;
 			Widget->Index = i;
+			UnlockItemSlots.Add(Widget);
+		}
+	}
+
+	for(int i = 0; i < RecoveryGridPanel->GetChildrenCount(); i++)
+	{
+		if(UItemSlotWidget* Widget = Cast<UItemSlotWidget>(RecoveryGridPanel->GetChildAt(i)))
+		{
+			Widget->ItemLocation = EItemSlotLocationType::StatueRecovery;
+			Widget->Index = i;
+			RecoveryItemSlots.Add(Widget);
 		}
 	}
 }
 
 void UStatueWidget::UpdateContainer(TArray<FItem> Items)
 {
-	for (int i = 0; i < UnlockGridPanel->GetChildrenCount(); i++)
+	for (int i = 0; i < UnlockItemSlots.Num(); i++)
 	{
-		if (UItemSlotWidget* ItemSlot = Cast<UItemSlotWidget>(UnlockGridPanel->GetChildAt(i)))
-		{
-			ItemSlot->Index = i;
-			const FItem& Item = i < Items.Num() ? Items[i] : FItem();
-			ItemSlot->UpdateItemSlot(Item);
-			ItemSlot->ThumbnailBorder->SetBrushFromTexture(Item.bIsValid ? Item.IconImg : EmptyImg);
-		}
+		UnlockItemSlots[i]->Index = i;
+		const FItem& Item = i < Items.Num() ? Items[i] : FItem();
+		UnlockItemSlots[i]->UpdateItemSlot(Item);
+		UnlockItemSlots[i]->ThumbnailBorder->SetBrushFromTexture(Item.bIsValid ? Item.IconImg : EmptyImg);
+	}
+
+	for (int i = 0; i < RecoveryItemSlots.Num(); i++)
+	{
+		RecoveryItemSlots[i]->Index = i;
+		const FItem& Item = i < Items.Num() ? Items[i] : FItem();
+		RecoveryItemSlots[i]->UpdateItemSlot(Item);
+		RecoveryItemSlots[i]->ThumbnailBorder->SetBrushFromTexture(Item.bIsValid ? Item.IconImg : EmptyImg);
 	}
 }
 
@@ -55,9 +70,10 @@ void UStatueWidget::SetActiveCanvasPanel(bool IsUnlockPanel)
 void UStatueWidget::UpdateStatueUI(const AStatue* Statue)
 {
 	// 성소가 해금된 상태라면, 색을 되찾는 UI로 세팅
-	if(Statue->bIsUnlock)
+	if(Statue->bIsUnlockComplete)
 	{
-		RecoveryBarAmount = Statue->RecoveryAmount / Statue->RecoveryCapacity;
+		RecoveryBarAmount = Statue->RecoveryAmount;
+		MaxRecoveryBarAmount = Statue->RecoveryCapacity;
 	}
 	else
 	{

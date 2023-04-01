@@ -20,7 +20,10 @@ public:
 
 	// 성소가 해금됐는지, 안 됐는지
 	UPROPERTY()
-	bool bIsUnlock = false;
+	bool bIsUnlockComplete = false;
+	
+	UPROPERTY()
+	bool bIsRecoveryComplete = false;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta=(AllowPrivateAccess))
 	int StatueIndex = 0;

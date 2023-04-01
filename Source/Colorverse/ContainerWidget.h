@@ -35,12 +35,6 @@ public:
 	FItem DropItem;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category=Container)
-	bool SelectArrayMaker;
-	
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category=Container)
-	bool DropArrayMaker;
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category=Container)
 	EItemSlotLocationType SelectLocation;
 	
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category=Container)

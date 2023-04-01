@@ -21,7 +21,10 @@ void UContainerWidget::MoveItem(TArray<FItem>& SelectAry, TArray<FItem>& DropAry
 
 	const static FItem EmptyItem = FItem();
 
-	if(SelectLocation == EItemSlotLocationType::Statue || DropLocation == EItemSlotLocationType::Statue)
+	if(SelectLocation == EItemSlotLocationType::StatueUnlock
+		|| SelectLocation == EItemSlotLocationType::StatueRecovery
+		|| DropLocation == EItemSlotLocationType::StatueUnlock
+		|| DropLocation == EItemSlotLocationType::StatueRecovery)
 	{
 		if(IsMoveBetween)
 		{
@@ -32,21 +35,33 @@ void UContainerWidget::MoveItem(TArray<FItem>& SelectAry, TArray<FItem>& DropAry
 					DropAry[DropItemIndex] = DropItem;
 					DropAry[DropItemIndex].Amount = SelectItem.Amount + DropItem.Amount;
 					SelectAry[SelectItemIndex] = EmptyItem;
-					Print(1.0f, TEXT("10"));
 				}
-				else if(SelectItem.CombineType == DropItem.CombineType &&
-					SelectItem.CombineType == EItemCombineType::Sacrifice)
+				else if(SelectItem.CombineType == DropItem.CombineType)
 				{
 					DropAry[DropItemIndex] = SelectItem;
 					SelectAry[SelectItemIndex] = DropItem;
 					Print(1.0f, TEXT("11"));
 				}
 			}
-			else if(SelectItem.CombineType == EItemCombineType::Sacrifice) //Statue -> Inventory
-			{
+			else if(SelectItem.CombineType == EItemCombineType::SacrificeUnlock
+				&& DropLocation == EItemSlotLocationType::StatueUnlock)
+			{ //Inventory -> StateUnlock
 				DropAry[DropItemIndex] = SelectItem;
 				SelectAry[SelectItemIndex] = EmptyItem;
-				Print(1.0f, TEXT("12"));
+				Print(1.0f, TEXT("12 - 1"));
+			}
+			else if(SelectItem.CombineType == EItemCombineType::SacrificeRecovery
+				&& DropLocation == EItemSlotLocationType::StatueRecovery)
+			{ //Inventory -> StateRecovery
+				DropAry[DropItemIndex] = SelectItem;
+				SelectAry[SelectItemIndex] = EmptyItem;
+				Print(1.0f, TEXT("12 - 2"));
+			}
+			else if(DropLocation == EItemSlotLocationType::Inventory)
+			{ //Statue -> Inventory
+				DropAry[DropItemIndex] = SelectItem;
+				SelectAry[SelectItemIndex] = EmptyItem;
+				Print(1.0f, TEXT("13"));
 			}
 		}
 		else
@@ -164,7 +179,13 @@ void UContainerWidget::SetItemSlotArrays()
 			InvenMgr->UpdateInventory();
 			InvenMgr->UpdateMaker();
 		}
-		else if(DropLocation == EItemSlotLocationType::Statue)
+		else if(DropLocation == EItemSlotLocationType::StatueUnlock)
+		{
+			MoveItem(InvenMgr->InventoryArray,InvenMgr->StatueArray, true);
+			InvenMgr->UpdateInventory();
+			InvenMgr->UpdateStatue();
+		}
+		else if(DropLocation == EItemSlotLocationType::StatueRecovery)
 		{
 			MoveItem(InvenMgr->InventoryArray,InvenMgr->StatueArray, true);
 			InvenMgr->UpdateInventory();
@@ -186,14 +207,28 @@ void UContainerWidget::SetItemSlotArrays()
 		}
 		break;
 
-	case EItemSlotLocationType::Statue:
+	case EItemSlotLocationType::StatueUnlock:
 		if(DropLocation == EItemSlotLocationType::Inventory)
 		{
 			MoveItem(InvenMgr->StatueArray, InvenMgr->InventoryArray, true);
 			InvenMgr->UpdateInventory();
 			InvenMgr->UpdateStatue();
 		}
-		else if(DropLocation == EItemSlotLocationType::Statue)
+		else if(DropLocation == EItemSlotLocationType::StatueUnlock)
+		{
+			MoveItem(InvenMgr->StatueArray, InvenMgr->StatueArray, false);
+			InvenMgr->UpdateStatue();
+		}
+		break;
+		
+	case EItemSlotLocationType::StatueRecovery:
+		if(DropLocation == EItemSlotLocationType::Inventory)
+		{
+			MoveItem(InvenMgr->StatueArray, InvenMgr->InventoryArray, true);
+			InvenMgr->UpdateInventory();
+			InvenMgr->UpdateStatue();
+		}
+		else if(DropLocation == EItemSlotLocationType::StatueRecovery)
 		{
 			MoveItem(InvenMgr->StatueArray, InvenMgr->StatueArray, false);
 			InvenMgr->UpdateStatue();

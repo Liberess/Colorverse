@@ -23,7 +23,8 @@ enum class EItemSlotLocationType : uint8
 {
 	Inventory UMETA(DisplayName = "Inventory"),
 	Maker UMETA(DisplayName = "Maker"),
-	Statue UMETA(DisplayName = "Statue")
+	StatueUnlock UMETA(DisplayName = "StatueUnlock"),
+	StatueRecovery UMETA(DisplayName = "StatueRecovery")
 };
 
 UENUM(BlueprintType)
@@ -31,7 +32,8 @@ enum class EItemCombineType : uint8
 {
 	Source UMETA(DisplayName = "Source"),
 	Destination UMETA(DisplayName = "Destination"),
-	Sacrifice UMETA(DisplayName = "Sacrifice")
+	SacrificeUnlock UMETA(DisplayName = "SacrificeUnlock"),
+	SacrificeRecovery UMETA(DisplayName = "SacrificeRecovery")
 };
 
 UENUM(BlueprintType)
