@@ -14,7 +14,7 @@ public:
 	AActor* damager;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Damage Message")
-	int damageAmount;
+	float damageAmount;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Damage Message")
 	FVector hitPoint;
@@ -34,6 +34,6 @@ class COLORVERSE_API IIDamageable
 	GENERATED_BODY()
 
 public:
-	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "Damageable")
-	void ApplyDamage(FDamageMessage dmgMsg);
+	UFUNCTION(Category = "Damageable")
+	virtual void ApplyDamage(FDamageMessage dmgMsg) = 0;
 };

@@ -32,6 +32,12 @@ public:
 
 	virtual void BeginPlay() override;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Combat System")
+	TArray<AActor*> AttackHitResults;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Combat System")
+	float attackResourceValue;
+
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Camera)
 	float BaseTurnRate;
 
@@ -74,6 +80,12 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void SetDisabledRoll();
 
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
+	void HitCheck();
+
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
+	void Attacked(FDamageMessage damageMessage);
+
 	UFUNCTION()
 	void OnOverlapBegin(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 
@@ -104,9 +116,6 @@ public:
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
 	void ChangeEquipPaint(ECombineColors CombineColor);
 
-	UFUNCTION(BlueprintPure)
-	ECombineColors GetCurrentPaintColor() const { return CurrentPaintColor; };
-
 	UFUNCTION(BlueprintCallable)
 	void SetNextAttackCheck();
 
@@ -120,7 +129,7 @@ private:
 	bool bIsRunTimer;
 	FTimerHandle ToggleRunTimer;
 	
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta=(AllowPrivateAccess), Category="Living Entity")
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta=(AllowPrivateAccess), Category="Combat System")
 	bool bIsDamageable;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta=(AllowPrivateAccess), Category="Combat System")
@@ -135,9 +144,6 @@ private:
 	FTimerHandle RollTimer;
 
 	bool bIsWatchingInteractWidget;
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Paint, meta=(AllowPrivateAccess))
-	ECombineColors CurrentPaintColor;
 
 	UInventoryManager* InvenMgr;
 
@@ -165,4 +171,5 @@ public:
 	FORCEINLINE class UCameraComponent* GetFollowCamera() const { return FollowCamera; }
 	FORCEINLINE class UCombatSystem* GetCombatSystem() const { return CombatSystem; }
 	FORCEINLINE class ULivingEntity* GetLivingEntity() const { return LivingEntity; }
+	FORCEINLINE class UColorverseCharacterAnimInstance* GetColorverseAnim() const { return ColorverseAnim; }
 };

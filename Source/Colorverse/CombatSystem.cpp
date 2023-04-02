@@ -3,7 +3,7 @@
 
 #include "CombatSystem.h"
 
-UCombatSystem::UCombatSystem() : MaxCombo(3), CurrentCombo(0), bCanNextCombo(false), bIsComboInputOn(false), bIsCanAttackTrace(false)
+UCombatSystem::UCombatSystem() : ATK(10), ColorBuff(ATK / 2), ElementBuff(ATK / 2), MaxCombo(3), CurrentCombo(0), bCanNextCombo(false), bIsComboInputOn(false), bIsCanAttackTrace(false)
 {
 	PrimaryComponentTick.bCanEverTick = false;
 	bWantsInitializeComponent = true;
@@ -19,6 +19,61 @@ void UCombatSystem::BeginPlay()
 void UCombatSystem::InitializeComponent()
 {
 	Super::InitializeComponent();
+}
+
+void UCombatSystem::SetColorBuff()
+{
+	if (GetCurrentPaintColorAmount() >= 5)
+	{
+		bIsOnColor = true;
+	}
+	else
+	{
+		bIsOnColor = false;
+	}
+}
+
+void UCombatSystem::SetElementBuff(bool value)
+{
+	bIsOnElement = value;
+}
+
+float UCombatSystem::GetCurrentATK()
+{
+	float CurrnetATK = ATK;
+
+	if (bIsOnColor)
+		CurrnetATK += ColorBuff;
+
+	if (bIsOnElement)
+		CurrnetATK += ElementBuff;
+
+	GEngine->AddOnScreenDebugMessage(-1, 3.0f, FColor::Blue, FString::Printf(TEXT("damage : %d "), CurrnetATK));
+	return CurrnetATK;
+}
+
+float UCombatSystem::GetCurrentPaintColorAmount()
+{
+	UInventoryManager* temp = GetWorld()->GetSubsystem<UInventoryManager>();
+	float colorAmount = temp->PaintAmountArray[(int)CurrentPaintColor];
+	return colorAmount;
+}
+
+void UCombatSystem::SetCurrentPaintColorAmount(float value)
+{
+	UInventoryManager* temp = GetWorld()->GetSubsystem<UInventoryManager>();
+	temp->PaintAmountArray[(int)CurrentPaintColor] += value;
+
+	if (temp->PaintAmountArray[(int)CurrentPaintColor] <= 0.0f)
+	{
+		temp->PaintAmountArray[(int)CurrentPaintColor] = 0;
+	}
+	else if (temp->PaintAmountArray[(int)CurrentPaintColor] < 5.0f)
+	{
+		SetColorBuff();
+	}
+	
+	temp->GetHUDWidget()->SetPaintBarPercent((int)CurrentPaintColor, temp->PaintAmountArray[(int)CurrentPaintColor]);
 }
 
 void UCombatSystem::AttackStartComboState()

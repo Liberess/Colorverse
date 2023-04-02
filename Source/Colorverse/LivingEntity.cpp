@@ -1,23 +1,22 @@
 #include "LivingEntity.h"
 
-ULivingEntity::ULivingEntity()
+ULivingEntity::ULivingEntity() : OriginHealth(100), CurrentHealth(OriginHealth)
 {
-	PrimaryComponentTick.bCanEverTick = true;
+	PrimaryComponentTick.bCanEverTick = false;
 }
 
 void ULivingEntity::BeginPlay()
 {
 	Super::BeginPlay();
+
+	CurrentHealth = OriginHealth;
 }
 
-void ULivingEntity::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
+void ULivingEntity::ApplyDamage(FDamageMessage dmgMsg)
 {
-	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
-}
+	float temp = CurrentHealth;
 
-void ULivingEntity::ApplyDamage_Implementation(FDamageMessage dmgMsg)
-{
-	//IIDamageable::ApplyDamage_Implementation(dmgMsg);
-	
-}
+	CurrentHealth -= dmgMsg.damageAmount;
 
+	GEngine->AddOnScreenDebugMessage(-1, 3.0f, FColor::Blue, FString::Printf(TEXT("Hp - damaged = Hp : %d - %d = %d"), temp, dmgMsg.damageAmount, CurrentHealth));
+}

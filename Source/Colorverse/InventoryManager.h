@@ -99,4 +99,6 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category=Statue)
 	void UpdateStatueUI();
+	
+	FORCEINLINE UHUDWidget* GetHUDWidget() { return HUDWidget; }
 };
