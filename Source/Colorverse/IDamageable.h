@@ -34,6 +34,6 @@ class COLORVERSE_API IIDamageable
 	GENERATED_BODY()
 
 public:
-	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "Damageable")
-	void ApplyDamage(FDamageMessage dmgMsg);
+	UFUNCTION(Category = "Damageable")
+	virtual void ApplyDamage(FDamageMessage dmgMsg) = 0;
 };

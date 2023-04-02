@@ -123,6 +123,7 @@ void AColorverseCharacter::SetEnableCanAttackTrace()
 void AColorverseCharacter::SetDisableCanAttackTrace()
 {
 	CombatSystem->bIsCanAttackTrace = false;
+	CombatSystem->SetCurrentPaintColorAmount(-5.0f);
 }
 
 #pragma region Movement 
@@ -242,6 +243,7 @@ void AColorverseCharacter::StopJumping()
 
 	Super::StopJumping();
 }
+#pragma endregion Movement
 
 void AColorverseCharacter::Attack_Implementation()
 {
@@ -295,7 +297,16 @@ void AColorverseCharacter::SetDisabledRoll()
 	bIsDamageable = true;
 	Print(1.0f, TEXT("Roll Off"));
 }
-#pragma endregion Movement
+
+void AColorverseCharacter::HitCheck_Implementation()
+{
+
+}
+
+void AColorverseCharacter::Attacked_Implementation(FDamageMessage damageMessage)
+{
+	LivingEntity->ApplyDamage(damageMessage);
+}
 
 void AColorverseCharacter::OnOverlapBegin(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor,
                                           class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep,
@@ -344,9 +355,11 @@ void AColorverseCharacter::OnOverlapEnd(class UPrimitiveComponent* OverlappedCom
 	}
 }
 
-void AColorverseCharacter::ChangeEquipPaint_Implementation(ECombineColors CombineColor)
+void AColorverseCharacter::ChangeEquipPaint(ECombineColors CombineColor)
 {
-	CurrentPaintColor = CombineColor;
+	CombatSystem->CurrentPaintColor = CombineColor;
+
+	CombatSystem->SetColorBuff();
 }
 
 void AColorverseCharacter::ControlMaker_Implementation()

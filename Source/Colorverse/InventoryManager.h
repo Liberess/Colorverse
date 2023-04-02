@@ -60,4 +60,6 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category=Inventory)
 	void CombineItems();
+
+	FORCEINLINE class UHUDWidget* GetHUDWidget() { return HUDWidget; }
 };

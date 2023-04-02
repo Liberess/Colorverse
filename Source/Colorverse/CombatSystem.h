@@ -4,8 +4,8 @@
 
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
+#include "InventoryManager.h"
 #include "CombatSystem.generated.h"
-
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class COLORVERSE_API UCombatSystem : public UActorComponent
@@ -32,6 +32,23 @@ public:
 	UPROPERTY(Category = "Character Status (General Settings)", EditAnywhere, BlueprintReadWrite)
 	float EXP;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Character Status (General Settings)")
+	ECombineColors CurrentPaintColor;
+
+	// 물감 있을 때 속성 버프
+	UPROPERTY(Category = "Character Status (General Settings)", EditAnywhere, BlueprintReadWrite)
+	float ColorBuff;
+
+	// 상성 가위바위보 강화 속성 버프
+	UPROPERTY(Category = "Character Status (General Settings)", EditAnywhere, BlueprintReadWrite)
+	float ElementBuff;
+
+	UPROPERTY(Category = "Character Buff", EditAnywhere, BlueprintReadWrite)
+	bool bIsOnColor;
+
+	UPROPERTY(Category = "Character Buff", EditAnywhere, BlueprintReadWrite)
+	bool bIsOnElement;
+
 	// 콤보 관련
 	UPROPERTY(Category = "Character Combo", EditAnywhere, BlueprintReadWrite)
 	int32 MaxCombo;
@@ -49,8 +66,21 @@ public:
 	bool bIsCanAttackTrace;
 
 public:
+	UFUNCTION(BlueprintCallable)
+	void SetColorBuff();
+
+	UFUNCTION(BlueprintCallable)
+	void SetElementBuff(bool value);
+
+	UFUNCTION(BlueprintCallable)
+	float GetCurrentATK();
+
+	UFUNCTION(BlueprintCallable)
+	float GetCurrentPaintColorAmount();
+
+	UFUNCTION(BlueprintCallable)
+	void SetCurrentPaintColorAmount(float value);
+
 	void AttackStartComboState();
 	void AttackEndComboState();
-
-	
 };

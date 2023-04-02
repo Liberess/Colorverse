@@ -17,21 +17,20 @@ protected:
 	virtual void BeginPlay() override;
 
 public:	
-	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
-
-	virtual void ApplyDamage_Implementation(FDamageMessage dmgMsg) override;
+	UFUNCTION(BlueprintCallable, Category = Interactable)
+	virtual void ApplyDamage(FDamageMessage dmgMsg) override;
 
 public:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Living Entity")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Character HP")
 	int OriginHealth;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Living Entity")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Character HP")
 	int CurrentHealth;
 
-	UFUNCTION(BlueprintCallable, Category = "Living Entity")
+	UFUNCTION(BlueprintCallable, Category = "Character HP")
 	bool GetDead() const { return bIsDead;}
 
-	UFUNCTION(BlueprintCallable, Category = "Living Entity")
+	UFUNCTION(BlueprintCallable, Category = "Character HP")
 	void SetDead(bool value) { bIsDead = value; }
 
 private:

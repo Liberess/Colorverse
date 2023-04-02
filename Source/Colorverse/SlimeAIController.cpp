@@ -7,7 +7,6 @@
 #include "BehaviorTree/BlackboardData.h"
 
 const FName ASlimeAIController::HomePosKey(TEXT("HomePos"));
-const FName ASlimeAIController::PatrolPosKey(TEXT("PatrolPos"));
 const FName ASlimeAIController::TargetKey(TEXT("Target"));
 
 ASlimeAIController::ASlimeAIController()
