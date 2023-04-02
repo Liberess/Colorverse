@@ -6,6 +6,7 @@
 #include "InventoryManager.h"
 #include "LivingEntity.h"
 #include "CombatSystem.h"
+#include "PaintedCollectObject.h"
 #include "ColorverseCharacterAnimInstance.h"
 #include "GameFramework/Character.h"
 #include "ColorverseCharacter.generated.h"
@@ -61,6 +62,12 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Player Movement")
 	float RollDelay;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TArray<FLinearColor> BrushColors;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	bool IsDrawing = false;
 	
 	UFUNCTION(BlueprintCallable)
 	void SetEnabledToggleRun();
@@ -106,6 +113,12 @@ public:
 	
 	UPROPERTY()
 	UInteractWidget* InteractWidget;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category=Interact)
+	APaintedCollectObject* CurPaintableObj;
+
+	/*UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Interact)
+	PaintedCollectObject* CurrentPaintableObject;*/
 
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
 	void ControlInventory();

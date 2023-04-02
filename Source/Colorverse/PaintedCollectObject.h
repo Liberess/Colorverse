@@ -8,5 +8,8 @@ UCLASS(Blueprintable)
 class COLORVERSE_API APaintedCollectObject : public AInteractObject
 {
 	GENERATED_BODY()
-	
+
+public:
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+	bool IsDrawing;
 };

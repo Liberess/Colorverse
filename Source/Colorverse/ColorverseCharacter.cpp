@@ -40,6 +40,16 @@ AColorverseCharacter::AColorverseCharacter()
 
 	CombatSystem = CreateDefaultSubobject<UCombatSystem>(TEXT("CombatSystem"));
 	LivingEntity = CreateDefaultSubobject<ULivingEntity>(TEXT("LivingEntity"));
+
+	BrushColors = {
+		FLinearColor::FromSRGBColor(FColor::Red),
+		FLinearColor::FromSRGBColor(FColor::Yellow),
+		FLinearColor::FromSRGBColor(FColor::Blue)
+	};
+	
+	/*BrushColors.Add(FLinearColor(1.0f, 0.0f, 0.0f, 1.0f));
+	BrushColors.Add(FLinearColor(1.0f, 1.0f, 0.0f, 1.0f));
+	BrushColors.Add(FLinearColor(0.0f, 0.0f, 1.0f, 1.0f));*/
 }
 
 void AColorverseCharacter::BeginPlay()
@@ -119,12 +129,19 @@ void AColorverseCharacter::SetEnableCanAttackTrace()
 {
 	CombatSystem->bIsCanAttackTrace = true;
 	AttackHitResults.Empty();
+
+	IsDrawing = true;
 }
 
 void AColorverseCharacter::SetDisableCanAttackTrace()
 {
 	CombatSystem->bIsCanAttackTrace = false;
 	CombatSystem->SetCurrentPaintColorAmount(-5.0f);
+
+	IsDrawing = false;
+	
+	if(IsValid(CurPaintableObj))
+		CurPaintableObj->IsDrawing = false;
 }
 
 #pragma region Movement 
