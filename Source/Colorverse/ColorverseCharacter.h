@@ -4,6 +4,10 @@
 #include "InteractObject.h"
 #include "InteractWidget.h"
 #include "InventoryManager.h"
+#include "LivingEntity.h"
+#include "CombatSystem.h"
+#include "PaintedCollectObject.h"
+#include "ColorverseCharacterAnimInstance.h"
 #include "GameFramework/Character.h"
 #include "ColorverseCharacter.generated.h"
 
@@ -17,11 +21,23 @@ class AColorverseCharacter : public ACharacter
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 	class UCameraComponent* FollowCamera;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Combat System", meta = (AllowPrivateAccess = "true"))
+	class UCombatSystem* CombatSystem;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Living Entity", meta = (AllowPrivateAccess = "true"))
+	class ULivingEntity* LivingEntity;
 	
 public:
 	AColorverseCharacter();
 
 	virtual void BeginPlay() override;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Combat System")
+	TArray<AActor*> AttackHitResults;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Combat System")
+	float attackResourceValue;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Camera)
 	float BaseTurnRate;
@@ -46,15 +62,36 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Player Movement")
 	float RollDelay;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TArray<FLinearColor> BrushColors;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	bool IsDrawing = false;
 	
 	UFUNCTION(BlueprintCallable)
 	void SetEnabledToggleRun();
+
+	virtual void Jump() override;
+	virtual void StopJumping() override;
+
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
+	void Attack();
+
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
+	void SetDisabledAttack(UAnimMontage* Montage, bool bInterrupted);
 
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
 	void Roll();
 
 	UFUNCTION(BlueprintCallable)
 	void SetDisabledRoll();
+
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
+	void HitCheck();
+
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
+	void Attacked(FDamageMessage damageMessage);
 
 	UFUNCTION()
 	void OnOverlapBegin(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
@@ -77,36 +114,54 @@ public:
 	UPROPERTY()
 	UInteractWidget* InteractWidget;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category=Interact)
+	APaintedCollectObject* CurPaintableObj;
+
+	/*UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Interact)
+	PaintedCollectObject* CurrentPaintableObject;*/
+
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
 	void ControlInventory();
 	
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
 	void ControlMaker();
 	
-	UFUNCTION(BlueprintCallable)
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
 	void ChangeEquipPaint(ECombineColors CombineColor);
 
-	UFUNCTION(BlueprintPure)
-	ECombineColors GetCurrentPaintColor() const { return CurrentPaintColor; };
+	UFUNCTION(BlueprintCallable)
+	void SetNextAttackCheck();
+
+	UFUNCTION(BlueprintCallable)
+	void SetEnableCanAttackTrace();
+
+	UFUNCTION(BlueprintCallable)
+	void SetDisableCanAttackTrace();
 
 private:
 	bool bIsRunTimer;
 	FTimerHandle ToggleRunTimer;
 	
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta=(AllowPrivateAccess), Category="LivingEntity")
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta=(AllowPrivateAccess), Category="Combat System")
 	bool bIsDamageable;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta=(AllowPrivateAccess), Category="Player Movement")
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta=(AllowPrivateAccess), Category="Combat System")
 	bool bIsRolling;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess), Category="Combat System")
+	bool bIsAttacking;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess), Category = "Combat System")
+	bool bIsAttacked;
 	
 	FTimerHandle RollTimer;
 
 	bool bIsWatchingInteractWidget;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Paint, meta=(AllowPrivateAccess))
-	ECombineColors CurrentPaintColor;
-
 	UInventoryManager* InvenMgr;
+
+	UPROPERTY(BlueprintReadWrite, meta=(AllowPrivateAccess))
+	UColorverseCharacterAnimInstance* ColorverseAnim;
 
 protected:
 	void OnResetVR();
@@ -122,8 +177,12 @@ protected:
 
 protected:
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+	virtual void PostInitializeComponents() override;
 
 public:
 	FORCEINLINE class USpringArmComponent* GetCameraBoom() const { return CameraBoom; }
 	FORCEINLINE class UCameraComponent* GetFollowCamera() const { return FollowCamera; }
+	FORCEINLINE class UCombatSystem* GetCombatSystem() const { return CombatSystem; }
+	FORCEINLINE class ULivingEntity* GetLivingEntity() const { return LivingEntity; }
+	FORCEINLINE class UColorverseCharacterAnimInstance* GetColorverseAnim() const { return ColorverseAnim; }
 };

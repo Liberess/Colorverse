@@ -3,6 +3,7 @@
 #include "CoreMinimal.h"
 #include "IInteractable.h"
 #include "GameFramework/Actor.h"
+#include "Components/BoxComponent.h"
 #include "InteractObject.generated.h"
 
 UCLASS(Blueprintable)
@@ -12,6 +13,12 @@ class COLORVERSE_API AInteractObject : public AActor, public IIInteractable
 
 protected:
 	virtual void BeginPlay() override;
+
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly)
+	USceneComponent* DefaultRoot = nullptr;
+
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly)
+	UBoxComponent* BoxCol;
 
 	UPROPERTY(EditAnywhere,
 		BlueprintGetter=GetInteractable,
@@ -28,11 +35,11 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 	UFUNCTION()
-	virtual void OnOverlapBegin(class AActor* OverlappedActor, class AActor* OtherActor);
+	virtual void OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 
 	UFUNCTION()
-	virtual void OnOverlapEnd(class AActor* OverlappedActor, class AActor* OtherActor);
-
+	virtual void OnOverlapEnd(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
+	
 	UFUNCTION(BlueprintCallable, Category=Interactable)
 	virtual void OnEnter() override;
 

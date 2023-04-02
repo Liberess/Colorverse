@@ -6,11 +6,6 @@
 AColorArea::AColorArea()
 {
 	PrimaryActorTick.bCanEverTick = true;
-
-	BoxCol = CreateDefaultSubobject<UBoxComponent>(TEXT("Box Collision"));
-	BoxCol->InitBoxExtent(FVector(100.0f, 100.0f, 100.0f));
-	BoxCol->SetCollisionProfileName(TEXT("Trigger"));
-	BoxCol->SetupAttachment(RootComponent);
 }
 
 void AColorArea::BeginPlay()

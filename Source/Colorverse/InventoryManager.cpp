@@ -2,6 +2,8 @@
 #include "ColorverseWorldSettings.h"
 #include "Kismet/GameplayStatics.h"
 
+#define Print(duration, text) if(GEngine) GEngine->AddOnScreenDebugMessage(-1,duration, FColor::Yellow, text);
+
 bool UInventoryManager::ShouldCreateSubsystem(UObject* Outer) const
 {
 	if (!Super::ShouldCreateSubsystem(Outer))
@@ -38,14 +40,30 @@ void UInventoryManager::InitializeManager()
 	for(int i = 0; i < 2; i++)
 		MakerArray.Add(FItem());
 
+	for(int i = 0; i < 1; i++)
+		StatueArray.Add(FItem());
+
 	PaintAmountArray = { 0.0f, 0.0f, 0.0f };
 
 	const FSoftClassPath InventoryRef(TEXT("/Game/UI/BP_InventoryWidget.BP_InventoryWidget_C"));
 	if(UClass* WidgetClass = InventoryRef.TryLoadClass<UInventoryWidget>())
 	{
 		InventoryWidget = Cast<UInventoryWidget>(CreateWidget(GetWorld(), WidgetClass));
-		InventoryWidget->CreateInventory(InventoryArray.Num(), false);
-		InventoryWidget->CreateInventory(MakerArray.Num(), true);
+		InventoryWidget->CreateContainer(InventoryArray.Num());
+	}
+
+	const FSoftClassPath MakerRef(TEXT("/Game/UI/BP_MakerWidget.BP_MakerWidget_C"));
+	if(UClass* WidgetClass = MakerRef.TryLoadClass<UMakerWidget>())
+	{
+		MakerWidget = Cast<UMakerWidget>(CreateWidget(GetWorld(), WidgetClass));
+		MakerWidget->CreateContainer(MakerArray.Num());
+	}
+
+	const FSoftClassPath StatueRef(TEXT("/Game/UI/BP_StatueWidget.BP_StatueWidget_C"));
+	if(UClass* WidgetClass = StatueRef.TryLoadClass<UStatueWidget>())
+	{
+		StatueWidget = Cast<UStatueWidget>(CreateWidget(GetWorld(), WidgetClass));
+		StatueWidget->CreateContainer(StatueArray.Num());
 	}
 
 	const FSoftClassPath HUDRef(TEXT("/Game/UI/BP_HUD.BP_HUD_C"));
@@ -57,12 +75,23 @@ void UInventoryManager::InitializeManager()
 	}
 }
 
-void UInventoryManager::SetInventoryUI()
+void UInventoryManager::SetInventoryUI(bool IsActive, bool IsFlip)
 {
-	check(InventoryWidget);
-	
-	bIsInventoryOpen = !bIsInventoryOpen;
+	if(!IsValid(InventoryWidget))
+		return;;
 
+	if(IsFlip)
+	{
+		bIsInventoryOpen = !bIsInventoryOpen;
+	}
+	else
+	{
+		if(bIsInventoryOpen && bIsInventoryOpen == IsActive)
+			return;
+
+		bIsInventoryOpen = IsActive;
+	}
+	
 	APlayerController* PlayerController = UGameplayStatics::GetPlayerController(GetWorld(), 0);
 	if(bIsInventoryOpen)
 	{
@@ -74,7 +103,7 @@ void UInventoryManager::SetInventoryUI()
 		PlayerController->SetShowMouseCursor(true);
 		InventoryWidget->AddToViewport();
 		InventoryWidget->PlayAnimation(InventoryWidget->InventoryShowAnim);
-		UpdateInventory(false);
+		UpdateInventory();
 	}
 	else
 	{
@@ -85,12 +114,112 @@ void UInventoryManager::SetInventoryUI()
 	}
 }
 
-void UInventoryManager::UpdateInventory(bool IsMaker)
+void UInventoryManager::SetMakerUI(bool IsActive, bool IsFlip)
 {
-	if(IsMaker)
-		InventoryWidget->UpdateInventory(MakerArray, IsMaker);
+	if(!IsValid(MakerWidget) || IsActive && bIsStatueOpen)
+		return;;
+
+	if(IsFlip)
+	{
+		bIsMakerOpen = !bIsMakerOpen;
+	}
 	else
-		InventoryWidget->UpdateInventory(InventoryArray, IsMaker);
+	{
+		if(bIsMakerOpen && bIsMakerOpen == IsActive)
+			return;
+
+		bIsMakerOpen = IsActive;
+	}
+
+	APlayerController* PlayerController = UGameplayStatics::GetPlayerController(GetWorld(), 0);
+	if(bIsMakerOpen)
+	{
+		FInputModeGameAndUI InputModeGameAndUI;
+		InputModeGameAndUI.SetWidgetToFocus(MakerWidget->TakeWidget());
+		InputModeGameAndUI.SetLockMouseToViewportBehavior(EMouseLockMode::DoNotLock);
+		InputModeGameAndUI.SetHideCursorDuringCapture(true);
+		PlayerController->SetInputMode(InputModeGameAndUI);
+		PlayerController->SetShowMouseCursor(true);
+		MakerWidget->AddToViewport();
+		MakerWidget->PlayAnimation(MakerWidget->MakerShowAnim);
+		UpdateMaker();
+	}
+	else
+	{
+		for(int i = 0; i < MakerArray.Num(); i++)
+		{
+			if(MakerArray[i].bIsValid)
+			{
+				AddInventoryItem(MakerArray[i]);
+				MakerArray[i] = FItem();
+			}
+		}
+
+		UpdateMaker();
+		UpdateInventory();
+		
+		const FInputModeGameOnly InputModeGameOnly;
+		PlayerController->SetInputMode(InputModeGameOnly);
+		PlayerController->SetShowMouseCursor(false);
+		MakerWidget->RemoveFromParent();
+	}
+}
+
+void UInventoryManager::SetStatueUI(bool IsActive, bool IsUnlockPanel)
+{
+	if(!IsValid(StatueWidget))
+		return;
+
+	bIsStatueOpen = IsActive;
+	
+	APlayerController* PlayerController = UGameplayStatics::GetPlayerController(GetWorld(), 0);
+	if(IsActive)
+	{
+		FInputModeGameAndUI InputModeGameAndUI;
+		InputModeGameAndUI.SetWidgetToFocus(StatueWidget->TakeWidget());
+		InputModeGameAndUI.SetLockMouseToViewportBehavior(EMouseLockMode::DoNotLock);
+		InputModeGameAndUI.SetHideCursorDuringCapture(true);
+		PlayerController->SetInputMode(InputModeGameAndUI);
+		PlayerController->SetShowMouseCursor(true);
+		StatueWidget->AddToViewport();
+		StatueWidget->SetActiveCanvasPanel(IsUnlockPanel);
+		//StatueWidget->PlayAnimation(StatueWidget->MakerShowAnim);
+		UpdateStatue();
+	}
+	else
+	{
+		for(int i = 0; i < StatueArray.Num(); i++)
+		{
+			if(StatueArray[i].bIsValid)
+			{
+				AddInventoryItem(StatueArray[i]);
+				StatueArray[i] = FItem();
+			}
+		}
+
+		UpdateStatue();
+		UpdateInventory();
+		
+		const FInputModeGameOnly InputModeGameOnly;
+		PlayerController->SetInputMode(InputModeGameOnly);
+		PlayerController->SetShowMouseCursor(false);
+		StatueWidget->RemoveFromParent();
+	}
+}
+
+void UInventoryManager::UpdateInventory()
+{
+	InventoryWidget->UpdateContainer(InventoryArray);
+}
+
+void UInventoryManager::UpdateMaker()
+{
+	MakerWidget->UpdateContainer(MakerArray);
+}
+
+void UInventoryManager::UpdateStatue()
+{
+	StatueWidget->UpdateContainer(StatueArray);
 }
 
 void UInventoryManager::AddInventoryItem(const FItem& Item)
@@ -113,7 +242,7 @@ void UInventoryManager::AddInventoryItem(const FItem& Item)
 		}
 	}
 	
-	UpdateInventory(false);
+	UpdateInventory();
 }
 
 void UInventoryManager::UseInventoryItem(FItem Item)
@@ -129,7 +258,7 @@ void UInventoryManager::UseInventoryItem(FItem Item)
 			InventoryArray[Index] = FItem();
 		}
 
-		UpdateInventory(false);
+		UpdateInventory();
 	}
 }
 
@@ -178,11 +307,108 @@ void UInventoryManager::CombineItems()
 			const int ColorNum = static_cast<int>(CombineRule->CombineColor);
 			PaintAmountArray[ColorNum] += GetCombinePaintAmount;
 			HUDWidget->SetPaintBarPercent(ColorNum, PaintAmountArray[ColorNum]);
-			UpdateInventory(true);
+			UpdateMaker();
 		}
 	}
 	catch (...)
 	{
 		
 	}
+}
+
+void UInventoryManager::SacrificeItems(ESacrificeType SacrificeType)
+{
+	const FItem& EmptyItem = FItem();
+	
+	// 제물로 바쳐진 아이템이 "해금"하는데 사용되는 것이라면
+	if(SacrificeType == ESacrificeType::Unlock)
+	{
+		for(auto& Item : StatueArray)
+		{
+			if(!Item.bIsValid && Item.CombineType != EItemCombineType::SacrificeUnlock)
+				continue;
+			
+			int MergeValue = Item.Amount + CurrentStatue->UnlockCount;
+			if(MergeValue >= CurrentStatue->UnlockCapacity)
+			{
+				int DecreaseAmount = CurrentStatue->UnlockCapacity - CurrentStatue->UnlockCount;
+				CurrentStatue->UnlockCount += DecreaseAmount;
+				
+				Item.Amount -= DecreaseAmount;
+				if(Item.Amount <= 0)
+					Item = EmptyItem;
+
+				if(CurrentStatue->UnlockCount >= CurrentStatue->UnlockCapacity)
+				{
+					if(Item.bIsValid)
+					{
+						AddInventoryItem(Item);
+						Item = EmptyItem;
+					}
+					break;
+				}
+			}
+			else
+			{
+				CurrentStatue->UnlockCount += Item.Amount;
+				Item = EmptyItem;
+			}
+		}
+
+		if(CurrentStatue->UnlockCount >= CurrentStatue->UnlockCapacity)
+		{
+			CurrentStatue->UnlockCount = CurrentStatue->UnlockCapacity;
+			CurrentStatue->bIsUnlockComplete = true;
+			StatueWidget->SetActiveCanvasPanel(false);
+		}
+	}
+	else
+	{
+		for(auto& Item : StatueArray)
+		{
+			if(!Item.bIsValid && Item.CombineType != EItemCombineType::SacrificeRecovery)
+				continue;
+			
+			int MergeValue = (Item.Amount * Item.RecoveryAmount) + CurrentStatue->RecoveryAmount;
+			if(MergeValue >= CurrentStatue->RecoveryCapacity)
+			{
+				int DecreaseAmount = CurrentStatue->RecoveryCapacity - CurrentStatue->RecoveryAmount;
+				CurrentStatue->RecoveryAmount += DecreaseAmount;
+				
+				Item.Amount -= (DecreaseAmount / Item.RecoveryAmount);
+				if(Item.Amount <= 0)
+					Item = EmptyItem;
+
+				if(CurrentStatue->RecoveryAmount >= CurrentStatue->RecoveryCapacity)
+				{
+					if(Item.bIsValid)
+					{
+						AddInventoryItem(Item);
+						Item = EmptyItem;
+					}
+					break;
+				}
+			}
+			else
+			{
+				CurrentStatue->RecoveryAmount += Item.Amount * Item.RecoveryAmount;
+				Item = EmptyItem;
+			}
+		}
+
+		if(CurrentStatue->RecoveryAmount >= CurrentStatue->RecoveryCapacity)
+		{
+			CurrentStatue->RecoveryAmount = CurrentStatue->RecoveryCapacity;
+			CurrentStatue->bIsRecoveryComplete = true;
+		}
+	}
+
+	StatueWidget->UpdateStatueUI(CurrentStatue);
+	UpdateStatue();
+}
+
+void UInventoryManager::UpdateStatueUI()
+{
+	if(IsValid(CurrentStatue))
+		StatueWidget->UpdateStatueUI(CurrentStatue);
 }

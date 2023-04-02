@@ -21,7 +21,7 @@ private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category="Collect Object",meta=(AllowPrivateAccess))
 	FItem ItemData;
 
-	UPROPERTY()
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Collect Object",meta=(AllowPrivateAccess))
 	UDataTable* ItemDataTable;
 	
 	virtual void Interact_Implementation() override;
@@ -31,7 +31,10 @@ protected:
 
 public:
 	ACollectObject();
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+	int PaintedCount = 0;
 	
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	UStaticMeshComponent* ItemMesh;
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+	int NeedsPaintedCount = 3;
 };

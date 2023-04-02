@@ -1,5 +1,7 @@
 #include "ColorverseCharacter.h"
 #include "HeadMountedDisplayFunctionLibrary.h"
+#include "Statue.h"
+#include "TimerManager.h"
 #include "Camera/CameraComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "Components/InputComponent.h"
@@ -26,7 +28,7 @@ AColorverseCharacter::AColorverseCharacter()
 	GetCharacterMovement()->RotationRate = FRotator(0.0f, 540.0f, 0.0f);
 	GetCharacterMovement()->JumpZVelocity = 600.f;
 	GetCharacterMovement()->AirControl = 0.2f;
-
+	
 	CameraBoom = CreateDefaultSubobject<USpringArmComponent>(TEXT("CameraBoom"));
 	CameraBoom->SetupAttachment(RootComponent);
 	CameraBoom->TargetArmLength = 300.0f;
@@ -35,6 +37,19 @@ AColorverseCharacter::AColorverseCharacter()
 	FollowCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("FollowCamera"));
 	FollowCamera->SetupAttachment(CameraBoom, USpringArmComponent::SocketName);
 	FollowCamera->bUsePawnControlRotation = false;
+
+	CombatSystem = CreateDefaultSubobject<UCombatSystem>(TEXT("CombatSystem"));
+	LivingEntity = CreateDefaultSubobject<ULivingEntity>(TEXT("LivingEntity"));
+
+	BrushColors = {
+		FLinearColor::FromSRGBColor(FColor::Red),
+		FLinearColor::FromSRGBColor(FColor::Yellow),
+		FLinearColor::FromSRGBColor(FColor::Blue)
+	};
+	
+	/*BrushColors.Add(FLinearColor(1.0f, 0.0f, 0.0f, 1.0f));
+	BrushColors.Add(FLinearColor(1.0f, 1.0f, 0.0f, 1.0f));
+	BrushColors.Add(FLinearColor(0.0f, 0.0f, 1.0f, 1.0f));*/
 }
 
 void AColorverseCharacter::BeginPlay()
@@ -52,9 +67,10 @@ void AColorverseCharacter::BeginPlay()
 void AColorverseCharacter::SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent)
 {
 	check(PlayerInputComponent);
-	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &ACharacter::Jump);
-	PlayerInputComponent->BindAction("Jump", IE_Released, this, &ACharacter::StopJumping);
+	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &AColorverseCharacter::Jump);
+	PlayerInputComponent->BindAction("Jump", IE_Released, this, &AColorverseCharacter::StopJumping);
 
+	PlayerInputComponent->BindAction("Attack", IE_Pressed, this, &AColorverseCharacter::Attack);
 	PlayerInputComponent->BindAction("Roll", IE_Pressed, this, &AColorverseCharacter::Roll);
 
 	PlayerInputComponent->BindAxis("MoveForward", this, &AColorverseCharacter::MoveForward);
@@ -82,7 +98,53 @@ void AColorverseCharacter::SetupPlayerInputComponent(class UInputComponent* Play
 		TEXT("BluePaint"), IE_Pressed, this, &AColorverseCharacter::ChangeEquipPaint, ECombineColors::Blue);
 }
 
-#pragma region Movement
+void AColorverseCharacter::PostInitializeComponents()
+{
+	Super::PostInitializeComponents();
+
+	ColorverseAnim = Cast<UColorverseCharacterAnimInstance>(GetMesh()->GetAnimInstance());
+
+	if (!IsValid(ColorverseAnim))
+		return;
+
+	ColorverseAnim->OnMontageEnded.AddDynamic(this, &AColorverseCharacter::SetDisabledAttack);
+	
+	ColorverseAnim->OnNextAttackCheck.AddDynamic(this, &AColorverseCharacter::SetNextAttackCheck);
+	ColorverseAnim->OnStartAttackJudg.AddDynamic(this, &AColorverseCharacter::SetEnableCanAttackTrace);
+	ColorverseAnim->OnEndAttackJudg.AddDynamic(this, &AColorverseCharacter::SetDisableCanAttackTrace);
+}
+
+void AColorverseCharacter::SetNextAttackCheck()
+{
+	CombatSystem->bCanNextCombo = false;
+
+	if (CombatSystem->bIsComboInputOn)
+	{
+		CombatSystem->AttackStartComboState();
+		ColorverseAnim->JumpToAttackMontageSection(CombatSystem->CurrentCombo);
+	}
+}
+
+void AColorverseCharacter::SetEnableCanAttackTrace()
+{
+	CombatSystem->bIsCanAttackTrace = true;
+	AttackHitResults.Empty();
+
+	IsDrawing = true;
+}
+
+void AColorverseCharacter::SetDisableCanAttackTrace()
+{
+	CombatSystem->bIsCanAttackTrace = false;
+	CombatSystem->SetCurrentPaintColorAmount(-5.0f);
+
+	IsDrawing = false;
+	
+	if(IsValid(CurPaintableObj))
+		CurPaintableObj->IsDrawing = false;
+}
+
+#pragma region Movement 
 void AColorverseCharacter::OnResetVR()
 {
 	UHeadMountedDisplayFunctionLibrary::ResetOrientationAndPosition();
@@ -110,6 +172,9 @@ void AColorverseCharacter::LookUpAtRate(float Rate)
 
 void AColorverseCharacter::MoveForward(float Value)
 {
+	if (bIsAttacking || bIsAttacked)
+		return;
+
 	if ((Controller != nullptr))
 	{
 		if (Value != 0.0f)
@@ -142,6 +207,9 @@ void AColorverseCharacter::MoveForward(float Value)
 
 void AColorverseCharacter::MoveRight(float Value)
 {
+	if (bIsAttacking || bIsAttacked)
+		return;
+
 	if ((Controller != nullptr))
 	{
 		if (Value != 0.0f)
@@ -178,6 +246,52 @@ void AColorverseCharacter::SetEnabledToggleRun()
 	GetCharacterMovement()->MaxWalkSpeed = RunSpeed;
 }
 
+void AColorverseCharacter::Jump()
+{
+	if (bIsAttacking || bIsAttacked)
+		return;
+
+	Super::Jump();
+}
+
+void AColorverseCharacter::StopJumping()
+{
+	if (bIsAttacking || bIsAttacked)
+		return;
+
+	Super::StopJumping();
+}
+#pragma endregion Movement
+
+void AColorverseCharacter::Attack_Implementation()
+{
+	if (bIsRolling)
+		return;
+
+	/*if (GetCharacterMovement()->IsFalling())
+		return;*/
+
+	if (bIsAttacking == true)
+	{
+		if (CombatSystem->bCanNextCombo)
+		{
+			CombatSystem->bIsComboInputOn = true;
+		}
+	}
+	else
+	{
+		CombatSystem->AttackStartComboState();
+		ColorverseAnim->PlayAttackMontage();
+		bIsAttacking = true;
+	}
+}
+
+void AColorverseCharacter::SetDisabledAttack_Implementation(UAnimMontage* Montage, bool bInterrupted)
+{
+	bIsAttacking = false;
+	CombatSystem->AttackEndComboState();
+}
+
 void AColorverseCharacter::Roll_Implementation()
 {
 	if (!bIsRunning || bIsRolling)
@@ -201,7 +315,16 @@ void AColorverseCharacter::SetDisabledRoll()
 	bIsDamageable = true;
 	Print(1.0f, TEXT("Roll Off"));
 }
-#pragma endregion Movement
+
+void AColorverseCharacter::HitCheck_Implementation()
+{
+
+}
+
+void AColorverseCharacter::Attacked_Implementation(FDamageMessage damageMessage)
+{
+	LivingEntity->ApplyDamage(damageMessage);
+}
 
 void AColorverseCharacter::OnOverlapBegin(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor,
                                           class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep,
@@ -238,6 +361,17 @@ void AColorverseCharacter::OnOverlapEnd(class UPrimitiveComponent* OverlappedCom
 	{
 		if (IsValid(InteractObject) && InteractObject == OtherActor)
 		{
+		 	AStatue* Statue = Cast<AStatue>(InteractObject);
+			if(IsValid(Statue))
+			{
+				if(Statue->bIsOpenInventoryByStatue)
+					InvenMgr->SetInventoryUI(false);
+				InvenMgr->SetStatueUI(false);
+				
+				Statue->bIsOpenInventoryByStatue = false;
+				InvenMgr->CurrentStatue = nullptr;
+			}
+			
 			InteractObject = nullptr;
 			bIsInteract = false;
 
@@ -245,19 +379,27 @@ void AColorverseCharacter::OnOverlapEnd(class UPrimitiveComponent* OverlappedCom
 			{
 				bIsWatchingInteractWidget = false;
 				InteractWidget->RemoveFromParent();
+				InteractWidget = nullptr;
 			}
 		}
 	}
 }
 
-void AColorverseCharacter::ChangeEquipPaint(ECombineColors CombineColor)
+void AColorverseCharacter::ChangeEquipPaint_Implementation(ECombineColors CombineColor)
 {
-	CurrentPaintColor = CombineColor;
+	CombatSystem->CurrentPaintColor = CombineColor;
+
+	CombatSystem->SetColorBuff();
+}
+
+void AColorverseCharacter::ControlInventory_Implementation()
+{
+	InvenMgr->SetInventoryUI(true, true);
 }
 
 void AColorverseCharacter::ControlMaker_Implementation()
 {
-	InvenMgr->SetInventoryUI();
+	InvenMgr->SetMakerUI(true, true);
 }
 
 void AColorverseCharacter::Interact_Implementation()
@@ -266,10 +408,13 @@ void AColorverseCharacter::Interact_Implementation()
 		return;
 
 	InteractObject->OnInteract();
-	//Print(1.0f, TEXT("Interact"));
-}
 
-void AColorverseCharacter::ControlInventory_Implementation()
-{
-	InvenMgr->SetInventoryUI();
+	if (bIsWatchingInteractWidget && InteractWidget != nullptr)
+	{
+		bIsWatchingInteractWidget = false;
+		InteractWidget->RemoveFromParent();
+		InteractWidget = nullptr;
+	}
+
+	//Print(1.0f, TEXT("Interact"));
 }

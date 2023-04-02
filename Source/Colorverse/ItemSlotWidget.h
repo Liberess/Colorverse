@@ -2,7 +2,6 @@
 
 #include "CoreMinimal.h"
 #include "IItem.h"
-#include "InventoryManager.h"
 #include "Blueprint/UserWidget.h"
 #include "Components/Border.h"
 #include "Components/Button.h"
@@ -15,7 +14,6 @@ class COLORVERSE_API UItemSlotWidget : public UUserWidget
 	GENERATED_BODY()
 	
 public:
-	virtual void NativeConstruct() override;
 	virtual void NativeOnMouseEnter(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent) override;
 	virtual void NativeOnMouseLeave(const FPointerEvent& InMouseEvent) override;
 	
@@ -38,11 +36,11 @@ public:
 	bool bIsMaker;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+	EItemSlotLocationType ItemLocation;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 	FItem ItemData;
-
-	UPROPERTY(BlueprintReadOnly)
-	UInventoryManager* InvenMgr;
-
+	
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
 	void OnClick();
 

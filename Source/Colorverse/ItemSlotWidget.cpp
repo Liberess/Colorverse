@@ -1,12 +1,5 @@
 #include "ItemSlotWidget.h"
-
-void UItemSlotWidget::NativeConstruct()
-{
-	Super::NativeConstruct();
-
-	InvenMgr = UUserWidget::GetWorld()->GetSubsystem<UInventoryManager>();
-	check(InvenMgr);
-}
+#include "InventoryManager.h"
 
 void UItemSlotWidget::NativeOnMouseEnter(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent)
 {
@@ -31,6 +24,7 @@ void UItemSlotWidget::OnClick_Implementation()
 	if(!ItemData.bIsValid || bIsMaker)
 		return;
 
+	UInventoryManager* InvenMgr = UUserWidget::GetWorld()->GetSubsystem<UInventoryManager>();
 	InvenMgr->UseInventoryItem(ItemData);
 }
 

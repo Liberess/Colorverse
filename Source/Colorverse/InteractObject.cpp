@@ -6,9 +6,17 @@
 AInteractObject::AInteractObject()
 {
 	PrimaryActorTick.bCanEverTick = true;
+	
+	DefaultRoot = CreateDefaultSubobject<USceneComponent>(TEXT("DefaultRoot"));
+	SetRootComponent(DefaultRoot);
 
-	OnActorBeginOverlap.AddDynamic(this, &AInteractObject::OnOverlapBegin);
-	OnActorEndOverlap.AddDynamic(this, &AInteractObject::OnOverlapEnd);
+	BoxCol = CreateDefaultSubobject<UBoxComponent>(TEXT("Box Collision"));
+	BoxCol->InitBoxExtent(FVector(100.0f, 100.0f, 100.0f));
+	BoxCol->SetCollisionProfileName(TEXT("Trigger"));
+	BoxCol->SetupAttachment(DefaultRoot);
+
+	BoxCol->OnComponentBeginOverlap.AddDynamic(this, &AInteractObject::OnOverlapBegin);
+	BoxCol->OnComponentEndOverlap.AddDynamic(this, &AInteractObject::OnOverlapEnd);
 }
 
 void AInteractObject::BeginPlay()
@@ -21,7 +29,7 @@ void AInteractObject::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 }
 
-void AInteractObject::OnOverlapBegin(AActor* OverlappedActor, AActor* OtherActor)
+void AInteractObject::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
 	if (OtherActor && OtherActor != this)
 	{
@@ -31,7 +39,7 @@ void AInteractObject::OnOverlapBegin(AActor* OverlappedActor, AActor* OtherActor
 	}
 }
 
-void AInteractObject::OnOverlapEnd(AActor* OverlappedActor, AActor* OtherActor)
+void AInteractObject::OnOverlapEnd(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
 {
 	if (OtherActor && OtherActor != this)
 	{
