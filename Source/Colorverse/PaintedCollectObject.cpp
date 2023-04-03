@@ -1,5 +1,4 @@
 #include "PaintedCollectObject.h"
-
 #include "InventoryManager.h"
 #include "Engine/TextureRenderTarget2D.h"
 
@@ -28,7 +27,7 @@ void APaintedCollectObject::BeginPlay()
 	{
 		FTimerHandle newHandle;
 		SpawnTimerHandles.Add(newHandle);
-	 }
+	}
 
 	try
 	{
