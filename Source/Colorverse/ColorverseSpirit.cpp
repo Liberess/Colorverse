@@ -37,6 +37,7 @@ void AColorverseSpirit::SetActive(bool value)
 
 void AColorverseSpirit::Attack()
 {
+	GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Blue, "Bullet");
 	SpawnBullet();
 }
 

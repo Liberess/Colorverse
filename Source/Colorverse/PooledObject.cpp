@@ -48,12 +48,18 @@ void APooledObject::SetActive(bool InActive)
 	SetActorHiddenInGame(!InActive);
 	SetActorEnableCollision(InActive);
 	SetActorTickEnabled(InActive);
+
+	ActiveTrueEvent();
 }
 
 void APooledObject::Deactivate()
 {
 	Init();
 	SetActive(false);
+}
+
+void APooledObject::ActiveTrueEvent_Implementation()
+{
 }
 
 void APooledObject::Init()
