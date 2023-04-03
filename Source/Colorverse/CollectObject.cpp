@@ -20,7 +20,17 @@ void ACollectObject::BeginPlay()
 
 void ACollectObject::SetColorIntensity(int amount)
 {
+	FLinearColor currentColor = GetPaintedColor();
+
+	float anotherValue = FMath::Lerp(currentColor.G, 0.0f, 0.5f);
+	currentColor = FLinearColor(1.0f, anotherValue, anotherValue, 1.0f);
+	PaintingMatInst->SetVectorParameterValue("OverlayColor", currentColor);
+
+	float intensity = 0.0f;
+	PaintingMatInst->GetScalarParameterValue(FName(TEXT("Intensity")), intensity);
 	
+	intensity = FMath::Lerp(intensity, 1.0f, 0.5f);
+	PaintingMatInst->SetScalarParameterValue("Intensity", intensity);
 }
 
 void ACollectObject::SetBaseTexture(UTexture2D* texture)

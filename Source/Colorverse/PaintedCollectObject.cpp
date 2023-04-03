@@ -23,7 +23,7 @@ void APaintedCollectObject::BeginPlay()
 			CollectObjects.Add(collectObj);
 	}
 
-	for(int i = 0; i < CollectObjects.Num(); i++)
+	for (int i = 0; i < CollectObjects.Num(); i++)
 	{
 		FTimerHandle newHandle;
 		SpawnTimerHandles.Add(newHandle);
@@ -89,7 +89,14 @@ void APaintedCollectObject::PaintToObject_Implementation(FLinearColor PaintedCol
 		IsColorActive = true;
 
 		SetChildCollectObjectTexture(ChildActiveTexture);
-		PaintingMatInst->SetTextureParameterValue("BaseTexture", ActiveTexture);
+
+		FTimerHandle timer;
+		GetWorldTimerManager().SetTimer(timer, FTimerDelegate::CreateLambda([&]
+		{
+			GroupMatInst->SetVectorParameterValue("OverlayColor", GroupActiveColor);
+			PaintingMatInst->SetTextureParameterValue("BaseTexture", ActiveTexture);
+			GetWorldTimerManager().ClearTimer(timer);
+		}), 2.0f, false);
 	}
 }
 
@@ -106,7 +113,7 @@ void APaintedCollectObject::SetActiveCollectObject(bool active, int index)
 
 void APaintedCollectObject::SetChildCollectObjectTexture(UTexture2D* texture)
 {
-	GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Yellow, TEXT("set"));	
+	GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Yellow, TEXT("set"));
 	for (auto& collectObj : CollectObjects)
 		collectObj->SetBaseTexture(texture);
 }

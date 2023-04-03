@@ -31,6 +31,12 @@ private:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Collect Object",meta=(AllowPrivateAccess))
 	UTexture2D* ChildInActiveTexture;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Collect Object",meta=(AllowPrivateAccess))
+	FLinearColor GroupActiveColor;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Collect Object",meta=(AllowPrivateAccess))
+	FLinearColor GroupInActiveColor;
+	
 public:
 	APaintedCollectObject();
 
@@ -85,6 +91,9 @@ public:
 	UPROPERTY(VisibleAnywhere,BlueprintReadWrite, Category="Painted Collect Object | Setting")
 	UMaterialInstanceDynamic* PaintingMatInst;
 
+	UPROPERTY(VisibleAnywhere,BlueprintReadWrite, Category="Painted Collect Object | Setting")
+	UMaterialInstanceDynamic* GroupMatInst;
+	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Painted Collect Object | Setting")
 	UTextureRenderTarget2D* PaintingRenderTargetTemplate;
 	
