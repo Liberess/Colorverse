@@ -17,8 +17,11 @@ protected:
 	UPROPERTY(BlueprintReadOnly)
 	USceneComponent* DefaultRoot = nullptr;
 
-	UPROPERTY(BlueprintReadOnly)
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	UBoxComponent* BoxCol;
+	
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	UStaticMeshComponent* StaticMesh;
 
 	UPROPERTY(EditAnywhere,
 		BlueprintGetter=GetInteractable,

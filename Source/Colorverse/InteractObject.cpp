@@ -15,6 +15,9 @@ AInteractObject::AInteractObject()
 	BoxCol->SetCollisionProfileName(TEXT("Trigger"));
 	BoxCol->SetupAttachment(DefaultRoot);
 
+	StaticMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Static Mesh"));
+	StaticMesh->SetupAttachment(DefaultRoot);
+
 	BoxCol->OnComponentBeginOverlap.AddDynamic(this, &AInteractObject::OnOverlapBegin);
 	BoxCol->OnComponentEndOverlap.AddDynamic(this, &AInteractObject::OnOverlapEnd);
 }

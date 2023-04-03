@@ -6,16 +6,41 @@
 #include "InteractObject.h"
 #include "CollectObject.generated.h"
 
-UCLASS()
-class COLORVERSE_API ACollectObject : public AInteractObject
+UCLASS(Blueprintable)
+class COLORVERSE_API ACollectObject : public AActor
 {
 	GENERATED_BODY()
 
 private:
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category="Collect Object",meta=(AllowPrivateAccess))
+	UPROPERTY(BlueprintReadOnly, meta=(AllowPrivateAccess))
+	USceneComponent* DefaultRoot = nullptr;
+	
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta=(AllowPrivateAccess))
+	UStaticMeshComponent* StaticMesh;
+	
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category="Collect Object | Setting", meta=(AllowPrivateAccess))
 	FItem ItemData;
 
-	virtual void Interact_Implementation() override;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Collect Object | Setting", meta=(AllowPrivateAccess)) 
+	UMaterialInterface* BrushMatTemplate;
+	
+	UPROPERTY(EditAnywhere,BlueprintReadWrite, Category="Collect Object | Setting", meta=(AllowPrivateAccess)) 
+	UMaterialInterface* PaintingMatTemplate;
+
+	UPROPERTY(BlueprintReadWrite, Category="Collect Object | Setting", meta=(AllowPrivateAccess)) 
+	UMaterialInstanceDynamic* BrushMatInst;
+
+	UPROPERTY(BlueprintReadWrite, Category="Collect Object | Setting", meta=(AllowPrivateAccess))
+	UMaterialInstanceDynamic* PaintingMatInst;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Collect Object | Setting", meta=(AllowPrivateAccess))
+	UTextureRenderTarget2D* PaintingRenderTargetTemplate;
+	
+	UPROPERTY(BlueprintReadWrite, Category="Collect Object | Setting", meta=(AllowPrivateAccess))
+	UTextureRenderTarget2D* PaintingRenderTargetPallet;
+
+	UPROPERTY(BlueprintReadWrite, Category="Collect Object | Setting", meta=(AllowPrivateAccess))
+	UTextureRenderTarget2D* PaintingRenderTargetCopy;
 
 protected:
 	virtual void BeginPlay() override;
@@ -23,9 +48,12 @@ protected:
 public:
 	ACollectObject();
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
-	int PaintedCount = 0;
+	UFUNCTION(BlueprintCallable)
+	void SetColorIntensity(int amount);
+
+	UFUNCTION(BlueprintCallable)
+	void SetBaseTexture(UTexture2D* texture);
 	
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
-	int NeedsPaintedCount = 3;
+	UFUNCTION(BlueprintCallable)
+	FLinearColor GetPaintedColor();
 };

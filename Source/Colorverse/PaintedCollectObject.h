@@ -25,10 +25,17 @@ private:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Painted Collect Object",meta=(AllowPrivateAccess))
 	UTexture2D* InActiveTexture;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Collect Object",meta=(AllowPrivateAccess))
+	UTexture2D* ChildActiveTexture;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Collect Object",meta=(AllowPrivateAccess))
+	UTexture2D* ChildInActiveTexture;
+
 public:
 	APaintedCollectObject();
 
 	virtual void BeginPlay() override;
+	virtual void Interact_Implementation() override;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Collect Object", meta=(AllowPrivateAccess))
 	int ItemID = 0;
@@ -52,28 +59,34 @@ public:
 	float SpawnDelayTime = 3.0f;
 
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
-	void PaintToObject();
+	void PaintToObject(FLinearColor PaintedColor);
 
-	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
-	void SpawnCollectObject();
-	
 	UFUNCTION(BlueprintCallable)
-	void SpawnCollectObjectByIndex(int ObjectIndex);
+	void SetActiveCollectObject(bool active, int index);
 
+	UFUNCTION(BlueprintCallable)
+	void SetChildCollectObjectTexture(UTexture2D* texture);
+	
 	UPROPERTY(BlueprintReadOnly)
 	TArray<FTimerHandle> SpawnTimerHandles;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Painted Collect Object")
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category="Painted Collect Object | Setting")
 	TArray<ACollectObject*> CollectObjects;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Painted Collect Object") 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Painted Collect Object | Setting") 
+	UMaterialInterface* BrushMatTemplate;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Painted Collect Object | Setting") 
+	UMaterialInterface* PaintingMatTemplate;
+
+	UPROPERTY(VisibleAnywhere,BlueprintReadWrite, Category="Painted Collect Object | Setting") 
 	UMaterialInstanceDynamic* BrushMatInst;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Painted Collect Object")
+	UPROPERTY(VisibleAnywhere,BlueprintReadWrite, Category="Painted Collect Object | Setting")
 	UMaterialInstanceDynamic* PaintingMatInst;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Painted Collect Object | Setting")
-	UTextureRenderTarget2D* PaintingRenderTarget;
+	UTextureRenderTarget2D* PaintingRenderTargetTemplate;
 	
 	UPROPERTY(BlueprintReadWrite, Category="Painted Collect Object | Setting")
 	UTextureRenderTarget2D* PaintingRenderTargetPallet;

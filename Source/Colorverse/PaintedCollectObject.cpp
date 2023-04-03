@@ -1,9 +1,12 @@
 #include "PaintedCollectObject.h"
 
+#include "InventoryManager.h"
+#include "Engine/TextureRenderTarget2D.h"
+
 APaintedCollectObject::APaintedCollectObject()
 {
 	PrimaryActorTick.bCanEverTick = true;
-	
+
 	static ConstructorHelpers::FObjectFinder<UDataTable> DataTable(TEXT("/Game/ItemDatas/DT_ItemData"));
 	if (DataTable.Succeeded())
 		ItemDataTable = DataTable.Object;
@@ -13,27 +16,20 @@ void APaintedCollectObject::BeginPlay()
 {
 	Super::BeginPlay();
 
-	if(IsColorActive)
+	TArray<AActor*> tempActors;
+	GetAllChildActors(tempActors, true);
+	for (auto actor : tempActors)
 	{
-		PaintingMatInst->SetTextureParameterValue("BaseTexture", ActiveTexture);
+		if (auto collectObj = Cast<ACollectObject>(actor))
+			CollectObjects.Add(collectObj);
 	}
-	else
-	{
-		PaintingMatInst->SetTextureParameterValue("BaseTexture", InActiveTexture);
-	}
-
-	/*GetWorldTimerManager().SetTimer(SpawnTimerHandles[0], this,
-		&APaintedCollectObject::SpawnCollectObject, SpawnDelayTime, false, 0.0f);*/
 
 	for(int i = 0; i < CollectObjects.Num(); i++)
 	{
-		GetWorldTimerManager().SetTimer(SpawnTimerHandles[i], FTimerDelegate::CreateLambda([i, this]
-		{
-			GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Green, TEXT("g"));
-			SpawnCollectObjectByIndex(i);
-		}), SpawnDelayTime, false, 0.0f);
-	}
-	
+		FTimerHandle newHandle;
+		SpawnTimerHandles.Add(newHandle);
+	 }
+
 	try
 	{
 		check(ItemDataTable);
@@ -44,40 +40,74 @@ void APaintedCollectObject::BeginPlay()
 	}
 	catch (...)
 	{
-		
 	}
 }
 
-void APaintedCollectObject::PaintToObject_Implementation()
+void APaintedCollectObject::Interact_Implementation()
 {
-	if(IsColorActive)
-		return;
-	
-	++PaintedCount;
+	//Super::Interact_Implementation();
 
-	if(PaintedCount >= NeedsPaintedCount)
+	if (IsColorActive)
 	{
-		IsColorActive = true;
-		PaintingMatInst->SetTextureParameterValue("BaseTexture", ActiveTexture);
-	}
-}
-
-void APaintedCollectObject::SpawnCollectObject_Implementation()
-{
-	for(auto& CollectObj : CollectObjects)
-	{
-		if(CollectObj->IsHidden())
+		for (int i = 0; i < CollectObjects.Num(); i++)
 		{
-			CollectObj->SetActorHiddenInGame(true);
-			CollectObj->SetActorEnableCollision(true);
-			CollectObj->SetActorTickEnabled(true);
-			break;
+			if (!CollectObjects[i]->IsHidden())
+			{
+				SetActiveCollectObject(false, i);
+				GetWorldTimerManager().SetTimer(SpawnTimerHandles[i], FTimerDelegate::CreateLambda([i, this]
+				{
+					GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Green, TEXT("g"));
+					SetActiveCollectObject(true, i);
+				}), SpawnDelayTime, false);
+
+				GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Purple, TEXT("Pickup Collect Object"));
+
+				UInventoryManager* InvenMgr = GetWorld()->GetSubsystem<UInventoryManager>();
+				InvenMgr->AddInventoryItem(ItemData);
+				break;
+			}
 		}
 	}
 }
 
-void APaintedCollectObject::SpawnCollectObjectByIndex(int ObjectIndex)
+void APaintedCollectObject::PaintToObject_Implementation(FLinearColor PaintedColor)
 {
-	if(ObjectIndex < 0 || ObjectIndex >= CollectObjects.Num())
+	if (IsColorActive)
 		return;
+
+	++PaintedCount;
+
+	GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Yellow, TEXT("paint"));
+
+	for (auto& collectObj : CollectObjects)
+	{
+		collectObj->SetColorIntensity(PaintedCount);
+	}
+
+	if (PaintedCount >= NeedsPaintedCount)
+	{
+		IsInteractable = true;
+		IsColorActive = true;
+
+		SetChildCollectObjectTexture(ChildActiveTexture);
+		PaintingMatInst->SetTextureParameterValue("BaseTexture", ActiveTexture);
+	}
+}
+
+void APaintedCollectObject::SetActiveCollectObject(bool active, int index)
+{
+	if (index < 0 || index >= CollectObjects.Num())
+		return;
+
+	// active가 true라면 CollectObject를 활성화한다.
+	CollectObjects[index]->SetActorHiddenInGame(!active);
+	CollectObjects[index]->SetActorEnableCollision(active);
+	CollectObjects[index]->SetActorTickEnabled(active);
+}
+
+void APaintedCollectObject::SetChildCollectObjectTexture(UTexture2D* texture)
+{
+	GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Yellow, TEXT("set"));	
+	for (auto& collectObj : CollectObjects)
+		collectObj->SetBaseTexture(texture);
 }
