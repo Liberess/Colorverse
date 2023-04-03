@@ -12,18 +12,9 @@ class COLORVERSE_API ACollectObject : public AInteractObject
 	GENERATED_BODY()
 
 private:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Collect Object", meta=(AllowPrivateAccess))
-	int ItemID = 0;
-	
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Collect Object", meta=(AllowPrivateAccess))
-	ECollectType CollectType;
-
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category="Collect Object",meta=(AllowPrivateAccess))
 	FItem ItemData;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Collect Object",meta=(AllowPrivateAccess))
-	UDataTable* ItemDataTable;
-	
 	virtual void Interact_Implementation() override;
 
 protected:

@@ -14,10 +14,10 @@ class COLORVERSE_API AInteractObject : public AActor, public IIInteractable
 protected:
 	virtual void BeginPlay() override;
 
-	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly)
+	UPROPERTY(BlueprintReadOnly)
 	USceneComponent* DefaultRoot = nullptr;
 
-	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly)
+	UPROPERTY(BlueprintReadOnly)
 	UBoxComponent* BoxCol;
 
 	UPROPERTY(EditAnywhere,
