@@ -45,6 +45,17 @@ enum class ECombineColors : uint8
 };
 
 UENUM(BlueprintType)
+enum class EPaintComboColors : uint8
+{
+	Red UMETA(DisplayName = "Red"),
+	Orange UMETA(DisplayName = "Orange"),
+	Yellow UMETA(DisplayName = "Yellow"),
+	Green UMETA(DisplayName = "Green"),
+	Blue UMETA(DisplayName = "Blue"),
+	Purple UMETA(DisplayName = "Purple")
+};
+
+UENUM(BlueprintType)
 enum class ESacrificeType : uint8
 {
 	Unlock UMETA(DisplayName = "Unlock"),

@@ -13,10 +13,16 @@ class COLORVERSE_API APaintedCollectObject : public AInteractObject
 	GENERATED_BODY()
 
 private:
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Painted Collect Object",meta=(AllowPrivateAccess))
-	UDataTable* ItemDataTable;
+	UPROPERTY(BlueprintReadOnly, Category="Painted Collect Object",meta=(AllowPrivateAccess))
+	UDataTable* ItemDT;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Painted Collect Object",meta=(AllowPrivateAccess))
+	UPROPERTY(BlueprintReadOnly, Category="Painted Collect Object",meta=(AllowPrivateAccess))
+	UDataTable* PaintComboDT;
+
+	UPROPERTY(BlueprintReadOnly, Category="Painted Collect Object",meta=(AllowPrivateAccess))
+	FPaintCombo PaintComboData;
+
+	UPROPERTY(BlueprintReadOnly, Category="Painted Collect Object",meta=(AllowPrivateAccess))
 	FItem ItemData;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Painted Collect Object",meta=(AllowPrivateAccess))
@@ -37,12 +43,6 @@ private:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Painted Collect Object | Child",meta=(AllowPrivateAccess))
 	FLinearColor GroupInActiveColor;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Painted Collect Object | Child", meta=(AllowPrivateAccess))
-	FLinearColor CollectOriginColor;
-
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Painted Collect Object | Setting", meta=(AllowPrivateAccess))
-	TArray<FLinearColor> VaildPaintColors;
-	
 public:
 	APaintedCollectObject();
 
@@ -51,6 +51,9 @@ public:
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Painted Collect Object | Child", meta=(AllowPrivateAccess))
 	int ItemID = 0;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Painted Collect Object | Child", meta=(AllowPrivateAccess))
+	EPaintComboColors PaintComboColorTag;
 	
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 	bool IsColorActive = false;
@@ -65,7 +68,7 @@ public:
 	float SpawnDelayTime = 3.0f;
 
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
-	void PaintToObject(FLinearColor PaintedColor);
+	void PaintToObject(ECombineColors colorTag, FLinearColor PaintedColor);
 
 	UFUNCTION(BlueprintCallable)
 	void SetActiveCollectObject(bool active, int index);
@@ -85,13 +88,13 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Painted Collect Object | Setting") 
 	UMaterialInterface* PaintingMatTemplate;
 
-	UPROPERTY(VisibleAnywhere,BlueprintReadWrite, Category="Painted Collect Object | Setting") 
+	UPROPERTY(BlueprintReadWrite, Category="Painted Collect Object | Setting") 
 	UMaterialInstanceDynamic* BrushMatInst;
 
-	UPROPERTY(VisibleAnywhere,BlueprintReadWrite, Category="Painted Collect Object | Setting")
+	UPROPERTY(BlueprintReadWrite, Category="Painted Collect Object | Setting")
 	UMaterialInstanceDynamic* PaintingMatInst;
 
-	UPROPERTY(VisibleAnywhere,BlueprintReadWrite, Category="Painted Collect Object | Child")
+	UPROPERTY(BlueprintReadWrite, Category="Painted Collect Object | Child")
 	UMaterialInstanceDynamic* GroupMatInst;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Painted Collect Object | Setting")

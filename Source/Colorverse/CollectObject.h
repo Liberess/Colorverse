@@ -45,20 +45,11 @@ private:
 	UPROPERTY(BlueprintReadOnly, Category="Collect Object | Setting", meta=(AllowPrivateAccess))
 	bool bIsChangedColor;
 	
-	UPROPERTY(BlueprintReadWrite, Category="Collect Object | Setting", meta=(AllowPrivateAccess))
-	FLinearColor OriginColor;
-	
 	UPROPERTY(BlueprintReadOnly, Category="Collect Object | Setting", meta=(AllowPrivateAccess))
 	FLinearColor CurrentColor;
 	
 	UPROPERTY(BlueprintReadOnly, Category="Collect Object | Setting", meta=(AllowPrivateAccess))
 	FLinearColor TargetColor;
-
-	UPROPERTY(BlueprintReadOnly, Category="Collect Object | Setting", meta=(AllowPrivateAccess))
-	FLinearColor PreviousPaintColor;
-	
-	UPROPERTY(BlueprintReadOnly, Category="Collect Object | Setting", meta=(AllowPrivateAccess))
-	FLinearColor NextPaintColor;
 	
 	UPROPERTY(BlueprintReadOnly, Category="Collect Object | Setting", meta=(AllowPrivateAccess))
 	float CurrentIntensity = 0.0f;
@@ -76,7 +67,10 @@ protected:
 public:
 	ACollectObject();
 
-	UPROPERTY(BlueprintReadOnly, Category="Collect Object | Setting", meta=(AllowPrivateAccess))\
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Collect Object | Setting")
+	FPaintCombo PaintComboData;
+
+	UPROPERTY(BlueprintReadOnly, Category="Collect Object | Setting")
 	bool bIsPaintComplete = false;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category="Collect Object | Setting")
@@ -85,11 +79,8 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Collect Object | Setting")
 	int NeedsPaintedCount = 3;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Collect Object | Setting")
-	TArray<FLinearColor> VaildPaintColors;
-
 	UFUNCTION(BlueprintCallable)
-	void SetPaintedColorAndIntensity(FLinearColor color);
+	void SetPaintedColorAndIntensity(ECombineColors colorTag, FLinearColor color);
 
 	UFUNCTION(BlueprintCallable)
 	void SetBaseTexture(UTexture2D* texture);
@@ -99,10 +90,4 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	void SetPaintedColor(FLinearColor color);
-
-	UFUNCTION(BlueprintCallable)
-	void SetPaintedComplete();
-
-	UFUNCTION(BlueprintCallable)
-	bool IsExistInVaildPaintArray(FLinearColor findColor);
 };

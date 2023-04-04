@@ -6,14 +6,39 @@ APaintedCollectObject::APaintedCollectObject()
 {
 	PrimaryActorTick.bCanEverTick = true;
 
-	static ConstructorHelpers::FObjectFinder<UDataTable> DataTable(TEXT("/Game/ItemDatas/DT_ItemData"));
+	static ConstructorHelpers::FObjectFinder<UDataTable> DataTable(TEXT("/Game/DataTables/DT_ItemData"));
 	if (DataTable.Succeeded())
-		ItemDataTable = DataTable.Object;
+		ItemDT = DataTable.Object;
+
+	static ConstructorHelpers::FObjectFinder<UDataTable> PaintComboTable(TEXT("/Game/DataTables/DT_PaintCombo"));
+	if (PaintComboTable.Succeeded())
+		PaintComboDT = PaintComboTable.Object;
 }
 
 void APaintedCollectObject::BeginPlay()
 {
 	Super::BeginPlay();
+
+	try
+	{
+		if(IsValid(ItemDT))
+		{
+			FString RowStr = "Item_";
+			RowStr.Append(FString::FromInt(ItemID));
+			ItemData = *(ItemDT->FindRow<FItem>(FName(*RowStr), ""));
+			InteractWidgetDisplayTxt = ItemData.Name.ToString();
+		}
+
+		if(IsValid(PaintComboDT))
+		{
+			FString str = UEnum::GetDisplayValueAsText(PaintComboColorTag).ToString();
+			PaintComboData = *(PaintComboDT->FindRow<FPaintCombo>(FName(*str), ""));
+		}
+	}
+	catch (...)
+	{
+		
+	}
 
 	TArray<AActor*> tempActors;
 	GetAllChildActors(tempActors, true);
@@ -21,10 +46,8 @@ void APaintedCollectObject::BeginPlay()
 	{
 		if (auto collectObj = Cast<ACollectObject>(actor))
 		{
+			collectObj->PaintComboData = PaintComboData;
 			CollectObjects.Add(collectObj);
-
-			for(auto& color : VaildPaintColors)
-				collectObj->VaildPaintColors.Add(color);
 		}
 	}
 
@@ -32,18 +55,6 @@ void APaintedCollectObject::BeginPlay()
 	{
 		FTimerHandle newHandle;
 		SpawnTimerHandles.Add(newHandle);
-	}
-
-	try
-	{
-		check(ItemDataTable);
-		FString RowStr = "Item_";
-		RowStr.Append(FString::FromInt(ItemID));
-		ItemData = *(ItemDataTable->FindRow<FItem>(FName(*RowStr), ""));
-		InteractWidgetDisplayTxt = ItemData.Name.ToString();
-	}
-	catch (...)
-	{
 	}
 }
 
@@ -71,7 +82,7 @@ void APaintedCollectObject::Interact_Implementation()
 	}
 }
 
-void APaintedCollectObject::PaintToObject_Implementation(FLinearColor PaintedColor)
+void APaintedCollectObject::PaintToObject_Implementation(ECombineColors colorTag, FLinearColor PaintedColor)
 {
 	if (IsColorActive)
 		return;
@@ -95,7 +106,7 @@ void APaintedCollectObject::PaintToObject_Implementation(FLinearColor PaintedCol
 		}
 		else
 		{
-			collectObj->SetPaintedColorAndIntensity(PaintedColor);
+			collectObj->SetPaintedColorAndIntensity(colorTag, PaintedColor);
 		}
 	}
 }

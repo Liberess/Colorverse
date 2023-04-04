@@ -1,8 +1,5 @@
 #include "CollectObject.h"
-#include "ColorModel.h"
 #include "InventoryManager.h"
-
-using namespace Liberess;
 
 ACollectObject::ACollectObject()
 {
@@ -33,34 +30,49 @@ void ACollectObject::Tick(float DeltaSeconds)
 		CurrentIntensity = FMath::Lerp(CurrentIntensity, TargetIntensity, DeltaSeconds * ChangedColorVelocity);
 		PaintingMatInst->SetScalarParameterValue("Intensity", CurrentIntensity);
 
-		GEngine->AddOnScreenDebugMessage(0, 1.0f, FColor::Purple,
-FString::Printf(TEXT("%f %f %f %f"),CurrentColor.R, CurrentColor.G, CurrentColor.B, CurrentColor.A
-));
-
 		if(FMath::Abs(CurrentIntensity - TargetIntensity) <= 0.01f)
+		{
 			bIsChangedColor = false;
+			
+			if(PaintedCount >= NeedsPaintedCount)
+				bIsPaintComplete = true;
+		}
 	}
 }
 
-void ACollectObject::SetPaintedColorAndIntensity(FLinearColor brushColor)
+void ACollectObject::SetPaintedColorAndIntensity(ECombineColors colorTag, FLinearColor brushColor)
 {
 	if(bIsPaintComplete)
 		return;
 
-	/*if(!IsExistInVaildPaintArray(brushColor))
-		return;*/
-	
+	if(PaintedCount < 0 || PaintedCount >= PaintComboData.ComboColors.Num())
+		return;
+
+	if(PaintComboData.ComboColors[PaintedCount] != colorTag)
+		return;
+
 	++PaintedCount;
-	
 	bIsChangedColor = true;
 
 	CurrentColor = GetPaintedColor();
-	TargetColor = FLinearColor(
+
+	if(PaintedCount >= NeedsPaintedCount)
+	{
+		TargetColor = FLinearColor(
+			PaintComboData.ResultColor.R,
+			PaintComboData.ResultColor.G,
+			PaintComboData.ResultColor.B,
+		1.0f);
+	}
+	else
+	{
+		TargetColor = FLinearColor(
 		FMath::Lerp(CurrentColor.R, brushColor.R, 0.5f),
 		FMath::Lerp(CurrentColor.G, brushColor.G, 0.5f),
 		FMath::Lerp(CurrentColor.B, brushColor.B, 0.5f),
 		1.0f);
-
+	}
+	
 	// Emissive
 	PaintingMatInst->GetScalarParameterValue(FName(TEXT("Intensity")), CurrentIntensity);
 	TargetIntensity = FMath::Lerp(CurrentIntensity, 1.0f, 0.5f);
@@ -87,21 +99,4 @@ void ACollectObject::SetPaintedColor(FLinearColor color)
 		return;
 	
 	PaintingMatInst->SetVectorParameterValue("OverlayColor", color);
-}
-
-void ACollectObject::SetPaintedComplete()
-{
-	bIsPaintComplete = true;
-	PaintingMatInst->SetVectorParameterValue("OverlayColor", OriginColor);
-}
-
-bool ACollectObject::IsExistInVaildPaintArray(FLinearColor findColor)
-{
-	for(auto& color : VaildPaintColors)
-	{
-		if(color == findColor)
-			return true;
-	}
-
-	return false;
 }
