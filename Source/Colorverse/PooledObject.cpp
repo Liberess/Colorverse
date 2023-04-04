@@ -69,11 +69,14 @@ void APooledObject::Init()
 	SetActorRotation(FRotator().ZeroRotator);
 }
 
-void APooledObject::CreatePooledObject_Implementation()
+void APooledObject::CreatePooledObject_Implementation(FVector location, FRotator rotator)
 {
 	IsInteractable = true;
 
 	SetActive(true);
+
+	SetActorLocation(location);
+	SetActorRotation(rotator);
 }
 
 void APooledObject::DistroyPooledObject_Implementation()

@@ -27,7 +27,7 @@ public:
 	TSubclassOf<class APooledObject> PooledObjectSubclass;
 
 	UPROPERTY(EditAnywhere, Category = "ObjectPooler")
-	int PoolSize = 100;
+	int PoolSize = 5;
 
 	TArray<APooledObject*> Pool;
 };

@@ -40,16 +40,15 @@ public:
 
 	void SetActive(bool InActive);
 
-	UFUNCTION(BlueprintCallable)
 	void Deactivate();
 
 	UFUNCTION(BlueprintNativeEvent)
 	void ActiveTrueEvent();
 
-	UFUNCTION(BlueprintNativeEvent)
-	void CreatePooledObject();
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
+	void CreatePooledObject(FVector location, FRotator rotator);
 
-	UFUNCTION(BlueprintNativeEvent)
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
 	void DistroyPooledObject();
 
 	FORCEINLINE class UStaticMeshComponent* GetStaticMesh() { return mesh; }
