@@ -20,7 +20,12 @@ void APaintedCollectObject::BeginPlay()
 	for (auto actor : tempActors)
 	{
 		if (auto collectObj = Cast<ACollectObject>(actor))
+		{
 			CollectObjects.Add(collectObj);
+
+			for(auto& color : VaildPaintColors)
+				collectObj->VaildPaintColors.Add(color);
+		}
 	}
 
 	for (int i = 0; i < CollectObjects.Num(); i++)
@@ -55,11 +60,8 @@ void APaintedCollectObject::Interact_Implementation()
 				SetActiveCollectObject(false, i);
 				GetWorldTimerManager().SetTimer(SpawnTimerHandles[i], FTimerDelegate::CreateLambda([i, this]
 				{
-					GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Green, TEXT("g"));
 					SetActiveCollectObject(true, i);
 				}), SpawnDelayTime, false);
-
-				GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Purple, TEXT("Pickup Collect Object"));
 
 				UInventoryManager* InvenMgr = GetWorld()->GetSubsystem<UInventoryManager>();
 				InvenMgr->AddInventoryItem(ItemData);
@@ -74,29 +76,27 @@ void APaintedCollectObject::PaintToObject_Implementation(FLinearColor PaintedCol
 	if (IsColorActive)
 		return;
 
-	++PaintedCount;
-
-	GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Yellow, TEXT("paint"));
-
 	for (auto& collectObj : CollectObjects)
 	{
-		collectObj->SetColorIntensity(PaintedCount);
-	}
-
-	if (PaintedCount >= NeedsPaintedCount)
-	{
-		IsInteractable = true;
-		IsColorActive = true;
-
-		SetChildCollectObjectTexture(ChildActiveTexture);
-
-		FTimerHandle timer;
-		GetWorldTimerManager().SetTimer(timer, FTimerDelegate::CreateLambda([&]
+		if(collectObj->bIsPaintComplete)
 		{
-			GroupMatInst->SetVectorParameterValue("OverlayColor", GroupActiveColor);
-			PaintingMatInst->SetTextureParameterValue("BaseTexture", ActiveTexture);
-			GetWorldTimerManager().ClearTimer(timer);
-		}), 2.0f, false);
+			IsInteractable = true;
+			IsColorActive = true;
+
+			SetChildCollectObjectTexture(ChildActiveTexture);
+
+			FTimerHandle timer;
+			GetWorldTimerManager().SetTimer(timer, FTimerDelegate::CreateLambda([&]
+			{
+				GroupMatInst->SetVectorParameterValue("OverlayColor", GroupActiveColor);
+				PaintingMatInst->SetTextureParameterValue("BaseTexture", ActiveTexture);
+				GetWorldTimerManager().ClearTimer(timer);
+			}), 2.0f, false);
+		}
+		else
+		{
+			collectObj->SetPaintedColorAndIntensity(PaintedColor);
+		}
 	}
 }
 
@@ -113,7 +113,6 @@ void APaintedCollectObject::SetActiveCollectObject(bool active, int index)
 
 void APaintedCollectObject::SetChildCollectObjectTexture(UTexture2D* texture)
 {
-	GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Yellow, TEXT("set"));
 	for (auto& collectObj : CollectObjects)
 		collectObj->SetBaseTexture(texture);
 }

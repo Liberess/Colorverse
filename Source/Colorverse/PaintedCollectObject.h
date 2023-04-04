@@ -25,17 +25,23 @@ private:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Painted Collect Object",meta=(AllowPrivateAccess))
 	UTexture2D* InActiveTexture;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Collect Object",meta=(AllowPrivateAccess))
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Painted Collect Object | Child",meta=(AllowPrivateAccess))
 	UTexture2D* ChildActiveTexture;
 	
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Collect Object",meta=(AllowPrivateAccess))
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Painted Collect Object | Child",meta=(AllowPrivateAccess))
 	UTexture2D* ChildInActiveTexture;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Collect Object",meta=(AllowPrivateAccess))
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Painted Collect Object | Child",meta=(AllowPrivateAccess))
 	FLinearColor GroupActiveColor;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Collect Object",meta=(AllowPrivateAccess))
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Painted Collect Object | Child",meta=(AllowPrivateAccess))
 	FLinearColor GroupInActiveColor;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Painted Collect Object | Child", meta=(AllowPrivateAccess))
+	FLinearColor CollectOriginColor;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Painted Collect Object | Setting", meta=(AllowPrivateAccess))
+	TArray<FLinearColor> VaildPaintColors;
 	
 public:
 	APaintedCollectObject();
@@ -43,7 +49,7 @@ public:
 	virtual void BeginPlay() override;
 	virtual void Interact_Implementation() override;
 	
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Collect Object", meta=(AllowPrivateAccess))
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Painted Collect Object | Child", meta=(AllowPrivateAccess))
 	int ItemID = 0;
 	
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
@@ -55,13 +61,7 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Painted Collect Object", meta=(AllowPrivateAccess))
 	ECollectType CollectType;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category="Painted Collect Object")
-	int PaintedCount = 0;
-	
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category="Painted Collect Object")
-	int NeedsPaintedCount = 3;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Painted Collect Object")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Painted Collect Object | Child")
 	float SpawnDelayTime = 3.0f;
 
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
@@ -76,7 +76,7 @@ public:
 	UPROPERTY(BlueprintReadOnly)
 	TArray<FTimerHandle> SpawnTimerHandles;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category="Painted Collect Object | Setting")
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category="Painted Collect Object | Child")
 	TArray<ACollectObject*> CollectObjects;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Painted Collect Object | Setting") 
@@ -91,7 +91,7 @@ public:
 	UPROPERTY(VisibleAnywhere,BlueprintReadWrite, Category="Painted Collect Object | Setting")
 	UMaterialInstanceDynamic* PaintingMatInst;
 
-	UPROPERTY(VisibleAnywhere,BlueprintReadWrite, Category="Painted Collect Object | Setting")
+	UPROPERTY(VisibleAnywhere,BlueprintReadWrite, Category="Painted Collect Object | Child")
 	UMaterialInstanceDynamic* GroupMatInst;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Painted Collect Object | Setting")

@@ -42,18 +42,67 @@ private:
 	UPROPERTY(BlueprintReadWrite, Category="Collect Object | Setting", meta=(AllowPrivateAccess))
 	UTextureRenderTarget2D* PaintingRenderTargetCopy;
 
+	UPROPERTY(BlueprintReadOnly, Category="Collect Object | Setting", meta=(AllowPrivateAccess))
+	bool bIsChangedColor;
+	
+	UPROPERTY(BlueprintReadWrite, Category="Collect Object | Setting", meta=(AllowPrivateAccess))
+	FLinearColor OriginColor;
+	
+	UPROPERTY(BlueprintReadOnly, Category="Collect Object | Setting", meta=(AllowPrivateAccess))
+	FLinearColor CurrentColor;
+	
+	UPROPERTY(BlueprintReadOnly, Category="Collect Object | Setting", meta=(AllowPrivateAccess))
+	FLinearColor TargetColor;
+
+	UPROPERTY(BlueprintReadOnly, Category="Collect Object | Setting", meta=(AllowPrivateAccess))
+	FLinearColor PreviousPaintColor;
+	
+	UPROPERTY(BlueprintReadOnly, Category="Collect Object | Setting", meta=(AllowPrivateAccess))
+	FLinearColor NextPaintColor;
+	
+	UPROPERTY(BlueprintReadOnly, Category="Collect Object | Setting", meta=(AllowPrivateAccess))
+	float CurrentIntensity = 0.0f;
+	
+	UPROPERTY(BlueprintReadOnly, Category="Collect Object | Setting", meta=(AllowPrivateAccess))
+	float TargetIntensity = 0.0f;
+	
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Collect Object | Setting", meta=(AllowPrivateAccess))
+	float ChangedColorVelocity = 2.0f;
+	
 protected:
 	virtual void BeginPlay() override;
+	virtual void Tick(float DeltaSeconds) override;
 
 public:
 	ACollectObject();
 
+	UPROPERTY(BlueprintReadOnly, Category="Collect Object | Setting", meta=(AllowPrivateAccess))\
+	bool bIsPaintComplete = false;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category="Collect Object | Setting")
+	int PaintedCount = 0;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Collect Object | Setting")
+	int NeedsPaintedCount = 3;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Collect Object | Setting")
+	TArray<FLinearColor> VaildPaintColors;
+
 	UFUNCTION(BlueprintCallable)
-	void SetColorIntensity(int amount);
+	void SetPaintedColorAndIntensity(FLinearColor color);
 
 	UFUNCTION(BlueprintCallable)
 	void SetBaseTexture(UTexture2D* texture);
 	
 	UFUNCTION(BlueprintCallable)
 	FLinearColor GetPaintedColor();
+
+	UFUNCTION(BlueprintCallable)
+	void SetPaintedColor(FLinearColor color);
+
+	UFUNCTION(BlueprintCallable)
+	void SetPaintedComplete();
+
+	UFUNCTION(BlueprintCallable)
+	bool IsExistInVaildPaintArray(FLinearColor findColor);
 };

@@ -52,6 +52,19 @@ public:
 	ECombineColors CombineColor;
 };
 
+USTRUCT(BlueprintType, BlueprintType)
+struct FPaintCombo : public FTableRowBase
+{
+	GENERATED_USTRUCT_BODY();
+
+public:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PaintCombo")
+	TArray<ECombineColors> ComboColor;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PaintCombo")
+	FLinearColor ResultColor;
+};
+
 UINTERFACE(MinimalAPI)
 class UIItem : public UInterface
 {
