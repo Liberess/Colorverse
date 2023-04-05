@@ -420,11 +420,11 @@ void UInventoryManager::SacrificeItems(ESacrificeType SacrificeType)
 void UInventoryManager::IncreaseStatueColorRecoveryProgress(ECombineColors SacrificeColor, float Amount)
 {
 	int index = static_cast<int>(SacrificeColor);
-	Statues[index]->WorldMineColorRecoveryAmount += Amount;
+	Statues[index]->WorldRecoveryAmount += Amount;
 
-	if(Statues[index]->WorldMineColorRecoveryAmount >= Statues[index]->WorldMineColorRecoveryCapacity)
+	if(Statues[index]->WorldRecoveryAmount >= Statues[index]->WorldRecoveryCapacity)
 	{
-		Statues[index]->WorldMineColorRecoveryAmount = Statues[index]->WorldMineColorRecoveryCapacity;
+		Statues[index]->WorldRecoveryAmount = Statues[index]->WorldRecoveryCapacity;
 		Statues[index]->bIsWorldMineColorRecoveryComplete = true;
 	}
 }

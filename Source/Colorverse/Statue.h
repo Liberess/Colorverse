@@ -57,9 +57,9 @@ public:
 
 	// 월드에서 자신의 색(빨강 등)을 되찾은 정도
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-	float WorldMineColorRecoveryAmount = 0.0f;
+	float WorldRecoveryAmount = 0.0f;
 
 	// 월드에서 자신의 색(빨강 등)을 되찾기 위해 채워야 하는 목표치
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
-	float WorldMineColorRecoveryCapacity = 100.0f;
+	float WorldRecoveryCapacity = 100.0f;
 };
