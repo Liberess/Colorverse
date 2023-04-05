@@ -89,25 +89,8 @@ void APaintedCollectObject::PaintToObject_Implementation(ECombineColors colorTag
 
 	for (auto& collectObj : CollectObjects)
 	{
-		if(collectObj->bIsPaintComplete)
-		{
-			IsInteractable = true;
-			IsColorActive = true;
-
-			SetChildCollectObjectTexture(ChildActiveTexture);
-
-			FTimerHandle timer;
-			GetWorldTimerManager().SetTimer(timer, FTimerDelegate::CreateLambda([&]
-			{
-				GroupMatInst->SetVectorParameterValue("OverlayColor", GroupActiveColor);
-				PaintingMatInst->SetTextureParameterValue("BaseTexture", ActiveTexture);
-				GetWorldTimerManager().ClearTimer(timer);
-			}), 2.0f, false);
-		}
-		else
-		{
+		if(!collectObj->bIsPaintComplete)
 			collectObj->SetPaintedColorAndIntensity(colorTag, PaintedColor);
-		}
 	}
 }
 
@@ -127,3 +110,24 @@ void APaintedCollectObject::SetChildCollectObjectTexture(UTexture2D* texture)
 	for (auto& collectObj : CollectObjects)
 		collectObj->SetBaseTexture(texture);
 }
+
+void APaintedCollectObject::SetRecoveryColorComplete(ECombineColors color)
+{
+	IsInteractable = true;
+	IsColorActive = true;
+
+	SetChildCollectObjectTexture(ChildActiveTexture);
+
+	UInventoryManager* invenMgr = GetWorld()->GetSubsystem<UInventoryManager>();
+	invenMgr->IncreaseStatueColorRecoveryProgress(color, 10.0f);
+
+	FTimerHandle timer;
+	GetWorldTimerManager().SetTimer(timer, FTimerDelegate::CreateLambda([&]
+	{
+		GroupMatInst->SetVectorParameterValue("OverlayColor", GroupActiveColor);
+		PaintingMatInst->SetTextureParameterValue("BaseTexture", ActiveTexture);
+		GetWorldTimerManager().ClearTimer(timer);
+	}), 2.0f, false);
+}
+
+

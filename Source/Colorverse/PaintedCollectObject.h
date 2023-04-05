@@ -75,6 +75,9 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	void SetChildCollectObjectTexture(UTexture2D* texture);
+
+	UFUNCTION(BlueprintCallable)
+	void SetRecoveryColorComplete(ECombineColors color);
 	
 	UPROPERTY(BlueprintReadOnly)
 	TArray<FTimerHandle> SpawnTimerHandles;

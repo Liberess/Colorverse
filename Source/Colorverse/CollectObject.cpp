@@ -1,5 +1,6 @@
 #include "CollectObject.h"
 #include "InventoryManager.h"
+#include "PaintedCollectObject.h"
 
 ACollectObject::ACollectObject()
 {
@@ -58,11 +59,15 @@ void ACollectObject::SetPaintedColorAndIntensity(ECombineColors colorTag, FLinea
 
 	if(PaintedCount >= NeedsPaintedCount)
 	{
+		GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Yellow, TEXT("gg"));
 		TargetColor = FLinearColor(
 			PaintComboData.ResultColor.R,
 			PaintComboData.ResultColor.G,
 			PaintComboData.ResultColor.B,
 		1.0f);
+
+		APaintedCollectObject* paintObj = Cast<APaintedCollectObject>(GetParentActor());
+		paintObj->SetRecoveryColorComplete(ECombineColors::Red);
 	}
 	else
 	{

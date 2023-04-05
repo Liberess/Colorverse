@@ -1,6 +1,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Enums.h"
 #include "InteractObject.h"
 #include "Statue.generated.h"
 
@@ -25,9 +26,15 @@ public:
 	UPROPERTY()
 	bool bIsRecoveryComplete = false;
 
+	UPROPERTY()
+	bool bIsWorldMineColorRecoveryComplete = false;
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta=(AllowPrivateAccess))
 	int StatueIndex = 0;
-
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta=(AllowPrivateAccess))
+	ECombineColors StatueColor;
+	
 	// 성소와 상호작용하며 인벤토리 UI가 열렸는지
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	bool bIsOpenInventoryByStatue = false;
@@ -40,11 +47,19 @@ public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	int UnlockCapacity = 3;
 
-	// 성소가 있는 지역의 색을 되찾은 정도
+	// 성소가 활성화 된 정도
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	float RecoveryAmount = 0.0f;
 
-	// 성소가 있는 지역의 색을 되찾기 위해 채워야 하는 목표치
+	// 성소가 활성화 되기 위해 채워야 하는 목표치
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	float RecoveryCapacity = 100.0f;
+
+	// 월드에서 자신의 색(빨강 등)을 되찾은 정도
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	float WorldMineColorRecoveryAmount = 0.0f;
+
+	// 월드에서 자신의 색(빨강 등)을 되찾기 위해 채워야 하는 목표치
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	float WorldMineColorRecoveryCapacity = 100.0f;
 };
