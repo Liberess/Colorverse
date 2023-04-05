@@ -61,6 +61,8 @@ void APaintedCollectObject::BeginPlay()
 void APaintedCollectObject::Interact_Implementation()
 {
 	//Super::Interact_Implementation();
+	if(!IsInteractable)
+		return;
 
 	if (IsColorActive)
 	{
@@ -84,7 +86,7 @@ void APaintedCollectObject::Interact_Implementation()
 
 void APaintedCollectObject::PaintToObject_Implementation(ECombineColors colorTag, FLinearColor PaintedColor)
 {
-	if (IsColorActive)
+	if (IsColorActive || !IsInteractable)
 		return;
 
 	for (auto& collectObj : CollectObjects)

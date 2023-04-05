@@ -1,5 +1,8 @@
 #include "InteractObject.h"
+
+#include "ColorArea.h"
 #include "ColorverseCharacter.h"
+#include "Kismet/GameplayStatics.h"
 
 #define Print(duration, text) if(GEngine) GEngine->AddOnScreenDebugMessage(-1,duration, FColor::Green, text);
 
@@ -25,6 +28,20 @@ AInteractObject::AInteractObject()
 void AInteractObject::BeginPlay()
 {
 	Super::BeginPlay();
+
+	TArray<AActor*> FoundActors;
+	UGameplayStatics::GetAllActorsOfClass(GetWorld(), AColorArea::StaticClass(), FoundActors);
+	for (auto& Actor : FoundActors)
+	{
+		if(AColorArea* ColorArea = Cast<AColorArea>(Actor))
+		{
+			if(ColorArea->StageName == ParentStageName)
+			{
+				ColorArea->OnSetEnabledStageInteract.AddDynamic(this, &AInteractObject::SetEnabledInteractable);
+				break;
+			}
+		}
+	}
 }
 
 void AInteractObject::Tick(float DeltaTime)

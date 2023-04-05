@@ -10,13 +10,13 @@ AColorArea::AColorArea()
 
 void AColorArea::BeginPlay()
 {
-	Super::BeginPlay();
+	//Super::BeginPlay();
 }
 
 void AColorArea::OnEnter()
 {
 	//Super::OnEnter();
-	Print(1.0f, "Enter");
+	//Print(1.0f, "Enter");
 }
 
 void AColorArea::OnInteract()
@@ -35,11 +35,12 @@ void AColorArea::OnInteract()
 void AColorArea::OnExit()
 {
 	//Super::OnExit();
-	Print(1.0f, "Exit");
+	//Print(1.0f, "Exit");
 }
 
 void AColorArea::SetEnabledPostProcess(bool Active)
 {
 	check(PostVolume);
 	PostVolume->bEnabled = Active;
+	OnSetEnabledStageInteract.Broadcast(!Active);
 }

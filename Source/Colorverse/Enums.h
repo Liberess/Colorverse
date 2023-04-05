@@ -5,9 +5,10 @@
 UENUM(BlueprintType)
 enum class EStageName : uint8
 {
-	Stage_1 UMETA(DisplayName = "Stage_1"),
-	Stage_2 UMETA(DisplayName = "Stage_2"),
-	Stage_3 UMETA(DisplayName = "Stage_3")
+	Stage_Red UMETA(DisplayName = "Stage_Red"),
+	Stage_Orange UMETA(DisplayName = "Stage_Orange"),
+	Stage_Yellow UMETA(DisplayName = "Stage_Yellow"),
+	Stage_Blue UMETA(DisplayName = "Stage_Blue")
 };
 
 UENUM(BlueprintType)

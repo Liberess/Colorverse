@@ -1,6 +1,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Enums.h"
 #include "IInteractable.h"
 #include "GameFramework/Actor.h"
 #include "Components/BoxComponent.h"
@@ -27,9 +28,15 @@ protected:
 		BlueprintGetter=GetInteractable,
 		BlueprintSetter=SetInteractable,
 		meta=(AllowPrivateAccess), Category=Interactable)
-	bool IsInteractable = true;
+	bool IsInteractable = false;
+
+	UFUNCTION()
+	void SetEnabledInteractable(bool IsEnabled) { IsInteractable = IsEnabled; };
 
 public:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=Interactable)
+	EStageName ParentStageName;
+	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=Interactable)
 	FString InteractWidgetDisplayTxt;
 
