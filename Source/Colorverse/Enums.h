@@ -5,9 +5,10 @@
 UENUM(BlueprintType)
 enum class EStageName : uint8
 {
-	Stage_1 UMETA(DisplayName = "Stage_1"),
-	Stage_2 UMETA(DisplayName = "Stage_2"),
-	Stage_3 UMETA(DisplayName = "Stage_3")
+	Stage_Red UMETA(DisplayName = "Stage_Red"),
+	Stage_Orange UMETA(DisplayName = "Stage_Orange"),
+	Stage_Yellow UMETA(DisplayName = "Stage_Yellow"),
+	Stage_Blue UMETA(DisplayName = "Stage_Blue")
 };
 
 UENUM(BlueprintType)
@@ -42,6 +43,17 @@ enum class ECombineColors : uint8
 	Red UMETA(DisplayName = "Red"),
 	Yellow UMETA(DisplayName = "Yellow"),
 	Blue UMETA(DisplayName = "Blue")
+};
+
+UENUM(BlueprintType)
+enum class EPaintComboColors : uint8
+{
+	Red UMETA(DisplayName = "Red"),
+	Orange UMETA(DisplayName = "Orange"),
+	Yellow UMETA(DisplayName = "Yellow"),
+	Green UMETA(DisplayName = "Green"),
+	Blue UMETA(DisplayName = "Blue"),
+	Purple UMETA(DisplayName = "Purple")
 };
 
 UENUM(BlueprintType)

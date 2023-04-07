@@ -16,7 +16,7 @@ void ALightObject::BeginPlay()
 
 void ALightObject::OnEnter()
 {
-	Print(1.0f, TEXT("LightObject::OnEnter"));
+	//Print(1.0f, TEXT("LightObject::OnEnter"));
 }
 
 void ALightObject::OnInteract()
@@ -32,5 +32,5 @@ void ALightObject::OnInteract()
 
 void ALightObject::OnExit()
 {
-	Print(1.0f, TEXT("LightObject::OnExit"));
+	//Print(1.0f, TEXT("LightObject::OnExit"));
 }

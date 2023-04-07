@@ -52,14 +52,17 @@ public:
 
 	void InitializeManager();
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta=(AllowPrivateAccess))
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	TArray<FItem> InventoryArray;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta=(AllowPrivateAccess))
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	TArray<FItem> MakerArray;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta=(AllowPrivateAccess))
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	TArray<FItem> StatueArray;
+	
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	TArray<AStatue*> Statues;
 	
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 	TArray<float> PaintAmountArray;
@@ -96,7 +99,10 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category=Statue)
 	void SacrificeItems(ESacrificeType SacrificeType);
-
+	
+	UFUNCTION(BlueprintCallable, Category=Statue)
+	void IncreaseStatueColorRecoveryProgress(ECombineColors SacrificeColor, float Amount);
+	
 	UFUNCTION(BlueprintCallable, Category=Statue)
 	void UpdateStatueUI();
 	

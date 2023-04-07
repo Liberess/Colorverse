@@ -306,7 +306,7 @@ void AColorverseCharacter::Roll_Implementation()
 	Print(1.0f, TEXT("Roll On"));
 
 	GetWorldTimerManager().ClearTimer(RollTimer);
-	GetWorldTimerManager().SetTimer(RollTimer, this, &AColorverseCharacter::SetDisabledRoll, RollDelay, false);
+	GetWorldTimerManager().SetTimer(RollTimer, this, &AColorverseCharacter::SetDisabledRoll, RollDelay, true);
 }
 
 void AColorverseCharacter::SetDisabledRoll()

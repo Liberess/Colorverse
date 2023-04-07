@@ -22,9 +22,10 @@ void UColorManager::Initialize(FSubsystemCollectionBase& Collection)
 {
 	Super::Initialize(Collection);
 
-	LightAmountMap.Add(EStageName::Stage_1, 0);
-	LightAmountMap.Add(EStageName::Stage_2, 0);
-	LightAmountMap.Add(EStageName::Stage_3, 0);
+	LightAmountMap.Add(EStageName::Stage_Red, 0);
+	LightAmountMap.Add(EStageName::Stage_Orange, 0);
+	LightAmountMap.Add(EStageName::Stage_Yellow, 0);
+	LightAmountMap.Add(EStageName::Stage_Blue, 0);
 }
 
 void UColorManager::InitializeManager()
