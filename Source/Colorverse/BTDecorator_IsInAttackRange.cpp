@@ -19,6 +19,6 @@ bool UBTDecorator_IsInAttackRange::CalculateRawConditionValue(UBehaviorTreeCompo
 	AColorverseCharacter* Target = Cast<AColorverseCharacter>(OwnerComp.GetBlackboardComponent()->GetValueAsObject(ASlimeAIController::TargetKey));
 	if (nullptr == Target) return false;
 
-	bool bResult = (Target->GetDistanceTo(ControllingPawn) <= 500.0f);
+	bool bResult = (Target->GetDistanceTo(ControllingPawn) <= 600.0f);
 	return bResult;
 }

@@ -79,7 +79,7 @@ public:
 	void Attack();
 
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
-	void SetDisabledAttack(UAnimMontage* Montage, bool bInterrupted);
+	void SetDisabledAttack();
 
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
 	void Roll();
@@ -148,10 +148,10 @@ private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta=(AllowPrivateAccess), Category="Combat System")
 	bool bIsRolling;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess), Category="Combat System")
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess), Category="Combat System")
 	bool bIsAttacking;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess), Category = "Combat System")
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess), Category = "Combat System")
 	bool bIsAttacked;
 	
 	FTimerHandle RollTimer;

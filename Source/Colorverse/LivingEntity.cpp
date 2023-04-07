@@ -14,7 +14,10 @@ void ULivingEntity::BeginPlay()
 
 void ULivingEntity::ApplyDamage(FDamageMessage dmgMsg)
 {
-	float temp = CurrentHealth;
-
 	CurrentHealth -= dmgMsg.damageAmount;
+
+	if (CurrentHealth < 0)
+	{
+		CurrentHealth = 0;
+	}
 }

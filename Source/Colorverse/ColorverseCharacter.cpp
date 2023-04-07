@@ -107,14 +107,13 @@ void AColorverseCharacter::PostInitializeComponents()
 	if (!IsValid(ColorverseAnim))
 		return;
 
-	ColorverseAnim->OnMontageEnded.AddDynamic(this, &AColorverseCharacter::SetDisabledAttack);
-	
 	ColorverseAnim->OnNextAttackCheck.AddDynamic(this, &AColorverseCharacter::SetNextAttackCheck);
 	ColorverseAnim->OnStartAttackJudg.AddDynamic(this, &AColorverseCharacter::SetEnableCanAttackTrace);
 	ColorverseAnim->OnEndAttackJudg.AddDynamic(this, &AColorverseCharacter::SetDisableCanAttackTrace);
+	ColorverseAnim->OnEndAttack.AddDynamic(this, &AColorverseCharacter::SetDisabledAttack);
 }
 
-void AColorverseCharacter::SetNextAttackCheck()
+void AColorverseCharacter::SetNextAttackCheck()	
 {
 	CombatSystem->bCanNextCombo = false;
 
@@ -286,7 +285,7 @@ void AColorverseCharacter::Attack_Implementation()
 	}
 }
 
-void AColorverseCharacter::SetDisabledAttack_Implementation(UAnimMontage* Montage, bool bInterrupted)
+void AColorverseCharacter::SetDisabledAttack_Implementation()
 {
 	bIsAttacking = false;
 	CombatSystem->AttackEndComboState();
@@ -294,6 +293,9 @@ void AColorverseCharacter::SetDisabledAttack_Implementation(UAnimMontage* Montag
 
 void AColorverseCharacter::Roll_Implementation()
 {
+	if (bIsAttacked || bIsAttacking)
+		return;
+
 	if (!bIsRunning || bIsRolling)
 		return;
 
@@ -323,7 +325,16 @@ void AColorverseCharacter::HitCheck_Implementation()
 
 void AColorverseCharacter::Attacked_Implementation(FDamageMessage damageMessage)
 {
+	if (bIsAttacked == true)
+		return;
+
+	ColorverseAnim->PlayDamagedMontage();
 	LivingEntity->ApplyDamage(damageMessage);
+
+	if (LivingEntity->CurrentHealth <= 0)
+	{
+
+	}
 }
 
 void AColorverseCharacter::OnOverlapBegin(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor,

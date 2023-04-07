@@ -28,6 +28,14 @@ void UColorverseCharacterAnimInstance::PlayAttackMontage()
 	}
 }
 
+void UColorverseCharacterAnimInstance::PlayDamagedMontage()
+{
+	if (!Montage_IsPlaying(DamagedMontage))
+	{
+		Montage_Play(DamagedMontage, 1.0f);
+	}
+}
+
 void UColorverseCharacterAnimInstance::JumpToAttackMontageSection(int32 NewSection)
 {
 	Montage_JumpToSection(GetAttackMontageSectionName(NewSection), AttackMontage);
@@ -46,6 +54,16 @@ void UColorverseCharacterAnimInstance::AnimNotify_StartAttackJudg()
 void UColorverseCharacterAnimInstance::AnimNotify_EndAttackJudg()
 {
 	OnEndAttackJudg.Broadcast();
+}
+
+void UColorverseCharacterAnimInstance::AnimNotify_EndAttack()
+{
+	OnEndAttack.Broadcast();
+}
+
+void UColorverseCharacterAnimInstance::AnimNotify_EndDamaged()
+{
+	OnEndDamaged.Broadcast();
 }
 
 FName UColorverseCharacterAnimInstance::GetAttackMontageSectionName(int32 Section)
