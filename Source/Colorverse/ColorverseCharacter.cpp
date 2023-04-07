@@ -268,8 +268,8 @@ void AColorverseCharacter::Attack_Implementation()
 	if (bIsRolling)
 		return;
 
-	/*if (GetCharacterMovement()->IsFalling())
-		return;*/
+	if (GetCharacterMovement()->IsFalling())
+		return;
 
 	if (bIsAttacking == true)
 	{

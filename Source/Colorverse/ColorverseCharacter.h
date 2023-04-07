@@ -180,6 +180,8 @@ protected:
 	virtual void PostInitializeComponents() override;
 
 public:
+	FORCEINLINE bool GetIsAttacking() const { return bIsAttacking; }
+
 	FORCEINLINE class USpringArmComponent* GetCameraBoom() const { return CameraBoom; }
 	FORCEINLINE class UCameraComponent* GetFollowCamera() const { return FollowCamera; }
 	FORCEINLINE class UCombatSystem* GetCombatSystem() const { return CombatSystem; }
