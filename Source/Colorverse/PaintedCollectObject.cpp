@@ -77,6 +77,7 @@ void APaintedCollectObject::Interact_Implementation()
 				}), SpawnDelayTime, false);
 
 				UInventoryManager* InvenMgr = GetWorld()->GetSubsystem<UInventoryManager>();
+				//float rand = FMath::RandRange()
 				InvenMgr->AddInventoryItem(ItemData);
 				break;
 			}
@@ -132,6 +133,3 @@ void APaintedCollectObject::SetRecoveryColorComplete(ECombineColors color)
 		GetWorldTimerManager().ClearTimer(timer);
 	}), 2.0f, false);
 }
-
-
-
