@@ -128,6 +128,7 @@ void APaintedCollectObject::SetRecoveryColorComplete(ECombineColors color)
 	{
 		GroupMatInst->SetVectorParameterValue("OverlayColor", GroupActiveColor);
 		PaintingMatInst->SetTextureParameterValue("BaseTexture", ActiveTexture);
+		PaintingMatInst->SetVectorParameterValue("OverlayColor", FColor::White);
 		GetWorldTimerManager().ClearTimer(timer);
 	}), 2.0f, false);
 }

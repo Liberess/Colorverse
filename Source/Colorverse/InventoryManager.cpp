@@ -369,6 +369,7 @@ void UInventoryManager::SacrificeItems(ESacrificeType SacrificeType)
 		{
 			CurrentStatue->UnlockCount = CurrentStatue->UnlockCapacity;
 			CurrentStatue->bIsUnlockComplete = true;
+			CurrentStatue->ActiveUnlockEffect();
 			StatueWidget->SetActiveCanvasPanel(false);
 		}
 	}

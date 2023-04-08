@@ -94,10 +94,10 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Painted Collect Object | Setting") 
 	UMaterialInterface* PaintingMatTemplate;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category="Painted Collect Object | Setting") 
+	UPROPERTY(BlueprintReadWrite, Category="Painted Collect Object | Setting") 
 	UMaterialInstanceDynamic* BrushMatInst;
 
-	UPROPERTY(VisibleAnywhere,BlueprintReadWrite, Category="Painted Collect Object | Setting")
+	UPROPERTY(BlueprintReadWrite, Category="Painted Collect Object | Setting")
 	UMaterialInstanceDynamic* PaintingMatInst;
 
 	UPROPERTY(BlueprintReadWrite, Category="Painted Collect Object | Child")
