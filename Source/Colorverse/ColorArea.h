@@ -10,7 +10,7 @@
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnSetEnabledStageInteract, bool, IsEnabled);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnDisabledStageInteract);
 
-UCLASS()
+UCLASS(Blueprintable, BlueprintType)
 class COLORVERSE_API AColorArea : public AInteractObject
 {
 	GENERATED_BODY()

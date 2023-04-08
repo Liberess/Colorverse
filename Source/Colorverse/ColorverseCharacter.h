@@ -114,11 +114,8 @@ public:
 	UPROPERTY()
 	UInteractWidget* InteractWidget;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category=Interact)
-	APaintedCollectObject* CurPaintableObj;
-
-	/*UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Interact)
-	PaintedCollectObject* CurrentPaintableObject;*/
+	UPROPERTY(BlueprintReadWrite, Category=Interact)
+	APaintedCollectObject* CurrentPaintedCollectObj;
 
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
 	void ControlInventory();

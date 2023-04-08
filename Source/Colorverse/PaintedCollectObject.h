@@ -7,7 +7,7 @@
 #include "InteractObject.h"
 #include "PaintedCollectObject.generated.h"
 
-UCLASS(Blueprintable)
+UCLASS(Blueprintable, BlueprintType)
 class COLORVERSE_API APaintedCollectObject : public AInteractObject
 {
 	GENERATED_BODY()
@@ -78,6 +78,9 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	void SetRecoveryColorComplete(ECombineColors color);
+
+	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent)
+	void DrawOnWhiteBoard(FVector2D LocationToDraw, bool Alpha, FLinearColor BrushColor);
 	
 	UPROPERTY(BlueprintReadOnly)
 	TArray<FTimerHandle> SpawnTimerHandles;
@@ -91,10 +94,10 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Painted Collect Object | Setting") 
 	UMaterialInterface* PaintingMatTemplate;
 
-	UPROPERTY(BlueprintReadWrite, Category="Painted Collect Object | Setting") 
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category="Painted Collect Object | Setting") 
 	UMaterialInstanceDynamic* BrushMatInst;
 
-	UPROPERTY(BlueprintReadWrite, Category="Painted Collect Object | Setting")
+	UPROPERTY(VisibleAnywhere,BlueprintReadWrite, Category="Painted Collect Object | Setting")
 	UMaterialInstanceDynamic* PaintingMatInst;
 
 	UPROPERTY(BlueprintReadWrite, Category="Painted Collect Object | Child")

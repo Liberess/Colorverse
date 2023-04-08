@@ -6,11 +6,13 @@
 AColorArea::AColorArea()
 {
 	PrimaryActorTick.bCanEverTick = true;
+	StaticMesh->SetupAttachment(BoxCol);
+	StaticMesh->SetCollisionProfileName("NoCollision");
 }
 
 void AColorArea::BeginPlay()
 {
-	//Super::BeginPlay();
+	Super::BeginPlay();
 }
 
 void AColorArea::OnEnter()

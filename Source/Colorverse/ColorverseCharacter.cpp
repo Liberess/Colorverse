@@ -139,8 +139,8 @@ void AColorverseCharacter::SetDisableCanAttackTrace()
 
 	IsDrawing = false;
 	
-	if(IsValid(CurPaintableObj))
-		CurPaintableObj->IsDrawing = false;
+	if(IsValid(CurrentPaintedCollectObj))
+		CurrentPaintedCollectObj->IsDrawing = false;
 }
 
 #pragma region Movement 
