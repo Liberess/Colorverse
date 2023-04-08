@@ -79,7 +79,7 @@ public:
 	void Attack();
 
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
-	void SetDisabledAttack(UAnimMontage* Montage, bool bInterrupted);
+	void SetDisabledAttack();
 
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
 	void Roll();
@@ -114,11 +114,8 @@ public:
 	UPROPERTY()
 	UInteractWidget* InteractWidget;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category=Interact)
-	APaintedCollectObject* CurPaintableObj;
-
-	/*UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Interact)
-	PaintedCollectObject* CurrentPaintableObject;*/
+	UPROPERTY(BlueprintReadWrite, Category=Interact)
+	APaintedCollectObject* CurrentPaintedCollectObj;
 
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
 	void ControlInventory();
@@ -148,10 +145,10 @@ private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta=(AllowPrivateAccess), Category="Combat System")
 	bool bIsRolling;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess), Category="Combat System")
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess), Category="Combat System")
 	bool bIsAttacking;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess), Category = "Combat System")
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess), Category = "Combat System")
 	bool bIsAttacked;
 	
 	FTimerHandle RollTimer;
@@ -180,6 +177,8 @@ protected:
 	virtual void PostInitializeComponents() override;
 
 public:
+	FORCEINLINE bool GetIsAttacking() const { return bIsAttacking; }
+
 	FORCEINLINE class USpringArmComponent* GetCameraBoom() const { return CameraBoom; }
 	FORCEINLINE class UCameraComponent* GetFollowCamera() const { return FollowCamera; }
 	FORCEINLINE class UCombatSystem* GetCombatSystem() const { return CombatSystem; }

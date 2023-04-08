@@ -7,7 +7,10 @@
 #include "Engine/PostProcessVolume.h"
 #include "ColorArea.generated.h"
 
-UCLASS()
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnSetEnabledStageInteract, bool, IsEnabled);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnDisabledStageInteract);
+
+UCLASS(Blueprintable, BlueprintType)
 class COLORVERSE_API AColorArea : public AInteractObject
 {
 	GENERATED_BODY()
@@ -32,4 +35,10 @@ public:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=ColorArea)
 	bool IsLightness = false;
+	
+	UPROPERTY(BlueprintAssignable, BlueprintCallable, Category=ColorArea)
+	FOnSetEnabledStageInteract OnSetEnabledStageInteract;
+	
+	UPROPERTY(BlueprintAssignable, BlueprintCallable, Category=ColorArea)
+	FOnDisabledStageInteract OnDisabledStageInteract;
 };

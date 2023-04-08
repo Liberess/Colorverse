@@ -8,6 +8,9 @@
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnNextAttackCheckDelegate);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnEndAttackJudgDelegate);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnStartAttackJudgDelegate);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnEndAttackDelegate);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnEndDamagedDelegate);
 
 UCLASS()
 class COLORVERSE_API UColorverseCharacterAnimInstance : public UAnimInstance
@@ -23,8 +26,12 @@ private:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Attack Montage", meta = (AllowPrivateAccess = "true"))
 	UAnimMontage* AttackMontage;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Attack Montage", meta = (AllowPrivateAccess = "true"))
+	UAnimMontage* DamagedMontage;
+
 public:
 	void PlayAttackMontage();
+	void PlayDamagedMontage();
 	void JumpToAttackMontageSection(int32 NewSection);
 
 public:
@@ -32,10 +39,16 @@ public:
 	FOnNextAttackCheckDelegate OnNextAttackCheck;
 	
 	UPROPERTY(BlueprintAssignable, BlueprintCallable)
-	FOnEndAttackJudgDelegate OnStartAttackJudg;
+	FOnStartAttackJudgDelegate OnStartAttackJudg;
 	
 	UPROPERTY(BlueprintAssignable, BlueprintCallable)
 	FOnEndAttackJudgDelegate OnEndAttackJudg;
+
+	UPROPERTY(BlueprintAssignable, BlueprintCallable)
+	FOnEndAttackDelegate OnEndAttack;
+
+	UPROPERTY(BlueprintAssignable, BlueprintCallable)
+	FOnEndDamagedDelegate OnEndDamaged;
 
 	UFUNCTION()
 	void AnimNotify_NextAttackCheck();
@@ -45,6 +58,12 @@ public:
 
 	UFUNCTION()
 	void AnimNotify_EndAttackJudg();
+
+	UFUNCTION()
+	void AnimNotify_EndAttack();
+
+	UFUNCTION()
+	void AnimNotify_EndDamaged();
 
 	FName GetAttackMontageSectionName(int32 Section);
 };

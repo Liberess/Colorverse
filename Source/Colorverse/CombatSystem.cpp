@@ -48,7 +48,6 @@ float UCombatSystem::GetCurrentATK()
 	if (bIsOnElement)
 		CurrnetATK += ElementBuff;
 
-	GEngine->AddOnScreenDebugMessage(-1, 3.0f, FColor::Blue, FString::Printf(TEXT("damage : %d "), CurrnetATK));
 	return CurrnetATK;
 }
 

@@ -73,6 +73,16 @@ void UInventoryManager::InitializeManager()
 		HUDWidget->InitializedHUD();
 		HUDWidget->AddToViewport();
 	}
+
+	TArray<AActor*> FoundActors;
+	UGameplayStatics::GetAllActorsOfClass(GetWorld(), AStatue::StaticClass(), FoundActors);
+	for (auto& Actor : FoundActors)
+		Statues.Add(Cast<AStatue>(Actor));
+
+	Statues.Sort([&](const AStatue& s1, const AStatue& s2)
+	{
+		return s1.StatueIndex < s2.StatueIndex;
+	});
 }
 
 void UInventoryManager::SetInventoryUI(bool IsActive, bool IsFlip)
@@ -405,6 +415,18 @@ void UInventoryManager::SacrificeItems(ESacrificeType SacrificeType)
 
 	StatueWidget->UpdateStatueUI(CurrentStatue);
 	UpdateStatue();
+}
+
+void UInventoryManager::IncreaseStatueColorRecoveryProgress(ECombineColors SacrificeColor, float Amount)
+{
+	int index = static_cast<int>(SacrificeColor);
+	Statues[index]->WorldRecoveryAmount += Amount;
+
+	if(Statues[index]->WorldRecoveryAmount >= Statues[index]->WorldRecoveryCapacity)
+	{
+		Statues[index]->WorldRecoveryAmount = Statues[index]->WorldRecoveryCapacity;
+		Statues[index]->bIsWorldMineColorRecoveryComplete = true;
+	}
 }
 
 void UInventoryManager::UpdateStatueUI()

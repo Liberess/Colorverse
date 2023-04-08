@@ -51,6 +51,12 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Statue)
 	float MaxRecoveryBarAmount;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Statue)
+	float WorldRecoveryBarAmount;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Statue)
+	float MaxWorldRecoveryBarAmount;
+
 	virtual void CreateContainer(int Slots) override;
 	virtual void UpdateContainer(TArray<FItem> Items) override;
 

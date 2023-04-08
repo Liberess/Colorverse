@@ -8,6 +8,7 @@
 
 const FName ASlimeAIController::HomePosKey(TEXT("HomePos"));
 const FName ASlimeAIController::TargetKey(TEXT("Target"));
+const FName ASlimeAIController::HasLineOfSightKey(TEXT("HasLineOfSight"));
 
 ASlimeAIController::ASlimeAIController()
 {
