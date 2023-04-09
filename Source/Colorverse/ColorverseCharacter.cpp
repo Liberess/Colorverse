@@ -276,6 +276,9 @@ void AColorverseCharacter::Attack_Implementation()
 	if (LivingEntity->GetDead())
 		return;
 
+	if (bIsAttacked)
+		return;
+
 	if (bIsRolling)
 		return;
 
