@@ -22,10 +22,10 @@ private:
 	UPROPERTY(BlueprintReadOnly, Category="Painted Collect Object",meta=(AllowPrivateAccess))
 	FPaintCombo PaintComboData;
 
-	UPROPERTY(BlueprintReadOnly, Category="Painted Collect Object",meta=(AllowPrivateAccess))
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Painted Collect Object",meta=(AllowPrivateAccess))
 	FItem ItemData;
 
-	UPROPERTY(BlueprintReadOnly, Category="Painted Collect Object",meta=(AllowPrivateAccess))
+	UPROPERTY(VisibleAnywhere,BlueprintReadOnly, Category="Painted Collect Object",meta=(AllowPrivateAccess))
 	FItem UnlockItemData;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Collect Object | Setting", meta=(AllowPrivateAccess))

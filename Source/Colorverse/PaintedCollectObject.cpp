@@ -7,17 +7,8 @@ APaintedCollectObject::APaintedCollectObject()
 
 	static ConstructorHelpers::FObjectFinder<UDataTable> DataTable(TEXT("/Game/DataTables/DT_ItemData"));
 	if (DataTable.Succeeded())
-	{
 		ItemDT = DataTable.Object;
-		
-		FString RowStr = "Item_";
-		RowStr.Append(FString::FromInt(ItemID));
-		ItemData = *(ItemDT->FindRow<FItem>(FName(*RowStr), ""));
-		InteractWidgetDisplayTxt = ItemData.Name.ToString();
-
-		UnlockItemData = *(ItemDT->FindRow<FItem>(FName(TEXT("UnlockStatue")), ""));
-	}
-
+	
 	static ConstructorHelpers::FObjectFinder<UDataTable> PaintComboTable(TEXT("/Game/DataTables/DT_PaintCombo"));
 	if (PaintComboTable.Succeeded())
 		PaintComboDT = PaintComboTable.Object;
@@ -28,6 +19,16 @@ void APaintedCollectObject::BeginPlay()
 	Super::BeginPlay();
 
 	//AddColorAreaEnabledAction();
+
+	if(IsValid(ItemDT))
+	{
+		FString RowStr = "Item_";
+		RowStr.Append(FString::FromInt(ItemID));
+		ItemData = *(ItemDT->FindRow<FItem>(FName(*RowStr), ""));
+		InteractWidgetDisplayTxt = ItemData.Name.ToString();
+        
+		UnlockItemData = *(ItemDT->FindRow<FItem>(FName(TEXT("UnlockStatue")), ""));
+	}
 
 	if(IsValid(PaintComboDT))
 	{
@@ -43,7 +44,7 @@ void APaintedCollectObject::BeginPlay()
 		{
 			collectObj->ItemData = ItemData;
 			collectObj->PaintComboData = PaintComboData;
-			collectObj->SetCollectObjectData(SeparatedItemName);
+			//collectObj->SetCollectObjectData(SeparatedItemName);
 			CollectObjects.Add(collectObj);
 		}
 	}
@@ -72,7 +73,6 @@ void APaintedCollectObject::Interact_Implementation()
 				SetActiveCollectObject(false, i);
 				GetWorldTimerManager().SetTimer(SpawnTimerHandles[i], FTimerDelegate::CreateLambda([i, this]
 				{
-					IsInteractable = true;
 					SetActiveCollectObject(true, i);
 				}), SpawnDelayTime, false);
 
@@ -85,9 +85,17 @@ void APaintedCollectObject::Interact_Implementation()
 				int Rand = FMath::RandRange(1, RandAccuracy + 1);
 
 				if (Rand <= RandHitRange)
+				{
+					GEngine->AddOnScreenDebugMessage(-1, 1.0f,
+						FColor::Blue, TEXT("1"));
 					InvenMgr->AddInventoryItem(UnlockItemData);
+				}
 				else
+				{
+					GEngine->AddOnScreenDebugMessage(-1, 1.0f,
+						FColor::Blue, TEXT("2"));
 					InvenMgr->AddInventoryItem(ItemData);
+				}
 
 				break;
 			}

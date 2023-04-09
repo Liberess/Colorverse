@@ -10,6 +10,8 @@ ALightObject::ALightObject()
 void ALightObject::BeginPlay()
 {
 	Super::BeginPlay();
+	
+	IsInteractable = true;
 }
 
 void ALightObject::OnEnter()
