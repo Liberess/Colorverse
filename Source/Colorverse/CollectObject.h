@@ -7,19 +7,13 @@
 #include "CollectObject.generated.h"
 
 UCLASS(Blueprintable)
-class COLORVERSE_API ACollectObject : public AActor
+class COLORVERSE_API ACollectObject : public AInteractObject
 {
 	GENERATED_BODY()
 
 private:
-	UPROPERTY(BlueprintReadOnly, meta=(AllowPrivateAccess))
-	USceneComponent* DefaultRoot = nullptr;
-	
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta=(AllowPrivateAccess))
-	UStaticMeshComponent* StaticMesh;
-	
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category="Collect Object | Setting", meta=(AllowPrivateAccess))
-	FItem ItemData;
+	UPROPERTY(BlueprintReadOnly, Category="Collect Object",meta=(AllowPrivateAccess))
+	UDataTable* ItemDT;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Collect Object | Setting", meta=(AllowPrivateAccess)) 
 	UMaterialInterface* BrushMatTemplate;
@@ -63,15 +57,26 @@ private:
 protected:
 	virtual void BeginPlay() override;
 	virtual void Tick(float DeltaSeconds) override;
+	virtual void Interact_Implementation() override;
 
 public:
 	ACollectObject();
+
+	UPROPERTY(BlueprintReadWrite, Category="Collect Object")
+	FName ItemName;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category="Collect Object | Setting", meta=(AllowPrivateAccess))
+	FItem ItemData;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Collect Object | Setting")
 	FPaintCombo PaintComboData;
 
 	UPROPERTY(BlueprintReadOnly, Category="Collect Object | Setting")
 	bool bIsPaintComplete = false;
+
+	// Parent에게 상속된 Collect Object인지 아닌지
+	UPROPERTY(BlueprintReadWrite, Category="Collect Object | Setting")
+	bool bIsSeparated = false;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category="Collect Object | Setting")
 	int PaintedCount = 0;
@@ -90,4 +95,7 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	void SetPaintedColor(FLinearColor color);
+
+	UFUNCTION(BlueprintCallable)
+	void SetCollectObjectData(FName _itemName);
 };

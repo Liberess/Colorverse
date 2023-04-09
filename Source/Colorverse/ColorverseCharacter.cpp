@@ -370,8 +370,8 @@ void AColorverseCharacter::OnOverlapBegin(class UPrimitiveComponent* OverlappedC
 		if (IsValid(InteractObject))
 		{
 			bIsInteract = true;
-
-			if (!bIsWatchingInteractWidget)
+			
+			if (!bIsWatchingInteractWidget && InteractObject->GetInteractable())
 			{
 				if (IsValid(InteractWidgetClass))
 				{
@@ -443,13 +443,11 @@ void AColorverseCharacter::Interact_Implementation()
 		return;
 
 	InteractObject->OnInteract();
-
+	
 	if (bIsWatchingInteractWidget && InteractWidget != nullptr)
 	{
 		bIsWatchingInteractWidget = false;
 		InteractWidget->RemoveFromParent();
 		InteractWidget = nullptr;
 	}
-
-	//Print(1.0f, TEXT("Interact"));
 }

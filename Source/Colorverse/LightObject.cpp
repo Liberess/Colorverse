@@ -2,8 +2,6 @@
 #include "ColorManager.h"
 #include "ColorverseCharacter.h"
 
-#define Print(duration, text) if(GEngine) GEngine->AddOnScreenDebugMessage(-1,duration, FColor::Yellow, text);
-
 ALightObject::ALightObject()
 {
 	PrimaryActorTick.bCanEverTick = true;
@@ -21,8 +19,7 @@ void ALightObject::OnEnter()
 
 void ALightObject::OnInteract()
 {
-	Super::OnInteract();
-	Print(1.0f, TEXT("LightObject::OnInteract::Get Light!"));
+	//Super::OnInteract();
 
 	UColorManager* ColorMgr = GetWorld()->GetSubsystem<UColorManager>();
 	check(ColorMgr);
