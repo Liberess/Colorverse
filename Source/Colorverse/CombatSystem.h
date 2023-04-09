@@ -47,7 +47,7 @@ public:
 	bool bIsOnColor;
 
 	UPROPERTY(Category = "Character Buff", EditAnywhere, BlueprintReadWrite)
-	bool bIsOnElement;
+	TArray<bool> bIsOnElements;
 
 	// 콤보 관련
 	UPROPERTY(Category = "Character Combo", EditAnywhere, BlueprintReadWrite)
@@ -70,7 +70,7 @@ public:
 	void SetColorBuff();
 
 	UFUNCTION(BlueprintCallable)
-	void SetElementBuff(bool value);
+	void SetElementBuff(int color);
 
 	UFUNCTION(BlueprintCallable)
 	float GetCurrentATK();

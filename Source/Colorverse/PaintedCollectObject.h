@@ -25,6 +25,15 @@ private:
 	UPROPERTY(BlueprintReadOnly, Category="Painted Collect Object",meta=(AllowPrivateAccess))
 	FItem ItemData;
 
+	UPROPERTY(BlueprintReadOnly, Category="Painted Collect Object",meta=(AllowPrivateAccess))
+	FItem UnlockItemData;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Collect Object | Setting", meta=(AllowPrivateAccess))
+	FName SeparatedItemName;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Painted Collect Object",meta=(AllowPrivateAccess))
+	float GetSacrificeProbability = 20.0f;
+
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Painted Collect Object",meta=(AllowPrivateAccess))
 	UTexture2D* ActiveTexture;
 	

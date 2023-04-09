@@ -1,6 +1,5 @@
 #include "PaintedCollectObject.h"
 #include "InventoryManager.h"
-#include "Engine/TextureRenderTarget2D.h"
 
 APaintedCollectObject::APaintedCollectObject()
 {
@@ -8,7 +7,16 @@ APaintedCollectObject::APaintedCollectObject()
 
 	static ConstructorHelpers::FObjectFinder<UDataTable> DataTable(TEXT("/Game/DataTables/DT_ItemData"));
 	if (DataTable.Succeeded())
+	{
 		ItemDT = DataTable.Object;
+		
+		FString RowStr = "Item_";
+		RowStr.Append(FString::FromInt(ItemID));
+		ItemData = *(ItemDT->FindRow<FItem>(FName(*RowStr), ""));
+		InteractWidgetDisplayTxt = ItemData.Name.ToString();
+
+		UnlockItemData = *(ItemDT->FindRow<FItem>(FName(TEXT("UnlockStatue")), ""));
+	}
 
 	static ConstructorHelpers::FObjectFinder<UDataTable> PaintComboTable(TEXT("/Game/DataTables/DT_PaintCombo"));
 	if (PaintComboTable.Succeeded())
@@ -19,25 +27,12 @@ void APaintedCollectObject::BeginPlay()
 {
 	Super::BeginPlay();
 
-	try
-	{
-		if(IsValid(ItemDT))
-		{
-			FString RowStr = "Item_";
-			RowStr.Append(FString::FromInt(ItemID));
-			ItemData = *(ItemDT->FindRow<FItem>(FName(*RowStr), ""));
-			InteractWidgetDisplayTxt = ItemData.Name.ToString();
-		}
+	//AddColorAreaEnabledAction();
 
-		if(IsValid(PaintComboDT))
-		{
-			FString str = UEnum::GetDisplayValueAsText(PaintComboColorTag).ToString();
-			PaintComboData = *(PaintComboDT->FindRow<FPaintCombo>(FName(*str), ""));
-		}
-	}
-	catch (...)
+	if(IsValid(PaintComboDT))
 	{
-		
+		FString str = UEnum::GetDisplayValueAsText(PaintComboColorTag).ToString();
+		PaintComboData = *(PaintComboDT->FindRow<FPaintCombo>(FName(*str), ""));
 	}
 
 	TArray<AActor*> tempActors;
@@ -46,7 +41,9 @@ void APaintedCollectObject::BeginPlay()
 	{
 		if (auto collectObj = Cast<ACollectObject>(actor))
 		{
+			collectObj->ItemData = ItemData;
 			collectObj->PaintComboData = PaintComboData;
+			collectObj->SetCollectObjectData(SeparatedItemName);
 			CollectObjects.Add(collectObj);
 		}
 	}
@@ -60,9 +57,7 @@ void APaintedCollectObject::BeginPlay()
 
 void APaintedCollectObject::Interact_Implementation()
 {
-	//Super::Interact_Implementation();
-	if(!IsInteractable)
-		return;
+	Super::Interact_Implementation();
 
 	if (IsColorActive)
 	{
@@ -70,15 +65,30 @@ void APaintedCollectObject::Interact_Implementation()
 		{
 			if (!CollectObjects[i]->IsHidden())
 			{
+				//이제 달린 사과가 없으니 상호작용 끔
+				if(i == CollectObjects.Num() - 1)
+					IsInteractable = false;
+				
 				SetActiveCollectObject(false, i);
 				GetWorldTimerManager().SetTimer(SpawnTimerHandles[i], FTimerDelegate::CreateLambda([i, this]
 				{
+					IsInteractable = true;
 					SetActiveCollectObject(true, i);
 				}), SpawnDelayTime, false);
 
 				UInventoryManager* InvenMgr = GetWorld()->GetSubsystem<UInventoryManager>();
-				//float rand = FMath::RandRange()
-				InvenMgr->AddInventoryItem(ItemData);
+				
+				float Percentage_Chance = GetSacrificeProbability / 100.0f;
+				
+				int RandAccuracy = 10000000;
+				float RandHitRange = Percentage_Chance * RandAccuracy;
+				int Rand = FMath::RandRange(1, RandAccuracy + 1);
+
+				if (Rand <= RandHitRange)
+					InvenMgr->AddInventoryItem(UnlockItemData);
+				else
+					InvenMgr->AddInventoryItem(ItemData);
+
 				break;
 			}
 		}
@@ -87,7 +97,7 @@ void APaintedCollectObject::Interact_Implementation()
 
 void APaintedCollectObject::PaintToObject_Implementation(ECombineColors colorTag, FLinearColor PaintedColor)
 {
-	if (IsColorActive || !IsInteractable)
+	if (IsColorActive)
 		return;
 
 	for (auto& collectObj : CollectObjects)

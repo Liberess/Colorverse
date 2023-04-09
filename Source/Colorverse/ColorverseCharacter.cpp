@@ -171,6 +171,9 @@ void AColorverseCharacter::LookUpAtRate(float Rate)
 
 void AColorverseCharacter::MoveForward(float Value)
 {
+	if (LivingEntity->GetDead())
+		return;
+
 	if (bIsAttacking || bIsAttacked)
 		return;
 
@@ -206,6 +209,9 @@ void AColorverseCharacter::MoveForward(float Value)
 
 void AColorverseCharacter::MoveRight(float Value)
 {
+	if (LivingEntity->GetDead())
+		return;
+
 	if (bIsAttacking || bIsAttacked)
 		return;
 
@@ -247,6 +253,9 @@ void AColorverseCharacter::SetEnabledToggleRun()
 
 void AColorverseCharacter::Jump()
 {
+	if (LivingEntity->GetDead())
+		return;
+
 	if (bIsAttacking || bIsAttacked)
 		return;
 
@@ -264,6 +273,12 @@ void AColorverseCharacter::StopJumping()
 
 void AColorverseCharacter::Attack_Implementation()
 {
+	if (LivingEntity->GetDead())
+		return;
+
+	if (bIsAttacked)
+		return;
+
 	if (bIsRolling)
 		return;
 
@@ -293,6 +308,9 @@ void AColorverseCharacter::SetDisabledAttack_Implementation()
 
 void AColorverseCharacter::Roll_Implementation()
 {
+	if (LivingEntity->GetDead())
+		return;
+
 	if (bIsAttacked || bIsAttacking)
 		return;
 
@@ -325,16 +343,24 @@ void AColorverseCharacter::HitCheck_Implementation()
 
 void AColorverseCharacter::Attacked_Implementation(FDamageMessage damageMessage)
 {
-	if (bIsAttacked == true)
+	if (bIsAttacked || LivingEntity->GetDead())
 		return;
 
-	ColorverseAnim->PlayDamagedMontage();
 	LivingEntity->ApplyDamage(damageMessage);
 
 	if (LivingEntity->CurrentHealth <= 0)
 	{
-
+		Dead();
+		return;
 	}
+
+	bIsAttacked = true;
+	ColorverseAnim->PlayDamagedMontage();
+}
+
+void AColorverseCharacter::Dead_Implementation()
+{
+	LivingEntity->SetDead(true);
 }
 
 void AColorverseCharacter::OnOverlapBegin(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor,
@@ -347,8 +373,8 @@ void AColorverseCharacter::OnOverlapBegin(class UPrimitiveComponent* OverlappedC
 		if (IsValid(InteractObject))
 		{
 			bIsInteract = true;
-
-			if (!bIsWatchingInteractWidget)
+			
+			if (!bIsWatchingInteractWidget && InteractObject->GetInteractable())
 			{
 				if (IsValid(InteractWidgetClass))
 				{
@@ -401,6 +427,7 @@ void AColorverseCharacter::ChangeEquipPaint_Implementation(ECombineColors Combin
 	CombatSystem->CurrentPaintColor = CombineColor;
 
 	CombatSystem->SetColorBuff();
+	CombatSystem->SetElementBuff((int)CombineColor);
 }
 
 void AColorverseCharacter::ControlInventory_Implementation()
@@ -419,13 +446,11 @@ void AColorverseCharacter::Interact_Implementation()
 		return;
 
 	InteractObject->OnInteract();
-
+	
 	if (bIsWatchingInteractWidget && InteractWidget != nullptr)
 	{
 		bIsWatchingInteractWidget = false;
 		InteractWidget->RemoveFromParent();
 		InteractWidget = nullptr;
 	}
-
-	//Print(1.0f, TEXT("Interact"));
 }
