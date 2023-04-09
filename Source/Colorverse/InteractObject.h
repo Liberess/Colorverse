@@ -24,7 +24,7 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	UStaticMeshComponent* StaticMesh;
 
-	UPROPERTY(EditAnywhere,
+	UPROPERTY(VisibleAnywhere,
 		BlueprintGetter=GetInteractable,
 		BlueprintSetter=SetInteractable,
 		meta=(AllowPrivateAccess), Category=Interactable)
@@ -32,6 +32,9 @@ protected:
 
 	UFUNCTION()
 	void SetEnabledInteractable(bool IsEnabled) { IsInteractable = IsEnabled; };
+
+	UFUNCTION()
+	void AddColorAreaEnabledAction();
 
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=Interactable)

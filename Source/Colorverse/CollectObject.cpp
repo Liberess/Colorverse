@@ -6,24 +6,32 @@ ACollectObject::ACollectObject()
 {
 	PrimaryActorTick.bCanEverTick = true;
 
+	/*
 	DefaultRoot = CreateDefaultSubobject<USceneComponent>(TEXT("DefaultRoot"));
 	SetRootComponent(DefaultRoot);
 	
 	StaticMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Static Mesh"));
 	StaticMesh->SetCollisionProfileName("Trigger");
 	StaticMesh->SetupAttachment(DefaultRoot);
+	*/
+
+	static ConstructorHelpers::FObjectFinder<UDataTable> DataTable(TEXT("/Game/DataTables/DT_ItemData"));
+	if (DataTable.Succeeded())
+		ItemDT = DataTable.Object;
 }
 
 void ACollectObject::BeginPlay()
 {
 	Super::BeginPlay();
+
+	IsInteractable = false;
 }
 
 void ACollectObject::Tick(float DeltaSeconds)
 {
 	Super::Tick(DeltaSeconds);
 
-	if(!bIsPaintComplete && bIsChangedColor)
+	if(!bIsPaintComplete && bIsChangedColor && !bIsSeparated)
 	{
 		CurrentColor = FMath::Lerp(CurrentColor, TargetColor, DeltaSeconds * ChangedColorVelocity);
 		PaintingMatInst->SetVectorParameterValue("OverlayColor", CurrentColor);
@@ -39,6 +47,17 @@ void ACollectObject::Tick(float DeltaSeconds)
 				bIsPaintComplete = true;
 		}
 	}
+}
+
+void ACollectObject::Interact_Implementation()
+{
+	//Super::Interact_Implementation();
+
+	if(!bIsSeparated)
+		return;
+
+	UInventoryManager* InvenMgr = GetWorld()->GetSubsystem<UInventoryManager>();
+	InvenMgr->AddInventoryItem(ItemData);
 }
 
 void ACollectObject::SetPaintedColorAndIntensity(ECombineColors colorTag, FLinearColor brushColor)
@@ -59,12 +78,13 @@ void ACollectObject::SetPaintedColorAndIntensity(ECombineColors colorTag, FLinea
 
 	if(PaintedCount >= NeedsPaintedCount)
 	{
-		GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Yellow, TEXT("gg"));
 		TargetColor = FLinearColor(
 			PaintComboData.ResultColor.R,
 			PaintComboData.ResultColor.G,
 			PaintComboData.ResultColor.B,
 		1.0f);
+
+		BoxCol->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 
 		APaintedCollectObject* paintObj = Cast<APaintedCollectObject>(GetParentActor());
 		paintObj->SetRecoveryColorComplete(ECombineColors::Red);
@@ -104,4 +124,10 @@ void ACollectObject::SetPaintedColor(FLinearColor color)
 		return;
 	
 	PaintingMatInst->SetVectorParameterValue("OverlayColor", color);
+}
+
+void ACollectObject::SetCollectObjectData(FName _itemName)
+{
+	ItemData = *(ItemDT->FindRow<FItem>(_itemName, ""));
+	InteractWidgetDisplayTxt = ItemData.Name.ToString();
 }
