@@ -68,7 +68,7 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category="Collect Object | Setting", meta=(AllowPrivateAccess))
 	FItem ItemData;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Collect Object | Setting")
+	UPROPERTY(BlueprintReadOnly, Category="Collect Object | Setting")
 	FPaintCombo PaintComboData;
 
 	UPROPERTY(BlueprintReadOnly, Category="Collect Object | Setting")
