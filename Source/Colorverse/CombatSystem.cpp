@@ -7,6 +7,8 @@ UCombatSystem::UCombatSystem() : ATK(10), ColorBuff(ATK / 2), ElementBuff(ATK / 
 {
 	PrimaryComponentTick.bCanEverTick = false;
 	bWantsInitializeComponent = true;
+
+	bIsOnElements.Init(false, 3);
 }
 
 void UCombatSystem::BeginPlay()
@@ -33,9 +35,10 @@ void UCombatSystem::SetColorBuff()
 	}
 }
 
-void UCombatSystem::SetElementBuff(bool value)
+void UCombatSystem::SetElementBuff(int color)
 {
-	bIsOnElement = value;
+	GEngine->AddOnScreenDebugMessage(-1, 3.0f, FColor::Blue, TEXT("set"));
+	bIsOnElements[color] = true;
 }
 
 float UCombatSystem::GetCurrentATK()
@@ -43,10 +46,14 @@ float UCombatSystem::GetCurrentATK()
 	float CurrnetATK = ATK;
 
 	if (bIsOnColor)
+	{
 		CurrnetATK += ColorBuff;
 
-	if (bIsOnElement)
-		CurrnetATK += ElementBuff;
+		if (bIsOnElements[(int)CurrentPaintColor])
+		{
+			CurrnetATK += ElementBuff;
+		}
+	}
 
 	return CurrnetATK;
 }

@@ -1,6 +1,7 @@
 #include "InventoryManager.h"
 #include "ColorverseWorldSettings.h"
 #include "Kismet/GameplayStatics.h"
+#include "ColorverseCharacter.h"
 
 #define Print(duration, text) if(GEngine) GEngine->AddOnScreenDebugMessage(-1,duration, FColor::Yellow, text);
 
@@ -371,6 +372,15 @@ void UInventoryManager::SacrificeItems(ESacrificeType SacrificeType)
 			CurrentStatue->bIsUnlockComplete = true;
 			CurrentStatue->ActiveUnlockEffect();
 			StatueWidget->SetActiveCanvasPanel(false);
+			
+			// 플레이어 속성 공격 활성화
+			AColorverseCharacter* Player = Cast<AColorverseCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
+
+			// 플레이어 컨트롤러와 캐릭터가 null 이 아닌지 확인
+			if (Player != nullptr)
+			{
+				Player->GetCombatSystem()->SetElementBuff((int)CurrentStatue->StatueColor);
+			}
 		}
 	}
 	else
