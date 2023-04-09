@@ -1,6 +1,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Enums.h"
 #include "IInteractable.h"
 #include "GameFramework/Actor.h"
 #include "Components/BoxComponent.h"
@@ -14,19 +15,28 @@ class COLORVERSE_API AInteractObject : public AActor, public IIInteractable
 protected:
 	virtual void BeginPlay() override;
 
-	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly)
+	UPROPERTY(BlueprintReadOnly)
 	USceneComponent* DefaultRoot = nullptr;
 
-	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly)
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	UBoxComponent* BoxCol;
+	
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	UStaticMeshComponent* StaticMesh;
 
 	UPROPERTY(EditAnywhere,
 		BlueprintGetter=GetInteractable,
 		BlueprintSetter=SetInteractable,
 		meta=(AllowPrivateAccess), Category=Interactable)
-	bool IsInteractable = true;
+	bool IsInteractable = false;
+
+	UFUNCTION()
+	void SetEnabledInteractable(bool IsEnabled) { IsInteractable = IsEnabled; };
 
 public:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=Interactable)
+	EStageName ParentStageName;
+	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=Interactable)
 	FString InteractWidgetDisplayTxt;
 

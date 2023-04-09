@@ -48,12 +48,18 @@ void APooledObject::SetActive(bool InActive)
 	SetActorHiddenInGame(!InActive);
 	SetActorEnableCollision(InActive);
 	SetActorTickEnabled(InActive);
+
+	ActiveTrueEvent();
 }
 
 void APooledObject::Deactivate()
 {
 	Init();
 	SetActive(false);
+}
+
+void APooledObject::ActiveTrueEvent_Implementation()
+{
 }
 
 void APooledObject::Init()
@@ -63,11 +69,14 @@ void APooledObject::Init()
 	SetActorRotation(FRotator().ZeroRotator);
 }
 
-void APooledObject::CreatePooledObject_Implementation()
+void APooledObject::CreatePooledObject_Implementation(FVector location, FRotator rotator)
 {
 	IsInteractable = true;
 
 	SetActive(true);
+
+	SetActorLocation(location);
+	SetActorRotation(rotator);
 }
 
 void APooledObject::DistroyPooledObject_Implementation()

@@ -24,6 +24,7 @@ bool UBTDecorator_IsStartAttack::CalculateRawConditionValue(UBehaviorTreeCompone
 	TArray<AActor*> AttackHitResults = Owner->AttackHitResults;
 	if (AttackHitResults.Num() <= 0)
 	{
+		OwnerComp.GetBlackboardComponent()->SetValueAsObject(ASpiritAIContorller::TargetKey, nullptr);
 		return false;
 	}
 	else

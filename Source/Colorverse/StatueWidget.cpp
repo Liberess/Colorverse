@@ -74,6 +74,9 @@ void UStatueWidget::UpdateStatueUI(const AStatue* Statue)
 	{
 		RecoveryBarAmount = Statue->RecoveryAmount;
 		MaxRecoveryBarAmount = Statue->RecoveryCapacity;
+
+		WorldRecoveryBarAmount = Statue->WorldRecoveryAmount;
+		MaxWorldRecoveryBarAmount = Statue->WorldRecoveryCapacity;
 	}
 	else
 	{

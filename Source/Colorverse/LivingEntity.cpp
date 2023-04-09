@@ -14,9 +14,10 @@ void ULivingEntity::BeginPlay()
 
 void ULivingEntity::ApplyDamage(FDamageMessage dmgMsg)
 {
-	float temp = CurrentHealth;
-
 	CurrentHealth -= dmgMsg.damageAmount;
 
-	GEngine->AddOnScreenDebugMessage(-1, 3.0f, FColor::Blue, FString::Printf(TEXT("Hp - damaged = Hp : %d - %d = %d"), temp, dmgMsg.damageAmount, CurrentHealth));
+	if (CurrentHealth < 0)
+	{
+		CurrentHealth = 0;
+	}
 }

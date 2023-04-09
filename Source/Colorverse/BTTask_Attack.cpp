@@ -8,7 +8,6 @@
 UBTTask_Attack::UBTTask_Attack()
 {
 	bNotifyTick = true;
-	IsAttacking = false;
 }
 
 EBTNodeResult::Type UBTTask_Attack::ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory)
@@ -20,9 +19,6 @@ EBTNodeResult::Type UBTTask_Attack::ExecuteTask(UBehaviorTreeComponent& OwnerCom
 		return EBTNodeResult::Failed;
 
 	ColorverseCharacter->Attack();
-	IsAttacking = true;
-
-	ColorverseCharacter->GetColorverseAnim()->OnEndAttackJudg.AddDynamic(this, &UBTTask_Attack::SetIsAttackingFalse);
 
 	return EBTNodeResult::InProgress;
 }
@@ -30,7 +26,9 @@ EBTNodeResult::Type UBTTask_Attack::ExecuteTask(UBehaviorTreeComponent& OwnerCom
 void UBTTask_Attack::TickTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory, float DeltaSeconds)
 {
 	Super::TickTask(OwnerComp, NodeMemory, DeltaSeconds);
-	if (!IsAttacking)
+
+	auto ColorverseCharacter = Cast<AColorverseCharacter>(OwnerComp.GetAIOwner()->GetPawn());
+	if (!ColorverseCharacter->GetIsAttacking())
 	{
 		FinishLatentTask(OwnerComp, EBTNodeResult::Succeeded);
 	}

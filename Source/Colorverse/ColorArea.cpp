@@ -6,6 +6,8 @@
 AColorArea::AColorArea()
 {
 	PrimaryActorTick.bCanEverTick = true;
+	StaticMesh->SetupAttachment(BoxCol);
+	StaticMesh->SetCollisionProfileName("NoCollision");
 }
 
 void AColorArea::BeginPlay()
@@ -16,7 +18,7 @@ void AColorArea::BeginPlay()
 void AColorArea::OnEnter()
 {
 	//Super::OnEnter();
-	Print(1.0f, "Enter");
+	//Print(1.0f, "Enter");
 }
 
 void AColorArea::OnInteract()
@@ -35,11 +37,12 @@ void AColorArea::OnInteract()
 void AColorArea::OnExit()
 {
 	//Super::OnExit();
-	Print(1.0f, "Exit");
+	//Print(1.0f, "Exit");
 }
 
 void AColorArea::SetEnabledPostProcess(bool Active)
 {
 	check(PostVolume);
 	PostVolume->bEnabled = Active;
+	OnSetEnabledStageInteract.Broadcast(!Active);
 }

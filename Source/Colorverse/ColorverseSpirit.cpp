@@ -43,15 +43,16 @@ void AColorverseSpirit::Attack()
 void AColorverseSpirit::SpawnBullet()
 {
 	APooledObject* PoolableActor = ObjectPooler->GetPooledObject();
+	GEngine->AddOnScreenDebugMessage(-1, 3.0f, FColor::Blue, PoolableActor->GetName());
 	if (PoolableActor == nullptr)
 	{
 		return;
 	}
 
 	FVector newPos = GetActorLocation();
-	PoolableActor->SetActorLocation(newPos);
 	FRotator newRot = GetActorRotation();
-	PoolableActor->SetActorRotation(newRot);
+	PoolableActor->CreatePooledObject(newPos, newRot);
 
-	PoolableActor->CreatePooledObject();
+	GEngine->AddOnScreenDebugMessage(-1, 3.0f, FColor::Blue, PoolableActor->GetActorLocation().ToString());
+	GEngine->AddOnScreenDebugMessage(-1, 3.0f, FColor::Blue, PoolableActor->GetActorRotation().ToString());
 }

@@ -9,8 +9,7 @@ AStatue::AStatue()
 void AStatue::BeginPlay()
 {
 	Super::BeginPlay();
-
-	
+	StatueIndex = static_cast<int>(StatueColor);
 }
 
 void AStatue::OnEnter()

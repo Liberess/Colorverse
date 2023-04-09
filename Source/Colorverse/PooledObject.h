@@ -26,10 +26,11 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Collision", meta = (AllowPrivateAccess = "true"))
 	UBoxComponent* collision;
 
-	bool active;
-
 public:	
 	virtual void Tick(float DeltaTime) override;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	bool active;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (ClampMin = 0, ClampMax = 50))
 	float ProgressValue;
@@ -38,12 +39,16 @@ public:
 	bool IsInteractable;
 
 	void SetActive(bool InActive);
+
 	void Deactivate();
 
 	UFUNCTION(BlueprintNativeEvent)
-	void CreatePooledObject();
+	void ActiveTrueEvent();
 
-	UFUNCTION(BlueprintNativeEvent)
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
+	void CreatePooledObject(FVector location, FRotator rotator);
+
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
 	void DistroyPooledObject();
 
 	FORCEINLINE class UStaticMeshComponent* GetStaticMesh() { return mesh; }
