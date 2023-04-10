@@ -38,7 +38,7 @@ void UInventoryWidget::UpdateContainer(TArray<FItem> Items)
 			ItemSlot->Index = i;
 			const FItem& Item = i < Items.Num() ? Items[i] : FItem();
 			ItemSlot->UpdateItemSlot(Item);
-			ItemSlot->ThumbnailBorder->SetBrushFromTexture(Item.bIsValid ? Item.IconImg : EmptyImg);
+			ItemSlot->ThumbnailImg->SetBrushFromTexture(Item.bIsValid ? Item.IconImg : EmptyImg);
 		}
 	}
 }

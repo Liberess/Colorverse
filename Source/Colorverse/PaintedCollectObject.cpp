@@ -87,17 +87,9 @@ void APaintedCollectObject::Interact_Implementation()
 				int Rand = FMath::RandRange(1, RandAccuracy + 1);
 
 				if (Rand <= RandHitRange)
-				{
-					GEngine->AddOnScreenDebugMessage(-1, 1.0f,
-						FColor::Blue, TEXT("1"));
 					InvenMgr->AddInventoryItem(UnlockItemData);
-				}
 				else
-				{
-					GEngine->AddOnScreenDebugMessage(-1, 1.0f,
-						FColor::Blue, TEXT("2"));
 					InvenMgr->AddInventoryItem(ItemData);
-				}
 
 				break;
 			}
