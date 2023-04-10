@@ -173,13 +173,18 @@ void AColorverseCharacter::MoveForward(float Value)
 	if (LivingEntity->GetDead())
 		return;
 
-	if (bIsAttacking || bIsAttacked)
+	if (bIsAttacked)
 		return;
 
 	if ((Controller != nullptr))
 	{
 		if (Value != 0.0f)
 		{
+			if (bIsAttacking)
+			{
+				Value *= 0.0001;
+			}
+
 			const FRotator Rotation = Controller->GetControlRotation();
 			const FRotator YawRotation(0, Rotation.Yaw, 0);
 
@@ -194,13 +199,18 @@ void AColorverseCharacter::MoveRight(float Value)
 	if (LivingEntity->GetDead())
 		return;
 
-	if (bIsAttacking || bIsAttacked)
+	if (bIsAttacked)
 		return;
 
 	if ((Controller != nullptr))
 	{
 		if (Value != 0.0f)
 		{
+			if (bIsAttacking)
+			{
+				Value *= 0.0001;
+			}
+
 			const FRotator Rotation = Controller->GetControlRotation();
 			const FRotator YawRotation(0, Rotation.Yaw, 0);
 
@@ -308,7 +318,7 @@ void AColorverseCharacter::HitCheck_Implementation()
 
 void AColorverseCharacter::Attacked_Implementation(FDamageMessage damageMessage)
 {
-	if (bIsAttacked || LivingEntity->GetDead())
+	if (LivingEntity->GetDead())
 		return;
 
 	LivingEntity->ApplyDamage(damageMessage);
