@@ -57,7 +57,7 @@ void AColorverseCharacter::BeginPlay()
 	Super::BeginPlay();
 
 	if (IsValid(GetCharacterMovement()))
-		GetCharacterMovement()->MaxWalkSpeed = WalkSpeed;
+		GetCharacterMovement()->MaxWalkSpeed = RunSpeed;
 
 	InvenMgr = GetWorld()->GetSubsystem<UInventoryManager>();
 
@@ -185,23 +185,6 @@ void AColorverseCharacter::MoveForward(float Value)
 
 			const FVector Direction = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X);
 			AddMovementInput(Direction, Value);
-
-			if (!bIsRunTimer)
-			{
-				bIsRunTimer = true;
-				GetWorldTimerManager().SetTimer(ToggleRunTimer, this, &AColorverseCharacter::SetEnabledToggleRun,
-				                                AutoRunStartDelay, false);
-			}
-		}
-		else
-		{
-			if (bIsRunTimer && GetCharacterMovement()->Velocity.IsZero())
-			{
-				bIsRunTimer = false;
-				bIsRunning = false;
-				GetCharacterMovement()->MaxWalkSpeed = WalkSpeed;
-				GetWorldTimerManager().ClearTimer(ToggleRunTimer);
-			}
 		}
 	}
 }
@@ -223,23 +206,6 @@ void AColorverseCharacter::MoveRight(float Value)
 
 			const FVector Direction = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y);
 			AddMovementInput(Direction, Value);
-
-			if (!bIsRunTimer)
-			{
-				bIsRunTimer = true;
-				GetWorldTimerManager().SetTimer(ToggleRunTimer, this, &AColorverseCharacter::SetEnabledToggleRun,
-				                                AutoRunStartDelay, false);
-			}
-		}
-		else
-		{
-			if (bIsRunTimer && GetCharacterMovement()->Velocity.IsZero())
-			{
-				bIsRunTimer = false;
-				bIsRunning = false;
-				GetCharacterMovement()->MaxWalkSpeed = WalkSpeed;
-				GetWorldTimerManager().ClearTimer(ToggleRunTimer);
-			}
 		}
 	}
 }
