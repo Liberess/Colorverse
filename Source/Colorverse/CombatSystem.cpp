@@ -37,7 +37,6 @@ void UCombatSystem::SetColorBuff()
 
 void UCombatSystem::SetElementBuff(int color)
 {
-	GEngine->AddOnScreenDebugMessage(-1, 3.0f, FColor::Blue, TEXT("set"));
 	bIsOnElements[color] = true;
 }
 
