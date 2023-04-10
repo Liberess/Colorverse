@@ -1,4 +1,6 @@
 #include "PaintedCollectObject.h"
+
+#include "ColorManager.h"
 #include "InventoryManager.h"
 
 APaintedCollectObject::APaintedCollectObject()
@@ -137,13 +139,27 @@ void APaintedCollectObject::SetChildCollectObjectTexture(UTexture2D* texture)
 
 void APaintedCollectObject::SetRecoveryColorComplete(ECombineColors color)
 {
+	if(IsInteractable && IsColorActive)
+		return;
+	
 	IsInteractable = true;
 	IsColorActive = true;
 
 	SetChildCollectObjectTexture(ChildActiveTexture);
 
-	UInventoryManager* invenMgr = GetWorld()->GetSubsystem<UInventoryManager>();
-	invenMgr->IncreaseStatueColorRecoveryProgress(color, 10.0f);
+	if(ParentStageName == EStageName::Stage_Tutorial)
+	{
+		UColorManager* ColorMgr = GetWorld()->GetSubsystem<UColorManager>();
+		++ColorMgr->TutorialRecoveryCount;
+		
+		if(ColorMgr->TutorialRecoveryCount >= ColorMgr->TutorialRecoveryCapacity)
+			ColorMgr->SpawnTutorialLightObject();
+	}
+	else
+	{
+		UInventoryManager* invenMgr = GetWorld()->GetSubsystem<UInventoryManager>();
+		invenMgr->IncreaseStatueColorRecoveryProgress(color, 10.0f);
+	}
 
 	FTimerHandle timer;
 	GetWorldTimerManager().SetTimer(timer, FTimerDelegate::CreateLambda([&]
