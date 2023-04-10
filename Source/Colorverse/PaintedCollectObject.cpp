@@ -114,6 +114,17 @@ void APaintedCollectObject::SetActiveCollectObject(bool active, int index)
 	if (index < 0 || index >= CollectObjects.Num())
 		return;
 
+	if(active)
+	{
+		CollectObjects[index]->bIsGrown = true;
+		CollectObjects[index]->TargetScale = FVector::OneVector;
+	}
+	else
+	{
+		CollectObjects[index]->bIsGrown = true;
+		CollectObjects[index]->TargetScale = FVector::ZeroVector;
+	}
+
 	// active가 true라면 CollectObject를 활성화한다.
 	CollectObjects[index]->SetActorHiddenInGame(!active);
 	CollectObjects[index]->SetActorEnableCollision(active);
