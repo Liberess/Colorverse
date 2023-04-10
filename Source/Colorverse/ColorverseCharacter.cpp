@@ -329,7 +329,7 @@ void AColorverseCharacter::Roll_Implementation()
 	GetWorldTimerManager().SetTimer(RollTimer, this, &AColorverseCharacter::SetDisabledRoll, RollDelay, true);
 }
 
-void AColorverseCharacter::SetDisabledRoll()
+void AColorverseCharacter::SetDisabledRoll_Implementation()
 {
 	bIsRolling = false;
 	bIsDamageable = true;

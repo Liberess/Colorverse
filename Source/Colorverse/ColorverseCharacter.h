@@ -84,7 +84,7 @@ public:
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
 	void Roll();
 
-	UFUNCTION(BlueprintCallable)
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
 	void SetDisabledRoll();
 
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
@@ -145,7 +145,7 @@ private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta=(AllowPrivateAccess), Category="Combat System")
 	bool bIsDamageable;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta=(AllowPrivateAccess), Category="Combat System")
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, meta=(AllowPrivateAccess), Category="Combat System")
 	bool bIsRolling;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess), Category="Combat System")
