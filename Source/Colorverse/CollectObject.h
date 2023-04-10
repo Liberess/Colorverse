@@ -98,4 +98,13 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	void SetCollectObjectData(FName _itemName);
+
+	UPROPERTY(BlueprintReadWrite)
+	bool bIsGrown = false;
+	
+	UPROPERTY(BlueprintReadWrite)
+	FVector CurrentScale;
+
+	UPROPERTY(BlueprintReadWrite)
+	FVector TargetScale;
 };

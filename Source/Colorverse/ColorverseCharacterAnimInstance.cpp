@@ -39,6 +39,7 @@ void UColorverseCharacterAnimInstance::PlayDamagedMontage()
 void UColorverseCharacterAnimInstance::JumpToAttackMontageSection(int32 NewSection)
 {
 	Montage_JumpToSection(GetAttackMontageSectionName(NewSection), AttackMontage);
+	GEngine->AddOnScreenDebugMessage(-1, 3.0f, FColor::Blue, FString::Printf(TEXT("section%d"), NewSection));
 }
 
 void UColorverseCharacterAnimInstance::AnimNotify_NextAttackCheck()

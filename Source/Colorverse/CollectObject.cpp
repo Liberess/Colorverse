@@ -25,6 +25,7 @@ void ACollectObject::BeginPlay()
 	Super::BeginPlay();
 
 	IsInteractable = false;
+	CurrentScale = FVector::ZeroVector;
 }
 
 void ACollectObject::Tick(float DeltaSeconds)
@@ -45,6 +46,22 @@ void ACollectObject::Tick(float DeltaSeconds)
 			
 			if(PaintedCount >= NeedsPaintedCount)
 				bIsPaintComplete = true;
+		}
+	}
+
+	if(bIsGrown)
+	{
+		CurrentScale = FMath::Lerp(CurrentScale, TargetScale, DeltaSeconds / 2.0f);
+		StaticMesh->SetRelativeScale3D(CurrentScale);
+
+		GEngine->AddOnScreenDebugMessage(10, 1.0f, FColor::Green,
+			FString::Printf(TEXT("%f"), CurrentScale.X));
+		
+		if(FMath::Abs(TargetScale.X - CurrentScale.X) <= 0.01f)
+		{
+			GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Green, TEXT("gg"));
+			bIsGrown = false;
+			StaticMesh->SetRelativeScale3D(TargetScale);
 		}
 	}
 }

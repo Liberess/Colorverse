@@ -135,7 +135,6 @@ void AColorverseCharacter::SetEnableCanAttackTrace()
 void AColorverseCharacter::SetDisableCanAttackTrace()
 {
 	CombatSystem->bIsCanAttackTrace = false;
-	CombatSystem->SetCurrentPaintColorAmount(-5.0f);
 
 	IsDrawing = false;
 	

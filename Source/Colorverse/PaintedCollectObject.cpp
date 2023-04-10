@@ -85,17 +85,9 @@ void APaintedCollectObject::Interact_Implementation()
 				int Rand = FMath::RandRange(1, RandAccuracy + 1);
 
 				if (Rand <= RandHitRange)
-				{
-					GEngine->AddOnScreenDebugMessage(-1, 1.0f,
-						FColor::Blue, TEXT("1"));
 					InvenMgr->AddInventoryItem(UnlockItemData);
-				}
 				else
-				{
-					GEngine->AddOnScreenDebugMessage(-1, 1.0f,
-						FColor::Blue, TEXT("2"));
 					InvenMgr->AddInventoryItem(ItemData);
-				}
 
 				break;
 			}
@@ -119,6 +111,17 @@ void APaintedCollectObject::SetActiveCollectObject(bool active, int index)
 {
 	if (index < 0 || index >= CollectObjects.Num())
 		return;
+
+	if(active)
+	{
+		CollectObjects[index]->bIsGrown = true;
+		CollectObjects[index]->TargetScale = FVector::OneVector;
+	}
+	else
+	{
+		CollectObjects[index]->bIsGrown = true;
+		CollectObjects[index]->TargetScale = FVector::ZeroVector;
+	}
 
 	// active가 true라면 CollectObject를 활성화한다.
 	CollectObjects[index]->SetActorHiddenInGame(!active);
