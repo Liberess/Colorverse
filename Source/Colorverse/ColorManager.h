@@ -32,4 +32,13 @@ public:
 	
 	UFUNCTION(BlueprintSetter)
 	void SetLightAmount(EStageName StageName, int amount);
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+	int TutorialRecoveryCount = 0;
+	
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+	int TutorialRecoveryCapacity = 0;
+
+	UFUNCTION(BlueprintCallable)
+	void SpawnTutorialLightObject();
 };
