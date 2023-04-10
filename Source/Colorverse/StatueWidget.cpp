@@ -37,7 +37,8 @@ void UStatueWidget::UpdateContainer(TArray<FItem> Items)
 		UnlockItemSlots[i]->Index = i;
 		const FItem& Item = i < Items.Num() ? Items[i] : FItem();
 		UnlockItemSlots[i]->UpdateItemSlot(Item);
-		UnlockItemSlots[i]->ThumbnailBorder->SetBrushFromTexture(Item.bIsValid ? Item.IconImg : EmptyImg);
+		UnlockItemSlots[i]->ThumbnailImg->SetBrushFromTexture(Item.bIsValid ? Item.IconImg : EmptyImg);
+		//UnlockItemSlots[i]->ThumbnailBorder->SetBrushFromTexture(Item.bIsValid ? Item.IconImg : EmptyImg);
 	}
 
 	for (int i = 0; i < RecoveryItemSlots.Num(); i++)
@@ -45,7 +46,8 @@ void UStatueWidget::UpdateContainer(TArray<FItem> Items)
 		RecoveryItemSlots[i]->Index = i;
 		const FItem& Item = i < Items.Num() ? Items[i] : FItem();
 		RecoveryItemSlots[i]->UpdateItemSlot(Item);
-		RecoveryItemSlots[i]->ThumbnailBorder->SetBrushFromTexture(Item.bIsValid ? Item.IconImg : EmptyImg);
+		RecoveryItemSlots[i]->ThumbnailImg->SetBrushFromTexture(Item.bIsValid ? Item.IconImg : EmptyImg);
+		//RecoveryItemSlots[i]->ThumbnailBorder->SetBrushFromTexture(Item.bIsValid ? Item.IconImg : EmptyImg);
 	}
 }
 

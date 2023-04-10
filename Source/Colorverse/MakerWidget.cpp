@@ -1,8 +1,6 @@
 #include "MakerWidget.h"
 #include "ItemSlotWidget.h"
 
-#define Print(duration, text) if(GEngine) GEngine->AddOnScreenDebugMessage(-1,duration, FColor::Blue, text)
-
 UMakerWidget::UMakerWidget(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)
 {
@@ -31,7 +29,8 @@ void UMakerWidget::UpdateContainer(TArray<FItem> Items)
 			ItemSlot->Index = i;
 			const FItem& Item = i < Items.Num() ? Items[i] : FItem();
 			ItemSlot->UpdateItemSlot(Item);
-			ItemSlot->ThumbnailBorder->SetBrushFromTexture(Item.bIsValid ? Item.IconImg : EmptyImg);
+			ItemSlot->ThumbnailImg->SetBrushFromTexture(Item.bIsValid ? Item.IconImg : EmptyImg);
+			//ItemSlot->ThumbnailBorder->SetBrushFromTexture(Item.bIsValid ? Item.IconImg : EmptyImg);
 		}
 	}
 }
