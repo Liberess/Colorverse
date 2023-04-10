@@ -426,6 +426,7 @@ void AColorverseCharacter::ChangeEquipPaint_Implementation(ECombineColors Combin
 	CombatSystem->CurrentPaintColor = CombineColor;
 
 	CombatSystem->SetColorBuff();
+	CombatSystem->SetElementBuff((int)CombineColor);
 }
 
 void AColorverseCharacter::ControlInventory_Implementation()

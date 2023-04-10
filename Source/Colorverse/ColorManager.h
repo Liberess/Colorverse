@@ -13,10 +13,10 @@ class COLORVERSE_API UColorManager : public UWorldSubsystem
 	GENERATED_BODY()
 
 private:
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, meta=(AllowPrivateAccess))
+	UPROPERTY(VisibleAnywhere, meta=(AllowPrivateAccess))
 	TMap<EStageName, int> LightAmountMap;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, meta=(AllowPrivateAccess))
+	UPROPERTY(VisibleAnywhere, meta=(AllowPrivateAccess))
 	TMap<EStageName, AColorArea*> ColorAreaMap;
 
 	AColorverseGameMode* GameMode;
@@ -32,13 +32,4 @@ public:
 	
 	UFUNCTION(BlueprintSetter)
 	void SetLightAmount(EStageName StageName, int amount);
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, meta=(AllowPrivateAccess))
-	int TutorialRecoveryCount = 0;
-	
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, meta=(AllowPrivateAccess))
-	int TutorialRecoveryCapacity = 0;
-
-	UFUNCTION(BlueprintCallable)
-	void SpawnTutorialLightObject();
 };

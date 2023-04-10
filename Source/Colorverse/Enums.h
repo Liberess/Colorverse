@@ -8,8 +8,7 @@ enum class EStageName : uint8
 	Stage_Red UMETA(DisplayName = "Stage_Red"),
 	Stage_Orange UMETA(DisplayName = "Stage_Orange"),
 	Stage_Yellow UMETA(DisplayName = "Stage_Yellow"),
-	Stage_Blue UMETA(DisplayName = "Stage_Blue"),
-	Stage_Tutorial UMETA(DisplayName = "Stage_Tutorial")
+	Stage_Blue UMETA(DisplayName = "Stage_Blue")
 };
 
 UENUM(BlueprintType)
