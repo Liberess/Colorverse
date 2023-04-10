@@ -4,7 +4,6 @@
 #include "IItem.h"
 #include "Blueprint/UserWidget.h"
 #include "Components/Border.h"
-#include "Components/Button.h"
 #include "Components/Image.h"
 #include "Components/TextBlock.h"
 #include "ItemSlotWidget.generated.h"

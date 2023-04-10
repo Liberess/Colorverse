@@ -11,7 +11,7 @@ UInventoryWidget::UInventoryWidget(const FObjectInitializer& ObjectInitializer)
 
 void UInventoryWidget::CreateContainer(int Slots)
 {
-	const FSoftClassPath WidgetBPClassRef(TEXT("/Game/UI/BP_ItemSlot.BP_ItemSlot_C"));
+	/*const FSoftClassPath WidgetBPClassRef(TEXT("/Game/UI/BP_ItemSlot.BP_ItemSlot_C"));
 	for(int i = 0; i < Slots - 1; i++)
 	{
 		if(UClass* WidgetClass = WidgetBPClassRef.TryLoadClass<UItemSlotWidget>())
@@ -25,6 +25,16 @@ void UInventoryWidget::CreateContainer(int Slots)
 				InventoryGridPanel->AddChildToUniformGrid(Widget, Row, i);
 			else
 				InventoryGridPanel->AddChildToUniformGrid(Widget, Row, i - (Row * GridColumnAmount));
+		}
+	}*/
+
+	for(int i = 0; i < InventoryGridPanel->GetChildrenCount(); i++)
+	{
+		if(UItemSlotWidget* Widget = Cast<UItemSlotWidget>(InventoryGridPanel->GetChildAt(i)))
+		{
+			Widget->bIsMaker = false;
+			Widget->ItemLocation = EItemSlotLocationType::Inventory;
+			Widget->Index = i;
 		}
 	}
 }
