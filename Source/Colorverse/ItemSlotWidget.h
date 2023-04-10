@@ -4,7 +4,7 @@
 #include "IItem.h"
 #include "Blueprint/UserWidget.h"
 #include "Components/Border.h"
-#include "Components/Button.h"
+#include "Components/Image.h"
 #include "Components/TextBlock.h"
 #include "ItemSlotWidget.generated.h"
 
@@ -19,6 +19,9 @@ public:
 	
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, meta=(BindWidget))
 	UBorder* ThumbnailBorder;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, meta=(BindWidget))
+	UImage* ThumbnailImg;
 	
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, meta=(BindWidget))
 	UTextBlock* AmountTxt;
