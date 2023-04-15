@@ -32,6 +32,7 @@ public:
 	AColorverseCharacter();
 
 	virtual void BeginPlay() override;
+	virtual void Tick(float DeltaTime) override;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Combat System")
 	TArray<AActor*> AttackHitResults;
@@ -138,10 +139,7 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void SetDisableCanAttackTrace();
 
-private:
-	bool bIsRunTimer;
-	FTimerHandle ToggleRunTimer;
-	
+private:	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta=(AllowPrivateAccess), Category="Combat System")
 	bool bIsDamageable;
 
@@ -154,8 +152,6 @@ private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess), Category = "Combat System")
 	bool bIsAttacked;
 	
-	FTimerHandle RollTimer;
-
 	bool bIsWatchingInteractWidget;
 
 	UInventoryManager* InvenMgr;

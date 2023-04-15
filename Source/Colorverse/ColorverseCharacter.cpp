@@ -64,6 +64,15 @@ void AColorverseCharacter::BeginPlay()
 	bIsDamageable = true;
 }
 
+void AColorverseCharacter::Tick(float DeltaTime)
+{
+	Super::Tick(DeltaTime);
+	if (CombatSystem->bIsCanAttackTrace)
+	{
+		HitCheck();
+	}
+}
+
 void AColorverseCharacter::SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent)
 {
 	check(PlayerInputComponent);
@@ -297,18 +306,12 @@ void AColorverseCharacter::Roll_Implementation()
 
 	bIsRolling = true;
 	bIsDamageable = false;
-
-	Print(1.0f, TEXT("Roll On"));
-
-	GetWorldTimerManager().ClearTimer(RollTimer);
-	GetWorldTimerManager().SetTimer(RollTimer, this, &AColorverseCharacter::SetDisabledRoll, RollDelay, true);
 }
 
 void AColorverseCharacter::SetDisabledRoll_Implementation()
 {
 	bIsRolling = false;
 	bIsDamageable = true;
-	Print(1.0f, TEXT("Roll Off"));
 }
 
 void AColorverseCharacter::HitCheck_Implementation()
