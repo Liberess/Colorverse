@@ -26,6 +26,8 @@ UInventoryManager::UInventoryManager()
 	static ConstructorHelpers::FObjectFinder<UDataTable> DataTable(TEXT("/Game/ItemDatas/DT_Combine"));
 	if (DataTable.Succeeded())
 		CombineDataTable = DataTable.Object;
+
+	ItemAcquiredWidgetPool = CreateDefaultSubobject<UItemAcquiredWidgetPool>(TEXT("WidgetPool"));
 }
 
 void UInventoryManager::Initialize(FSubsystemCollectionBase& Collection)
@@ -235,6 +237,9 @@ void UInventoryManager::UpdateStatue()
 
 void UInventoryManager::AddInventoryItem(const FItem& Item)
 {
+	if(!Item.bIsValid)
+		return;
+	
 	static int Index = 0;
 	if(GetInventoryItemByName(Item.Name, Index))
 	{
@@ -254,6 +259,25 @@ void UInventoryManager::AddInventoryItem(const FItem& Item)
 	}
 	
 	UpdateInventory();
+
+	HUDWidget->AddItemLog(Item);
+
+	/*if(ItemAcquiredWidgetClass)
+	{
+		UItemAcquiredWidget* AcquiredWidget = Cast<UItemAcquiredWidget>(ItemAcquiredWidgetPool->GetOrCreateWidget(GetWorld(), ItemAcquiredWidgetClass));
+		if (AcquiredWidget)
+		{
+			AcquiredWidget->AddToViewport();
+			AcquiredWidget->ShowItemAcquired(Item);
+
+			FTimerHandle TimerHandle;
+			GetWorld()->GetTimerManager().SetTimer(TimerHandle, [this, AcquiredWidget]()
+			{
+				AcquiredWidget->SetVisibility(ESlateVisibility::Collapsed);
+				ItemAcquiredWidgetPool->ReleaseWidget(AcquiredWidget);
+			}, 3.0f, false);
+		}
+	}*/
 }
 
 void UInventoryManager::UseInventoryItem(FItem Item)

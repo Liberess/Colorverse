@@ -4,6 +4,8 @@
 #include "HUDWidget.h"
 #include "IItem.h"
 #include "InventoryWidget.h"
+#include "ItemAcquiredWidget.h"
+#include "ItemAcquiredWidgetPool.h"
 #include "MakerWidget.h"
 #include "StatueWidget.h"
 #include "Subsystems/WorldSubsystem.h"
@@ -107,4 +109,10 @@ public:
 	void UpdateStatueUI();
 	
 	FORCEINLINE UHUDWidget* GetHUDWidget() { return HUDWidget; }
+
+	UPROPERTY(BlueprintReadOnly, Category = "Item Acquired")
+	TSubclassOf<UItemAcquiredWidget> ItemAcquiredWidgetClass;
+
+	UPROPERTY(BlueprintReadOnly, Category = "Item Acquired")
+	UItemAcquiredWidgetPool* ItemAcquiredWidgetPool;
 };
