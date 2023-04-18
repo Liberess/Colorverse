@@ -87,5 +87,4 @@ void UHUDWidget::UpdateItemLog()
 void UHUDWidget::ReleaseItemLogWidget(UItemAcquiredWidget* ItemLogWidget)
 {
 	ItemLogPool->ReleaseWidget(ItemLogWidget);
-	GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Orange, TEXT("release"));
 }
