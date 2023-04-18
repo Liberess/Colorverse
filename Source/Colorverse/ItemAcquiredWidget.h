@@ -13,8 +13,14 @@ class COLORVERSE_API UItemAcquiredWidget : public UUserWidget
 	GENERATED_BODY()
 	
 public:
+	UPROPERTY(BlueprintReadOnly, Category="Item Acquired")
+	bool bIsViewComplete = false;
+	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Item Acquired")
 	int LogIndex = 0;
+	
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Item Acquired")
+	FItem ItemData;
 	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Item Acquired", meta=(BindWidget))
 	UImage* ItemImg;
@@ -35,7 +41,13 @@ public:
 	UWidgetAnimation* HideAnim;
 	
 	UFUNCTION(BlueprintCallable, Category = "Item Acquired")
-	void UpdateItemInformation(const FItem& ItemData);
+	void SetupItemWidget(const FItem& _ItemData);
+	
+	UFUNCTION(BlueprintCallable, Category = "Item Acquired")
+	void SetupItemLogTimer();
+	
+	UFUNCTION(BlueprintCallable, Category = "Item Acquired")
+	void UpdateItemInformation();
 
 	UFUNCTION(BlueprintCallable, Category = "Item Acquired")
 	void UpdateItemLogIndex();

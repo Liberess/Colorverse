@@ -1,17 +1,24 @@
 #include "ItemAcquiredWidget.h"
 #include "HUDWidget.h"
 
-void UItemAcquiredWidget::UpdateItemInformation(const FItem& ItemData)
+void UItemAcquiredWidget::SetupItemWidget(const FItem& _ItemData)
 {
-	ItemImg->SetBrushFromTexture(ItemData.IconImg);
-	ItemNameTxt->SetText(ItemData.Name);
-	ItemAmountTxt->SetText(FText::FromString("x" + FString::FromInt(ItemData.Amount)));
-	PlayAnimation(ShowAnim);
+	if(bIsViewComplete)
+		return;
 
+	ItemData = _ItemData;
+	
+	UpdateItemInformation();
+	SetupItemLogTimer();
+}
+
+void UItemAcquiredWidget::SetupItemLogTimer()
+{
+	PlayAnimation(ShowAnim);
 	GetWorld()->GetTimerManager().ClearTimer(RemoveLogTimer);
 	GetWorld()->GetTimerManager().SetTimer(RemoveLogTimer, [this]()
 	{
-		if (LogIndex >= 4)
+		if (LogIndex >= 3)
 			return;
 
 		StopAnimation(ShowAnim);
@@ -19,19 +26,32 @@ void UItemAcquiredWidget::UpdateItemInformation(const FItem& ItemData)
 
 		GetWorld()->GetTimerManager().SetTimer(RemoveLogTimer, FTimerDelegate::CreateLambda([&]()
 		{
+			bIsViewComplete = true;
 			ReleaseItemLogWidget();
-			GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Red, TEXT("auto release"));
+			GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Yellow, TEXT("auto release"));
 		}), 1.0f, false);
 	}, 2.0f, false);
 }
 
+void UItemAcquiredWidget::UpdateItemInformation()
+{
+	ItemImg->SetBrushFromTexture(ItemData.IconImg);
+	ItemNameTxt->SetText(ItemData.Name);
+	ItemAmountTxt->SetText(FText::FromString("x" + FString::FromInt(ItemData.Amount)));
+}
+
 void UItemAcquiredWidget::UpdateItemLogIndex()
 {
+	if(bIsViewComplete)
+		return;
+	
 	++LogIndex;
 	if (LogIndex >= 4)
 	{
+		bIsViewComplete = true;
 		StopAnimation(ShowAnim);
-		PlayAnimation(HideAnim, 0.0f, 1, EUMGSequencePlayMode::Forward, 2.0f);
+		StopAnimation(HideAnim);
+		PlayAnimation(HideAnim, 0.0f, 1, EUMGSequencePlayMode::Forward, 4.0f);
 		GetWorld()->GetTimerManager().ClearTimer(RemoveLogTimer);
 		GetWorld()->GetTimerManager().SetTimer(RemoveLogTimer, [this]()
 		{
@@ -48,9 +68,10 @@ void UItemAcquiredWidget::UpdateItemLogIndex()
 			if (LogIndex >= 4)
 				return;
 
-
+			bIsViewComplete = true;
+			GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Blue, TEXT("over 3"));
 			StopAnimation(ShowAnim);
-			PlayAnimation(HideAnim, 0.0f, 1, EUMGSequencePlayMode::Forward, 1.5f);
+			PlayAnimation(HideAnim, 0.0f, 1, EUMGSequencePlayMode::Forward, 2.0f);
 
 			GetWorld()->GetTimerManager().SetTimer(RemoveLogTimer,
 			                                       FTimerDelegate::CreateUObject(
@@ -71,5 +92,4 @@ void UItemAcquiredWidget::ReleaseItemLogWidget()
 	}
 
 	GetWorld()->GetTimerManager().ClearTimer(RemoveLogTimer);
-	GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Red, TEXT("release"));
 }
