@@ -1,6 +1,3 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
-
 #include "CombatSystem.h"
 
 UCombatSystem::UCombatSystem() : ATK(10), ColorBuff(ATK / 2), ElementBuff(ATK / 2), MaxCombo(3), CurrentCombo(0), bCanNextCombo(false), bIsComboInputOn(false), bIsCanAttackTrace(false)
@@ -60,25 +57,26 @@ float UCombatSystem::GetCurrentATK()
 float UCombatSystem::GetCurrentPaintColorAmount()
 {
 	UInventoryManager* temp = GetWorld()->GetSubsystem<UInventoryManager>();
-	float colorAmount = temp->PaintAmountArray[(int)CurrentPaintColor];
-	return colorAmount;
+	return temp->PaintAmount;
 }
 
 void UCombatSystem::SetCurrentPaintColorAmount(float value)
 {
 	UInventoryManager* temp = GetWorld()->GetSubsystem<UInventoryManager>();
-	temp->PaintAmountArray[(int)CurrentPaintColor] += value;
+	temp->PaintAmount += value;
 
-	if (temp->PaintAmountArray[(int)CurrentPaintColor] <= 0.0f)
+	if (temp->PaintAmount <= 0.0f)
 	{
-		temp->PaintAmountArray[(int)CurrentPaintColor] = 0;
+		temp->PaintAmount = 0;
 	}
-	else if (temp->PaintAmountArray[(int)CurrentPaintColor] < 5.0f)
+	else if (temp->PaintAmount < 5.0f)
 	{
 		SetColorBuff();
 	}
-	
-	temp->GetHUDWidget()->SetPaintBarPercent((int)CurrentPaintColor, temp->PaintAmountArray[(int)CurrentPaintColor]);
+
+	GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Red,
+		FString::Printf(TEXT("%f"), temp->PaintAmount));
+	temp->GetHUDWidget()->SetPaintBarPercent(temp->PaintAmount);
 }
 
 void UCombatSystem::AttackStartComboState()

@@ -1,8 +1,6 @@
 #include "InventoryWidget.h"
 #include "ItemSlotWidget.h"
 
-#define Print(duration, text) if(GEngine) GEngine->AddOnScreenDebugMessage(-1,duration, FColor::Orange, text)
-
 UInventoryWidget::UInventoryWidget(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)
 {

@@ -105,6 +105,8 @@ void AColorverseCharacter::SetupPlayerInputComponent(class UInputComponent* Play
 		TEXT("YellowPaint"), IE_Pressed, this, &AColorverseCharacter::ChangeEquipPaint, ECombineColors::Yellow);
 	PlayerInputComponent->BindAction<TDelegate<void(ECombineColors)>>(
 		TEXT("BluePaint"), IE_Pressed, this, &AColorverseCharacter::ChangeEquipPaint, ECombineColors::Blue);
+	PlayerInputComponent->BindAction<TDelegate<void(ECombineColors)>>(
+		TEXT("EmptyPaint"), IE_Pressed, this, &AColorverseCharacter::ChangeEquipPaint, ECombineColors::Empty);
 }
 
 void AColorverseCharacter::PostInitializeComponents()
@@ -404,8 +406,11 @@ void AColorverseCharacter::ChangeEquipPaint_Implementation(ECombineColors Combin
 {
 	CombatSystem->CurrentPaintColor = CombineColor;
 
-	CombatSystem->SetColorBuff();
-	CombatSystem->SetElementBuff((int)CombineColor);
+	if(CombineColor != ECombineColors::Empty)
+	{
+		CombatSystem->SetColorBuff();
+		CombatSystem->SetElementBuff((int)CombineColor);
+	}
 }
 
 void AColorverseCharacter::ControlInventory_Implementation()

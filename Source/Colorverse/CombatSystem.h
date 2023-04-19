@@ -34,6 +34,9 @@ public:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Character Status (General Settings)")
 	ECombineColors CurrentPaintColor;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Character Status (General Settings)")
+	TArray<FLinearColor> PaintColorTemplates;
 
 	// 물감 있을 때 속성 버프
 	UPROPERTY(Category = "Character Status (General Settings)", EditAnywhere, BlueprintReadWrite)
@@ -74,6 +77,12 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	float GetCurrentATK();
+
+	UFUNCTION(BlueprintCallable)
+	FLinearColor GetCurrentPaintLinearColor()
+	{
+		return PaintColorTemplates[static_cast<int>(CurrentPaintColor)];
+	}
 
 	UFUNCTION(BlueprintCallable)
 	float GetCurrentPaintColorAmount();
