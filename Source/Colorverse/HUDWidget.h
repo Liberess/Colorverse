@@ -15,11 +15,20 @@ class COLORVERSE_API UHUDWidget : public UUserWidget
 	GENERATED_BODY()
 
 protected:
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Paint)
+	ECombineColors PaintColor;
+	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Paint, meta=(BindWidget))
-	UUniformGridPanel* PaintSlotGridPanel;
+	UProgressBar* PaintBar;
 	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Paint)
-	TArray<UPaintSlotWidget*> PaintSlotWidgetArray;
+	float PaintBarAmount = 0.0f;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Paint)
+	float MaxPaintAmount = 100.0f;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category=Paint)
+	float PaintBarProgressVelocity = 2.0f;
 	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Item Acquired", meta=(BindWidget))
 	UUniformGridPanel* ItemLogGridPanel;
@@ -37,7 +46,7 @@ public:
 	void InitializedHUD();
 
 	UFUNCTION(BlueprintCallable)
-	void SetPaintBarPercent(int CombineColorNum, float Amount);
+	void SetPaintBarPercent(float Amount);
 
 	UFUNCTION(BlueprintCallable)
 	void AddItemLog(const FItem& ItemData);
@@ -47,4 +56,7 @@ public:
 	
 	UFUNCTION(BlueprintCallable)
 	void ReleaseItemLogWidget(UItemAcquiredWidget* ItemLogWidget);
+
+	UFUNCTION(BlueprintCallable, Category=Paint)
+	void SetPaintColor(ECombineColors CombineColor);
 };

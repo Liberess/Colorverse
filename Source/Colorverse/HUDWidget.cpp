@@ -13,21 +13,15 @@ void UHUDWidget::InitializedHUD()
 	if(UClass* WidgetClass = WidgetBPClassRef.TryLoadClass<UItemAcquiredWidget>())
 		ItemAcquiredWidgetClass = WidgetClass;
 	
-	for(int i = 0; i < PaintSlotGridPanel->GetChildrenCount(); i++)
-	{
-		if(UPaintSlotWidget* Widget = Cast<UPaintSlotWidget>(PaintSlotGridPanel->GetChildAt(i)))
-		{
-			Widget->SetPaintColor(static_cast<ECombineColors>(i));
-			Widget->SetInputKeyText(FString::FromInt(i+1));
-			Widget->SetPaintBarPercent(0.0f);
-			PaintSlotWidgetArray.Add(Widget);
-		}
-	}
+	//PaintWidget->SetPaintColor(static_cast<ECombineColors>(i));
+	//PaintWidget->SetInputKeyText(FString::FromInt(i+1));
+	PaintBar->SetPercent(0.0f);
+	SetPaintBarPercent(0.0f);
 }
 
-void UHUDWidget::SetPaintBarPercent(int CombineColorNum, float Amount)
+void UHUDWidget::SetPaintBarPercent(float Amount)
 {
-	PaintSlotWidgetArray[CombineColorNum]->SetPaintBarPercent(Amount);
+	PaintBarAmount = Amount;
 }
 
 void UHUDWidget::AddItemLog(const FItem& ItemData)
@@ -79,4 +73,9 @@ void UHUDWidget::UpdateItemLog()
 void UHUDWidget::ReleaseItemLogWidget(UItemAcquiredWidget* ItemLogWidget)
 {
 	ItemLogPool->ReleaseWidget(ItemLogWidget);
+}
+
+void UHUDWidget::SetPaintColor(ECombineColors CombineColor)
+{
+	PaintColor = CombineColor;
 }

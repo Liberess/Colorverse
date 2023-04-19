@@ -43,7 +43,8 @@ enum class ECombineColors : uint8
 {
 	Red UMETA(DisplayName = "Red"),
 	Yellow UMETA(DisplayName = "Yellow"),
-	Blue UMETA(DisplayName = "Blue")
+	Blue UMETA(DisplayName = "Blue"),
+	Empty UMETA(DisplayName = "Empty")
 };
 
 UENUM(BlueprintType)

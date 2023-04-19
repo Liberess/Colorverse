@@ -46,8 +46,6 @@ void UInventoryManager::InitializeManager()
 	for(int i = 0; i < 1; i++)
 		StatueArray.Add(FItem());
 
-	PaintAmountArray = { 0.0f, 0.0f, 0.0f };
-
 	const FSoftClassPath InventoryRef(TEXT("/Game/UI/BP_InventoryWidget.BP_InventoryWidget_C"));
 	if(UClass* WidgetClass = InventoryRef.TryLoadClass<UInventoryWidget>())
 	{
@@ -340,8 +338,8 @@ void UInventoryManager::CombineItems()
 				DestItem = EmptyItem;
 
 			const int ColorNum = static_cast<int>(CombineRule->CombineColor);
-			PaintAmountArray[ColorNum] += GetCombinePaintAmount;
-			HUDWidget->SetPaintBarPercent(ColorNum, PaintAmountArray[ColorNum]);
+			PaintAmount += GetCombinePaintAmount;
+			HUDWidget->SetPaintBarPercent(PaintAmount);
 			UpdateMaker();
 		}
 	}

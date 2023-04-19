@@ -67,7 +67,7 @@ public:
 	TArray<AStatue*> Statues;
 	
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
-	TArray<float> PaintAmountArray;
+	float PaintAmount = 0.0f;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 	AStatue* CurrentStatue;
