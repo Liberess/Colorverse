@@ -25,17 +25,13 @@ enum class EItemSlotLocationType : uint8
 {
 	Inventory UMETA(DisplayName = "Inventory"),
 	Maker UMETA(DisplayName = "Maker"),
-	StatueUnlock UMETA(DisplayName = "StatueUnlock"),
-	StatueRecovery UMETA(DisplayName = "StatueRecovery")
 };
 
 UENUM(BlueprintType)
 enum class EItemCombineType : uint8
 {
 	Source UMETA(DisplayName = "Source"),
-	Destination UMETA(DisplayName = "Destination"),
-	SacrificeUnlock UMETA(DisplayName = "SacrificeUnlock"),
-	SacrificeRecovery UMETA(DisplayName = "SacrificeRecovery")
+	Destination UMETA(DisplayName = "Destination")
 };
 
 UENUM(BlueprintType)
@@ -56,13 +52,6 @@ enum class EPaintComboColors : uint8
 	Green UMETA(DisplayName = "Green"),
 	Blue UMETA(DisplayName = "Blue"),
 	Purple UMETA(DisplayName = "Purple")
-};
-
-UENUM(BlueprintType)
-enum class ESacrificeType : uint8
-{
-	Unlock UMETA(DisplayName = "Unlock"),
-	Recovery UMETA(DisplayName = "Recovery")
 };
 
 class COLORVERSE_API Enums

@@ -97,7 +97,6 @@ void AColorverseCharacter::SetupPlayerInputComponent(class UInputComponent* Play
 
 	PlayerInputComponent->BindAction("Interact", IE_Pressed, this, &AColorverseCharacter::Interact);
 	PlayerInputComponent->BindAction("Inventory", IE_Pressed, this, &AColorverseCharacter::ControlInventory);
-	PlayerInputComponent->BindAction("Maker", IE_Pressed, this, &AColorverseCharacter::ControlMaker);
 
 	PlayerInputComponent->BindAction<TDelegate<void(ECombineColors)>>(
 		TEXT("RedPaint"), IE_Pressed, this, &AColorverseCharacter::ChangeEquipPaint, ECombineColors::Red);
@@ -378,17 +377,6 @@ void AColorverseCharacter::OnOverlapEnd(class UPrimitiveComponent* OverlappedCom
 	{
 		if (IsValid(InteractObject) && InteractObject == OtherActor)
 		{
-		 	AStatue* Statue = Cast<AStatue>(InteractObject);
-			if(IsValid(Statue))
-			{
-				if(Statue->bIsOpenInventoryByStatue)
-					InvenMgr->SetInventoryUI(false);
-				InvenMgr->SetStatueUI(false);
-				
-				Statue->bIsOpenInventoryByStatue = false;
-				InvenMgr->CurrentStatue = nullptr;
-			}
-			
 			InteractObject = nullptr;
 			bIsInteract = false;
 
@@ -416,11 +404,6 @@ void AColorverseCharacter::ChangeEquipPaint_Implementation(ECombineColors Combin
 void AColorverseCharacter::ControlInventory_Implementation()
 {
 	InvenMgr->SetInventoryUI(true, true);
-}
-
-void AColorverseCharacter::ControlMaker_Implementation()
-{
-	InvenMgr->SetMakerUI(true, true);
 }
 
 void AColorverseCharacter::Interact_Implementation()

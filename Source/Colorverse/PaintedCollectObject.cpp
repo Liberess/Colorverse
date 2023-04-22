@@ -1,5 +1,4 @@
 #include "PaintedCollectObject.h"
-
 #include "ColorManager.h"
 #include "InventoryManager.h"
 
@@ -45,7 +44,9 @@ void APaintedCollectObject::BeginPlay()
 		if (auto collectObj = Cast<ACollectObject>(actor))
 		{
 			collectObj->ItemData = ItemData;
+			collectObj->PaintedCount = 0;
 			collectObj->PaintComboData = PaintComboData;
+			collectObj->NeedsPaintedCount = PaintComboData.ComboColors.Num();
 			//collectObj->SetCollectObjectData(SeparatedItemName);
 			CollectObjects.Add(collectObj);
 		}
@@ -146,20 +147,6 @@ void APaintedCollectObject::SetRecoveryColorComplete(ECombineColors color)
 	IsColorActive = true;
 
 	SetChildCollectObjectTexture(ChildActiveTexture);
-
-	if(ParentStageName == EStageName::Stage_Tutorial)
-	{
-		UColorManager* ColorMgr = GetWorld()->GetSubsystem<UColorManager>();
-		++ColorMgr->TutorialRecoveryCount;
-		
-		if(ColorMgr->TutorialRecoveryCount >= ColorMgr->TutorialRecoveryCapacity)
-			ColorMgr->SpawnTutorialLightObject();
-	}
-	else
-	{
-		UInventoryManager* invenMgr = GetWorld()->GetSubsystem<UInventoryManager>();
-		invenMgr->IncreaseStatueColorRecoveryProgress(color, 10.0f);
-	}
 
 	FTimerHandle timer;
 	GetWorldTimerManager().SetTimer(timer, FTimerDelegate::CreateLambda([&]

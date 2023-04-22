@@ -11,7 +11,6 @@ struct FItem : public FTableRowBase
 {
 	GENERATED_USTRUCT_BODY();
 	
-public:
 	FItem() : Id(-1), CombineType(EItemCombineType::Source), Amount(1), RecoveryAmount(0.0f), IconImg(), bIsValid(false) {};
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item")
@@ -22,6 +21,9 @@ public:
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item")
 	FText Name;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item")
+	FText Description;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item")
 	int Amount;
@@ -34,6 +36,9 @@ public:
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item")
 	bool bIsValid;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item")
+	bool bIsConsume = false;
 };
 
 USTRUCT(BlueprintType, BlueprintType)

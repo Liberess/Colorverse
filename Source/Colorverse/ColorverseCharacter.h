@@ -123,10 +123,7 @@ public:
 
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
 	void ControlInventory();
-	
-	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
-	void ControlMaker();
-	
+
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
 	void ChangeEquipPaint(ECombineColors CombineColor);
 

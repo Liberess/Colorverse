@@ -5,16 +5,7 @@
 ACollectObject::ACollectObject()
 {
 	PrimaryActorTick.bCanEverTick = true;
-
-	/*
-	DefaultRoot = CreateDefaultSubobject<USceneComponent>(TEXT("DefaultRoot"));
-	SetRootComponent(DefaultRoot);
 	
-	StaticMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Static Mesh"));
-	StaticMesh->SetCollisionProfileName("Trigger");
-	StaticMesh->SetupAttachment(DefaultRoot);
-	*/
-
 	static ConstructorHelpers::FObjectFinder<UDataTable> DataTable(TEXT("/Game/DataTables/DT_ItemData"));
 	if (DataTable.Succeeded())
 		ItemDT = DataTable.Object;

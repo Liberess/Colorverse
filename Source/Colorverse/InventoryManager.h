@@ -3,11 +3,9 @@
 #include "CoreMinimal.h"
 #include "HUDWidget.h"
 #include "IItem.h"
+#include "Statue.h"
 #include "InventoryWidget.h"
-#include "ItemAcquiredWidget.h"
-#include "ItemAcquiredWidgetPool.h"
 #include "MakerWidget.h"
-#include "StatueWidget.h"
 #include "Subsystems/WorldSubsystem.h"
 #include "InventoryManager.generated.h"
 
@@ -22,12 +20,6 @@ private:
 	UPROPERTY(BlueprintReadWrite, meta=(AllowPrivateAccess))
 	UInventoryWidget* InventoryWidget;
 
-	UPROPERTY(BlueprintReadWrite, meta=(AllowPrivateAccess))
-	UMakerWidget* MakerWidget;
-
-	UPROPERTY(BlueprintReadWrite, meta=(AllowPrivateAccess))
-	UStatueWidget* StatueWidget;
-	
 	UPROPERTY(BlueprintReadWrite, meta=(AllowPrivateAccess))
 	UHUDWidget* HUDWidget;
 
@@ -45,6 +37,9 @@ private:
 	UPROPERTY()
 	UDataTable* CombineDataTable;
 
+	UPROPERTY()
+	UDataTable* ItemDataTable;
+
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta=(AllowPrivateAccess))
 	float GetCombinePaintAmount = 30.0f;
 	
@@ -61,34 +56,19 @@ public:
 	TArray<FItem> MakerArray;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-	TArray<FItem> StatueArray;
-	
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	TArray<AStatue*> Statues;
 	
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 	float PaintAmount = 0.0f;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
-	AStatue* CurrentStatue;
-
 	UFUNCTION()
 	void SetInventoryUI(bool IsActive, bool IsFlip = false);
-	
-	UFUNCTION()
-	void SetMakerUI(bool IsActive, bool IsFlip = false);
 
-	UFUNCTION()
-	void SetStatueUI(bool IsActive, bool IsUnlockPanel = true);
-	
 	UFUNCTION(BlueprintCallable)
 	void UpdateInventory();
 
 	UFUNCTION(BlueprintCallable)
 	void UpdateMaker();
-	
-	UFUNCTION(BlueprintCallable)
-	void UpdateStatue();
 
 	UFUNCTION(BlueprintCallable, Category=Inventory)
 	void AddInventoryItem(const FItem& Item);
@@ -99,20 +79,5 @@ public:
 	UFUNCTION(BlueprintCallable, Category=Inventory)
 	void CombineItems();
 
-	UFUNCTION(BlueprintCallable, Category=Statue)
-	void SacrificeItems(ESacrificeType SacrificeType);
-	
-	UFUNCTION(BlueprintCallable, Category=Statue)
-	void IncreaseStatueColorRecoveryProgress(ECombineColors SacrificeColor, float Amount);
-	
-	UFUNCTION(BlueprintCallable, Category=Statue)
-	void UpdateStatueUI();
-	
 	FORCEINLINE UHUDWidget* GetHUDWidget() { return HUDWidget; }
-
-	UPROPERTY(BlueprintReadOnly, Category = "Item Acquired")
-	TSubclassOf<UItemAcquiredWidget> ItemAcquiredWidgetClass;
-
-	UPROPERTY(BlueprintReadOnly, Category = "Item Acquired")
-	UItemAcquiredWidgetPool* ItemAcquiredWidgetPool;
 };
