@@ -148,20 +148,6 @@ void APaintedCollectObject::SetRecoveryColorComplete(ECombineColors color)
 
 	SetChildCollectObjectTexture(ChildActiveTexture);
 
-	if(ParentStageName == EStageName::Stage_Tutorial)
-	{
-		UColorManager* ColorMgr = GetWorld()->GetSubsystem<UColorManager>();
-		++ColorMgr->TutorialRecoveryCount;
-		
-		if(ColorMgr->TutorialRecoveryCount >= ColorMgr->TutorialRecoveryCapacity)
-			ColorMgr->SpawnTutorialLightObject();
-	}
-	else
-	{
-		UInventoryManager* invenMgr = GetWorld()->GetSubsystem<UInventoryManager>();
-		invenMgr->IncreaseStatueColorRecoveryProgress(color, 10.0f);
-	}
-
 	FTimerHandle timer;
 	GetWorldTimerManager().SetTimer(timer, FTimerDelegate::CreateLambda([&]
 	{

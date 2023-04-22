@@ -6,8 +6,9 @@
 UContainerWidget::UContainerWidget(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)
 {
-	static ConstructorHelpers::FObjectFinder<UTexture2D> EmptyImgObj(TEXT("/Game/UI/UI_Inventory/UI_Box_Off.UI_Box_Off"));
-	if(EmptyImgObj.Object != nullptr)
+	static ConstructorHelpers::FObjectFinder<UTexture2D> EmptyImgObj(
+		TEXT("/Game/UI/UI_Inventory/UI_Box_Off.UI_Box_Off"));
+	if (EmptyImgObj.Object != nullptr)
 		EmptyImg = EmptyImgObj.Object;
 }
 
@@ -21,146 +22,72 @@ void UContainerWidget::MoveItem(TArray<FItem>& SelectAry, TArray<FItem>& DropAry
 
 	const static FItem EmptyItem = FItem();
 
-	if(SelectLocation == EItemSlotLocationType::StatueUnlock
-		|| SelectLocation == EItemSlotLocationType::StatueRecovery
-		|| DropLocation == EItemSlotLocationType::StatueUnlock
-		|| DropLocation == EItemSlotLocationType::StatueRecovery)
+
+	const bool IsSelectMaker = SelectAry.Num() <= 2;
+	const bool IsSameCombineType = SelectItem.CombineType == DropItem.CombineType;
+
+	//SelectItem이 Src고 Drop할 곳도 Src
+	const bool IsSourceSwap = SelectItem.CombineType == EItemCombineType::Source && DropItemIndex == 0;
+	//SelectItem이 Dest고 Drop할 곳도 Dest
+	const bool IsDestinationSwap = SelectItem.CombineType == EItemCombineType::Destination && DropItemIndex == 1;
+
+	if (IsMoveBetween)
 	{
-		if(IsMoveBetween)
+		if (DropItem.bIsValid)
 		{
-			if(DropItem.bIsValid)
+			if (SelectItem.Name.EqualTo(DropItem.Name))
 			{
-				if(SelectItem.Name.EqualTo(DropItem.Name))
-				{
-					DropAry[DropItemIndex] = DropItem;
-					DropAry[DropItemIndex].Amount = SelectItem.Amount + DropItem.Amount;
-					SelectAry[SelectItemIndex] = EmptyItem;
-				}
-				else if(SelectItem.CombineType == DropItem.CombineType)
-				{
-					DropAry[DropItemIndex] = SelectItem;
-					SelectAry[SelectItemIndex] = DropItem;
-					Print(1.0f, TEXT("11"));
-				}
-			}
-			else if(SelectItem.CombineType == EItemCombineType::SacrificeUnlock
-				&& DropLocation == EItemSlotLocationType::StatueUnlock)
-			{ //Inventory -> StateUnlock
-				DropAry[DropItemIndex] = SelectItem;
+				DropAry[DropItemIndex] = DropItem;
+				DropAry[DropItemIndex].Amount = SelectItem.Amount + DropItem.Amount;
 				SelectAry[SelectItemIndex] = EmptyItem;
-				Print(1.0f, TEXT("12 - 1"));
+				Print(1.0f, TEXT("1"));
 			}
-			else if(SelectItem.CombineType == EItemCombineType::SacrificeRecovery
-				&& DropLocation == EItemSlotLocationType::StatueRecovery)
-			{ //Inventory -> StateRecovery
+			else if (IsSameCombineType)
+			{
 				DropAry[DropItemIndex] = SelectItem;
-				SelectAry[SelectItemIndex] = EmptyItem;
-				Print(1.0f, TEXT("12 - 2"));
-			}
-			else if(DropLocation == EItemSlotLocationType::Inventory)
-			{ //Statue -> Inventory
-				DropAry[DropItemIndex] = SelectItem;
-				SelectAry[SelectItemIndex] = EmptyItem;
-				Print(1.0f, TEXT("13"));
+				SelectAry[SelectItemIndex] = DropItem;
+				Print(1.0f, TEXT("2"));
 			}
 		}
-		else
+		else if (IsSelectMaker) //Maker -> Inventory
 		{
-			if(SelectItemIndex != DropItemIndex)
-			{
-				if(DropItem.bIsValid)
-				{
-					if(SelectItem.Name.EqualTo(DropItem.Name))
-					{
-						DropAry[DropItemIndex] = DropItem;
-						DropAry[DropItemIndex].Amount = SelectItem.Amount + DropItem.Amount;
-						SelectAry[SelectItemIndex] = EmptyItem;
-						Print(1.0f, TEXT("13"));
-					}
-					else
-					{
-						DropAry[DropItemIndex] = SelectItem;
-						SelectAry[SelectItemIndex] = DropItem;
-						Print(1.0f, TEXT("14"));
-					}
-				}
-				else
-				{
-					DropAry[DropItemIndex] = SelectItem;
-					SelectAry[SelectItemIndex] = EmptyItem;
-					Print(1.0f, TEXT("15"));
-				}
-			}
+			DropAry[DropItemIndex] = SelectItem;
+			SelectAry[SelectItemIndex] = EmptyItem;
+			Print(1.0f, TEXT("3"));
+		}
+		else if (IsSourceSwap || IsDestinationSwap)
+		{
+			DropAry[DropItemIndex] = SelectItem;
+			SelectAry[SelectItemIndex] = EmptyItem;
+			Print(1.0f, TEXT("4"));
 		}
 	}
 	else
 	{
-		const bool IsSelectMaker = SelectAry.Num() <= 2;
-		const bool IsSameCombineType = SelectItem.CombineType == DropItem.CombineType;
-
-		//SelectItem이 Src고 Drop할 곳도 Src
-		const bool IsSourceSwap = SelectItem.CombineType == EItemCombineType::Source && DropItemIndex == 0;
-		//SelectItem이 Dest고 Drop할 곳도 Dest
-		const bool IsDestinationSwap = SelectItem.CombineType == EItemCombineType::Destination && DropItemIndex == 1;
-	
-		if(IsMoveBetween)
+		if (SelectItemIndex != DropItemIndex)
 		{
-			if(DropItem.bIsValid)
+			if (DropItem.bIsValid)
 			{
-				if(SelectItem.Name.EqualTo(DropItem.Name))
+				if (SelectItem.Name.EqualTo(DropItem.Name))
 				{
 					DropAry[DropItemIndex] = DropItem;
 					DropAry[DropItemIndex].Amount = SelectItem.Amount + DropItem.Amount;
 					SelectAry[SelectItemIndex] = EmptyItem;
-					Print(1.0f, TEXT("1"));
-				}
-				else if(IsSameCombineType)
-				{
-					DropAry[DropItemIndex] = SelectItem;
-					SelectAry[SelectItemIndex] = DropItem;
-					Print(1.0f, TEXT("2"));
-				}
-			}
-			else if(IsSelectMaker) //Maker -> Inventory
-				{
-				DropAry[DropItemIndex] = SelectItem;
-				SelectAry[SelectItemIndex] = EmptyItem;
-				Print(1.0f, TEXT("3"));
-				}
-			else if(IsSourceSwap || IsDestinationSwap)
-			{
-				DropAry[DropItemIndex] = SelectItem;
-				SelectAry[SelectItemIndex] = EmptyItem;
-				Print(1.0f, TEXT("4"));
-			}
-		}
-		else
-		{
-			if(SelectItemIndex != DropItemIndex)
-			{
-				if(DropItem.bIsValid)
-				{
-					if(SelectItem.Name.EqualTo(DropItem.Name))
-					{
-						DropAry[DropItemIndex] = DropItem;
-						DropAry[DropItemIndex].Amount = SelectItem.Amount + DropItem.Amount;
-						SelectAry[SelectItemIndex] = EmptyItem;
-						Print(1.0f, TEXT("5"));
-					}
-					else
-					{
-						DropAry[DropItemIndex] = SelectItem;
-						SelectAry[SelectItemIndex] = DropItem;
-						Print(1.0f, TEXT("6"));
-					}
+					Print(1.0f, TEXT("5"));
 				}
 				else
 				{
 					DropAry[DropItemIndex] = SelectItem;
-					SelectAry[SelectItemIndex] = EmptyItem;
-					Print(1.0f, TEXT("7"));
+					SelectAry[SelectItemIndex] = DropItem;
+					Print(1.0f, TEXT("6"));
 				}
-			}	
+			}
+			else
+			{
+				DropAry[DropItemIndex] = SelectItem;
+				SelectAry[SelectItemIndex] = EmptyItem;
+				Print(1.0f, TEXT("7"));
+			}
 		}
 	}
 }
@@ -173,23 +100,11 @@ void UContainerWidget::SetItemSlotArrays()
 	switch (SelectLocation)
 	{
 	case EItemSlotLocationType::Inventory:
-		if(DropLocation == EItemSlotLocationType::Maker)
+		if (DropLocation == EItemSlotLocationType::Maker)
 		{
-			MoveItem(InvenMgr->InventoryArray,InvenMgr->MakerArray, true);
+			MoveItem(InvenMgr->InventoryArray, InvenMgr->MakerArray, true);
 			InvenMgr->UpdateInventory();
 			InvenMgr->UpdateMaker();
-		}
-		else if(DropLocation == EItemSlotLocationType::StatueUnlock)
-		{
-			MoveItem(InvenMgr->InventoryArray,InvenMgr->StatueArray, true);
-			InvenMgr->UpdateInventory();
-			InvenMgr->UpdateStatue();
-		}
-		else if(DropLocation == EItemSlotLocationType::StatueRecovery)
-		{
-			MoveItem(InvenMgr->InventoryArray,InvenMgr->StatueArray, true);
-			InvenMgr->UpdateInventory();
-			InvenMgr->UpdateStatue();
 		}
 		else
 		{
@@ -199,39 +114,11 @@ void UContainerWidget::SetItemSlotArrays()
 		break;
 
 	case EItemSlotLocationType::Maker:
-		if(DropLocation == EItemSlotLocationType::Inventory)
+		if (DropLocation == EItemSlotLocationType::Inventory)
 		{
 			MoveItem(InvenMgr->MakerArray, InvenMgr->InventoryArray, true);
 			InvenMgr->UpdateInventory();
 			InvenMgr->UpdateMaker();
-		}
-		break;
-
-	case EItemSlotLocationType::StatueUnlock:
-		if(DropLocation == EItemSlotLocationType::Inventory)
-		{
-			MoveItem(InvenMgr->StatueArray, InvenMgr->InventoryArray, true);
-			InvenMgr->UpdateInventory();
-			InvenMgr->UpdateStatue();
-		}
-		else if(DropLocation == EItemSlotLocationType::StatueUnlock)
-		{
-			MoveItem(InvenMgr->StatueArray, InvenMgr->StatueArray, false);
-			InvenMgr->UpdateStatue();
-		}
-		break;
-		
-	case EItemSlotLocationType::StatueRecovery:
-		if(DropLocation == EItemSlotLocationType::Inventory)
-		{
-			MoveItem(InvenMgr->StatueArray, InvenMgr->InventoryArray, true);
-			InvenMgr->UpdateInventory();
-			InvenMgr->UpdateStatue();
-		}
-		else if(DropLocation == EItemSlotLocationType::StatueRecovery)
-		{
-			MoveItem(InvenMgr->StatueArray, InvenMgr->StatueArray, false);
-			InvenMgr->UpdateStatue();
 		}
 		break;
 	}

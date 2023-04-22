@@ -85,6 +85,12 @@ public:
 	}
 
 	UFUNCTION(BlueprintCallable)
+	FLinearColor GetCurrentPaintLinearColorByEnum(ECombineColors EColor)
+	{
+		return PaintColorTemplates[static_cast<int>(EColor)];
+	}
+
+	UFUNCTION(BlueprintCallable)
 	float GetCurrentPaintColorAmount();
 
 	UFUNCTION(BlueprintCallable)

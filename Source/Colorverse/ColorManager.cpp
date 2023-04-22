@@ -2,7 +2,6 @@
 #include "ColorverseWorldSettings.h"
 #include "LightObject.h"
 #include "NavigationSystem.h"
-#include "PaintedCollectObject.h"
 #include "GameFramework/Character.h"
 #include "Kismet/GameplayStatics.h"
 
@@ -42,18 +41,6 @@ void UColorManager::InitializeManager()
 	{
 		AColorArea* ColorArea = Cast<AColorArea>(Actor);
 		ColorAreaMap.Add(ColorArea->StageName, ColorArea);
-	}
-
-	TArray<AActor*> TempActors;
-	UGameplayStatics::GetAllActorsOfClass(this, APaintedCollectObject::StaticClass(), TempActors);
-	for (auto TempActor : TempActors)
-	{
-		APaintedCollectObject* PaintObj = Cast<APaintedCollectObject>(TempActor);
-		if(PaintObj->ParentStageName == EStageName::Stage_Tutorial)
-		{
-			PaintObj->SetInteractable(true);
-			++TutorialRecoveryCapacity;
-		}
 	}
 }
 
