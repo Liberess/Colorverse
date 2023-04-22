@@ -43,6 +43,9 @@ private:
 	UPROPERTY()
 	UDataTable* CombineDataTable;
 
+	UPROPERTY()
+	UDataTable* ItemDataTable;
+
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta=(AllowPrivateAccess))
 	float GetCombinePaintAmount = 30.0f;
 	

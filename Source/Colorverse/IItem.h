@@ -11,7 +11,6 @@ struct FItem : public FTableRowBase
 {
 	GENERATED_USTRUCT_BODY();
 	
-public:
 	FItem() : Id(-1), CombineType(EItemCombineType::Source), Amount(1), RecoveryAmount(0.0f), IconImg(), bIsValid(false) {};
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item")

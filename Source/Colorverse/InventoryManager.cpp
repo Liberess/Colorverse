@@ -23,9 +23,13 @@ bool UInventoryManager::ShouldCreateSubsystem(UObject* Outer) const
 
 UInventoryManager::UInventoryManager()
 {
-	static ConstructorHelpers::FObjectFinder<UDataTable> DataTable(TEXT("/Game/ItemDatas/DT_Combine"));
-	if (DataTable.Succeeded())
-		CombineDataTable = DataTable.Object;
+	static ConstructorHelpers::FObjectFinder<UDataTable> CombineDT(TEXT("/Game/DataTables/DT_Combine"));
+	if (CombineDT.Succeeded())
+		CombineDataTable = CombineDT.Object;
+
+	static ConstructorHelpers::FObjectFinder<UDataTable> ItemDT(TEXT("/Game/DataTables/DT_ItemData"));
+	if (ItemDT.Succeeded())
+		ItemDataTable = ItemDT.Object;
 }
 
 void UInventoryManager::Initialize(FSubsystemCollectionBase& Collection)
@@ -335,9 +339,8 @@ void UInventoryManager::CombineItems()
 			else
 				DestItem = EmptyItem;
 
-			const int ColorNum = static_cast<int>(CombineRule->CombineColor);
-			PaintAmount += GetCombinePaintAmount;
-			HUDWidget->SetPaintBarPercent(PaintAmount);
+			const FItem Item = *(ItemDataTable->FindRow<FItem>(FName(CombineRule->ResultItemName.ToString()), ""));
+			AddInventoryItem(Item);
 			UpdateMaker();
 		}
 	}
