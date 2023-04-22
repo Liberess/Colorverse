@@ -1,5 +1,4 @@
 #include "PaintedCollectObject.h"
-
 #include "ColorManager.h"
 #include "InventoryManager.h"
 

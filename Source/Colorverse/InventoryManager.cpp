@@ -26,8 +26,6 @@ UInventoryManager::UInventoryManager()
 	static ConstructorHelpers::FObjectFinder<UDataTable> DataTable(TEXT("/Game/ItemDatas/DT_Combine"));
 	if (DataTable.Succeeded())
 		CombineDataTable = DataTable.Object;
-
-	ItemAcquiredWidgetPool = CreateDefaultSubobject<UItemAcquiredWidgetPool>(TEXT("WidgetPool"));
 }
 
 void UInventoryManager::Initialize(FSubsystemCollectionBase& Collection)

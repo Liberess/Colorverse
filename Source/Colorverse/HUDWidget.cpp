@@ -1,12 +1,6 @@
 #include "HUDWidget.h"
 #include "Components/UniformGridSlot.h"
 
-UHUDWidget::UHUDWidget(const FObjectInitializer& ObjectInitializer)
-	: Super(ObjectInitializer)
-{
-	ItemLogPool = CreateDefaultSubobject<UItemAcquiredWidgetPool>(TEXT("ItemLogWidgetPool"));
-}
-
 void UHUDWidget::InitializedHUD()
 {
 	const FSoftClassPath WidgetBPClassRef(TEXT("/Game/UI/BP_ItemAcquiredWidget.BP_ItemAcquiredWidget_C"));
@@ -26,7 +20,7 @@ void UHUDWidget::SetPaintBarPercent(float Amount)
 
 void UHUDWidget::AddItemLog(const FItem& ItemData)
 {
-	if(!ItemData.bIsValid || !ItemAcquiredWidgetClass)
+	if(!ItemData.bIsValid)
 		return;
 
 	for(auto& Child : ItemLogGridPanel->GetAllChildren())
@@ -46,7 +40,8 @@ void UHUDWidget::AddItemLog(const FItem& ItemData)
 		}
 	}
 
-	if(UItemAcquiredWidget* ItemLogWidget = Cast<UItemAcquiredWidget>(ItemLogPool->GetOrCreateWidget(GetWorld(), ItemAcquiredWidgetClass)))
+	//UUserWidget* NewWidget = CreateWidget<UUserWidget>(GetWorld(), ItemAcquiredWidgetClass);
+	if(UItemAcquiredWidget* ItemLogWidget = Cast<UItemAcquiredWidget>(GetOrCreateWidget(ItemAcquiredWidgetClass)))
 	{
 		ItemLogWidget->SetVisibility(ESlateVisibility::Visible);
 		ItemLogWidget->LogIndex = 0;
@@ -70,12 +65,56 @@ void UHUDWidget::UpdateItemLog()
 	}
 }
 
-void UHUDWidget::ReleaseItemLogWidget(UItemAcquiredWidget* ItemLogWidget)
+void UHUDWidget::ReleaseItemLogWidget(UUserWidget* Widget)
 {
-	ItemLogPool->ReleaseWidget(ItemLogWidget);
+	if (Widget != nullptr)
+		return;
+
+	ReleaseWidget(Widget);
 }
 
 void UHUDWidget::SetPaintColor(ECombineColors CombineColor)
 {
 	PaintColor = CombineColor;
+}
+
+UUserWidget* UHUDWidget::GetOrCreateWidget(TSubclassOf<UUserWidget> WidgetClass)
+{
+	if (!WidgetClass)
+		return nullptr;
+
+	FWidgetData* FoundWidgetData = PoolMap.Find(WidgetClass);
+
+	if (!FoundWidgetData)
+	{
+		FWidgetData NewWidgetData;
+		NewWidgetData.WidgetClass = WidgetClass;
+		PoolMap.Add(WidgetClass, NewWidgetData);
+		FoundWidgetData = PoolMap.Find(WidgetClass);
+	}
+
+	for (UUserWidget* Widget : FoundWidgetData->WidgetArray)
+	{
+		if (Widget && !Widget->IsVisible())
+			return Widget;
+	}
+
+	UWorld* World = GEngine->GetWorldFromContextObject(GetWorld(), EGetWorldErrorMode::LogAndReturnNull);
+	if (!World)
+		return nullptr;
+
+	UUserWidget* NewWidget = CreateWidget<UUserWidget>(World, WidgetClass);
+	FoundWidgetData->WidgetArray.Add(NewWidget);
+	return NewWidget;
+}
+
+void UHUDWidget::ReleaseWidget(UUserWidget* Widget)
+{
+	const TSubclassOf<UUserWidget> WidgetClass = Widget->GetClass();
+	const FWidgetData* FoundWidgetData = PoolMap.Find(WidgetClass);
+
+	if (!FoundWidgetData)
+		return;
+
+	Widget->SetVisibility(ESlateVisibility::Collapsed);
 }

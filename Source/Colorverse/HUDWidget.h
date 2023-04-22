@@ -4,10 +4,21 @@
 #include "PaintSlotWidget.h"
 #include "IItem.h"
 #include "ItemAcquiredWidget.h"
-#include "ItemAcquiredWidgetPool.h"
 #include "Blueprint/UserWidget.h"
 #include "Components/UniformGridPanel.h"
 #include "HUDWidget.generated.h"
+
+USTRUCT(BlueprintType)
+struct FWidgetData
+{
+	GENERATED_BODY()
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	TSubclassOf<UUserWidget> WidgetClass;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	TArray<UUserWidget*> WidgetArray;
+};
 
 UCLASS(BlueprintType)
 class COLORVERSE_API UHUDWidget : public UUserWidget
@@ -33,15 +44,7 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Item Acquired", meta=(BindWidget))
 	UUniformGridPanel* ItemLogGridPanel;
 
-	UPROPERTY(BlueprintReadOnly, Category = "Item Acquired")
-	TSubclassOf<UItemAcquiredWidget> ItemAcquiredWidgetClass;
-
-	UPROPERTY(BlueprintReadOnly, Category = "Item Acquired")
-	UItemAcquiredWidgetPool* ItemLogPool;
-
 public:
-	UHUDWidget(const FObjectInitializer& ObjectInitializer);
-	
 	UFUNCTION(BlueprintCallable)
 	void InitializedHUD();
 
@@ -55,8 +58,21 @@ public:
 	void UpdateItemLog();
 	
 	UFUNCTION(BlueprintCallable)
-	void ReleaseItemLogWidget(UItemAcquiredWidget* ItemLogWidget);
+	void ReleaseItemLogWidget(UUserWidget* Widget);
 
 	UFUNCTION(BlueprintCallable, Category=Paint)
 	void SetPaintColor(ECombineColors CombineColor);
+
+	UFUNCTION(BlueprintCallable, Category = "Item Acquired Widget Pool")
+	UUserWidget* GetOrCreateWidget(TSubclassOf<UUserWidget> WidgetClass);
+
+	UFUNCTION(BlueprintCallable, Category = "Item Acquired Widget Pool")
+	void ReleaseWidget(UUserWidget* Widget);
+
+private:
+	UPROPERTY(BlueprintReadOnly, Category = "Item Acquired", meta=(AllowPrivateAccess))
+	TSubclassOf<UItemAcquiredWidget> ItemAcquiredWidgetClass;
+
+	UPROPERTY()
+	TMap<TSubclassOf<UUserWidget>, FWidgetData> PoolMap;
 };
