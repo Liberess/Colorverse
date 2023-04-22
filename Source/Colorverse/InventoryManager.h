@@ -43,6 +43,9 @@ private:
 	UPROPERTY()
 	UDataTable* CombineDataTable;
 
+	UPROPERTY()
+	UDataTable* ItemDataTable;
+
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta=(AllowPrivateAccess))
 	float GetCombinePaintAmount = 30.0f;
 	
@@ -65,7 +68,7 @@ public:
 	TArray<AStatue*> Statues;
 	
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
-	TArray<float> PaintAmountArray;
+	float PaintAmount = 0.0f;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 	AStatue* CurrentStatue;

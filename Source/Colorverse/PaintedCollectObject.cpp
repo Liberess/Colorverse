@@ -1,5 +1,4 @@
 #include "PaintedCollectObject.h"
-
 #include "ColorManager.h"
 #include "InventoryManager.h"
 
@@ -45,7 +44,9 @@ void APaintedCollectObject::BeginPlay()
 		if (auto collectObj = Cast<ACollectObject>(actor))
 		{
 			collectObj->ItemData = ItemData;
+			collectObj->PaintedCount = 0;
 			collectObj->PaintComboData = PaintComboData;
+			collectObj->NeedsPaintedCount = PaintComboData.ComboColors.Num();
 			//collectObj->SetCollectObjectData(SeparatedItemName);
 			CollectObjects.Add(collectObj);
 		}

@@ -23,9 +23,13 @@ bool UInventoryManager::ShouldCreateSubsystem(UObject* Outer) const
 
 UInventoryManager::UInventoryManager()
 {
-	static ConstructorHelpers::FObjectFinder<UDataTable> DataTable(TEXT("/Game/ItemDatas/DT_Combine"));
-	if (DataTable.Succeeded())
-		CombineDataTable = DataTable.Object;
+	static ConstructorHelpers::FObjectFinder<UDataTable> CombineDT(TEXT("/Game/DataTables/DT_Combine"));
+	if (CombineDT.Succeeded())
+		CombineDataTable = CombineDT.Object;
+
+	static ConstructorHelpers::FObjectFinder<UDataTable> ItemDT(TEXT("/Game/DataTables/DT_ItemData"));
+	if (ItemDT.Succeeded())
+		ItemDataTable = ItemDT.Object;
 }
 
 void UInventoryManager::Initialize(FSubsystemCollectionBase& Collection)
@@ -43,8 +47,6 @@ void UInventoryManager::InitializeManager()
 
 	for(int i = 0; i < 1; i++)
 		StatueArray.Add(FItem());
-
-	PaintAmountArray = { 0.0f, 0.0f, 0.0f };
 
 	const FSoftClassPath InventoryRef(TEXT("/Game/UI/BP_InventoryWidget.BP_InventoryWidget_C"));
 	if(UClass* WidgetClass = InventoryRef.TryLoadClass<UInventoryWidget>())
@@ -235,6 +237,9 @@ void UInventoryManager::UpdateStatue()
 
 void UInventoryManager::AddInventoryItem(const FItem& Item)
 {
+	if(!Item.bIsValid)
+		return;
+	
 	static int Index = 0;
 	if(GetInventoryItemByName(Item.Name, Index))
 	{
@@ -254,6 +259,25 @@ void UInventoryManager::AddInventoryItem(const FItem& Item)
 	}
 	
 	UpdateInventory();
+
+	HUDWidget->AddItemLog(Item);
+
+	/*if(ItemAcquiredWidgetClass)
+	{
+		UItemAcquiredWidget* AcquiredWidget = Cast<UItemAcquiredWidget>(ItemAcquiredWidgetPool->GetOrCreateWidget(GetWorld(), ItemAcquiredWidgetClass));
+		if (AcquiredWidget)
+		{
+			AcquiredWidget->AddToViewport();
+			AcquiredWidget->ShowItemAcquired(Item);
+
+			FTimerHandle TimerHandle;
+			GetWorld()->GetTimerManager().SetTimer(TimerHandle, [this, AcquiredWidget]()
+			{
+				AcquiredWidget->SetVisibility(ESlateVisibility::Collapsed);
+				ItemAcquiredWidgetPool->ReleaseWidget(AcquiredWidget);
+			}, 3.0f, false);
+		}
+	}*/
 }
 
 void UInventoryManager::UseInventoryItem(FItem Item)
@@ -315,9 +339,8 @@ void UInventoryManager::CombineItems()
 			else
 				DestItem = EmptyItem;
 
-			const int ColorNum = static_cast<int>(CombineRule->CombineColor);
-			PaintAmountArray[ColorNum] += GetCombinePaintAmount;
-			HUDWidget->SetPaintBarPercent(ColorNum, PaintAmountArray[ColorNum]);
+			const FItem Item = *(ItemDataTable->FindRow<FItem>(FName(CombineRule->ResultItemName.ToString()), ""));
+			AddInventoryItem(Item);
 			UpdateMaker();
 		}
 	}
