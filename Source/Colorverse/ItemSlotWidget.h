@@ -14,9 +14,6 @@ class COLORVERSE_API UItemSlotWidget : public UUserWidget
 	GENERATED_BODY()
 	
 public:
-	virtual void NativeOnMouseEnter(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent) override;
-	virtual void NativeOnMouseLeave(const FPointerEvent& InMouseEvent) override;
-	
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, meta=(BindWidget))
 	UBorder* ThumbnailBorder;
 
@@ -25,12 +22,6 @@ public:
 	
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, meta=(BindWidget))
 	UTextBlock* AmountTxt;
-	
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, meta=(BindWidget))
-	UTextBlock* NameTxt;
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, meta=(BindWidget))
-	UBorder* NameBorder;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 	int Index;

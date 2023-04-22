@@ -21,6 +21,9 @@ struct FItem : public FTableRowBase
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item")
 	FText Name;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item")
+	FText Description;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item")
 	int Amount;
@@ -33,6 +36,9 @@ struct FItem : public FTableRowBase
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item")
 	bool bIsValid;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item")
+	bool bIsConsume = false;
 };
 
 USTRUCT(BlueprintType, BlueprintType)
