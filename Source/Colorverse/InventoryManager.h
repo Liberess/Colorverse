@@ -5,7 +5,6 @@
 #include "IItem.h"
 #include "Statue.h"
 #include "InventoryWidget.h"
-#include "MakerWidget.h"
 #include "Subsystems/WorldSubsystem.h"
 #include "InventoryManager.generated.h"
 

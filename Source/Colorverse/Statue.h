@@ -15,16 +15,17 @@ protected:
 
 public:
 	AStatue();
+	virtual void Tick(float DeltaSeconds) override;
+	
 	virtual void OnEnter() override;
 	virtual void OnInteract() override;
 	virtual void OnExit() override;
 
-	// 성소가 해금됐는지, 안 됐는지
-	UPROPERTY()
-	bool bIsUnlockComplete = false;
-	
 	UPROPERTY()
 	bool bIsRecoveryComplete = false;
+
+	UPROPERTY()
+	bool bIsChangedColor = false;
 
 	UPROPERTY()
 	bool bIsWorldMineColorRecoveryComplete = false;
@@ -35,6 +36,33 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta=(AllowPrivateAccess))
 	ECombineColors StatueColor;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, meta=(AllowPrivateAccess))
+	FLinearColor CurrentColor;
+	
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, meta=(AllowPrivateAccess))
+	FLinearColor TargetColor;
+	
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, meta=(AllowPrivateAccess))
+	FLinearColor CompleteColor;
+
+	UPROPERTY(BlueprintReadWrite, meta=(AllowPrivateAccess))
+	UMaterialInstanceDynamic* PaintingMatInst;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta=(AllowPrivateAccess))
+	float ChangedColorVelocity = 0.5f;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, meta=(AllowPrivateAccess))
+	int RecoveryCount = 0;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, meta=(AllowPrivateAccess))
+	int MaxRecoveryCount = 3;
+
 	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent)
 	void ActiveUnlockEffect();
+	
+	UFUNCTION(BlueprintCallable)
+	void IncreaseColor();
+
+	UFUNCTION(BlueprintCallable)
+	void DecreaseColor();
 };
