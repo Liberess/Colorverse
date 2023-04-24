@@ -3,7 +3,7 @@
 #include "CoreMinimal.h"
 #include "HUDWidget.h"
 #include "IItem.h"
-#include "Statue.h"
+#include "Sanctum.h"
 #include "InventoryWidget.h"
 #include "Subsystems/WorldSubsystem.h"
 #include "InventoryManager.generated.h"
@@ -55,7 +55,7 @@ public:
 	TArray<FItem> MakerArray;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-	TArray<AStatue*> Statues;
+	TArray<ASanctum*> Statues;
 	
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 	float PaintAmount = 0.0f;

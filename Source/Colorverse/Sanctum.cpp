@@ -1,35 +1,32 @@
-#include "Statue.h"
+#include "Sanctum.h"
 #include "ColorverseCharacter.h"
 #include "CombatSystem.h"
 #include "Kismet/GameplayStatics.h"
 
-AStatue::AStatue()
+ASanctum::ASanctum()
 {
 	//PrimaryComponentTick.bCanEverTick = true;
 }
 
-void AStatue::Tick(float DeltaSeconds)
+void ASanctum::Tick(float DeltaSeconds)
 {
 	Super::Tick(DeltaSeconds);
 
-	if (bIsChangedColor)
+	if (bIsChangedColor && !bIsUnlock)
 	{
 		CurrentColor = FMath::Lerp(CurrentColor, TargetColor, DeltaSeconds * ChangedColorVelocity);
-		PaintingMatInst->SetVectorParameterValue("EmissiveColor", CurrentColor);
-
+		
 		if (FMath::Abs(CurrentColor.R - TargetColor.R) <= 0.01f)
 		{
 			bIsChangedColor = false;
-
-			if(bIsRecoveryComplete)
-			{
-				
-			}
+			CurrentColor = TargetColor;
 		}
+
+		PaintingMatInst->SetVectorParameterValue("EmissiveColor", CurrentColor);
 	}
 }
 
-void AStatue::BeginPlay()
+void ASanctum::BeginPlay()
 {
 	Super::BeginPlay();
 
@@ -39,22 +36,31 @@ void AStatue::BeginPlay()
 	CompleteColor = Character->GetCombatSystem()->GetCurrentPaintLinearColorByEnum(StatueColor);
 }
 
-void AStatue::OnEnter()
+void ASanctum::OnEnter()
 {
+	
 }
 
-void AStatue::OnInteract()
+void ASanctum::Interact_Implementation()
 {
-	Super::OnInteract();
+	if(!bIsRecoveryComplete || bIsUnlock)
+		return;
+
+	bIsUnlock = true;
+	IsInteractable = false;
+	ActiveUnlockEffect();
 }
 
-void AStatue::OnExit()
+void ASanctum::OnExit()
 {
 	//Super::OnExit();
 }
 
-void AStatue::IncreaseColor()
+void ASanctum::IncreaseColor()
 {
+	if(bIsRecoveryComplete || bIsUnlock)
+		return;
+	
 	bIsChangedColor = true;
 	
 	++RecoveryCount;
@@ -65,6 +71,8 @@ void AStatue::IncreaseColor()
 	{
 		bIsRecoveryComplete = true;
 		TargetColor = CompleteColor;
+		IsInteractable = true;
+		InteractWidgetDisplayTxt = FName(TEXT("성소 해금")).ToString();
 	}
 	else
 	{
@@ -76,10 +84,13 @@ void AStatue::IncreaseColor()
 	}
 }
 
-void AStatue::DecreaseColor()
+void ASanctum::DecreaseColor()
 {
-	bIsChangedColor = true;
+	if(bIsRecoveryComplete || bIsUnlock)
+		return;
 	
+	bIsChangedColor = true;
+
 	--RecoveryCount;
 	
 	PaintingMatInst->GetVectorParameterValue(FName(TEXT("EmissiveColor")), CurrentColor);

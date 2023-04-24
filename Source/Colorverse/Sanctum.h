@@ -3,10 +3,10 @@
 #include "CoreMinimal.h"
 #include "Enums.h"
 #include "InteractObject.h"
-#include "Statue.generated.h"
+#include "Sanctum.generated.h"
 
 UCLASS(Blueprintable)
-class COLORVERSE_API AStatue : public AInteractObject
+class COLORVERSE_API ASanctum : public AInteractObject
 {
 	GENERATED_BODY()
 
@@ -14,22 +14,22 @@ protected:
 	virtual void BeginPlay() override;
 
 public:
-	AStatue();
+	ASanctum();
 	virtual void Tick(float DeltaSeconds) override;
 	
 	virtual void OnEnter() override;
-	virtual void OnInteract() override;
+	virtual void Interact_Implementation() override;
 	virtual void OnExit() override;
 
-	UPROPERTY()
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	bool bIsRecoveryComplete = false;
 
-	UPROPERTY()
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	bool bIsChangedColor = false;
-
-	UPROPERTY()
-	bool bIsWorldMineColorRecoveryComplete = false;
-
+	
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	bool bIsUnlock = false;
+	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta=(AllowPrivateAccess))
 	int StatueIndex = 0;
 	
