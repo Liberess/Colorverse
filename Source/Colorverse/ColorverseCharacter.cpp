@@ -1,6 +1,6 @@
 #include "ColorverseCharacter.h"
 #include "HeadMountedDisplayFunctionLibrary.h"
-#include "Statue.h"
+#include "Sanctum.h"
 #include "TimerManager.h"
 #include "Camera/CameraComponent.h"
 #include "Components/CapsuleComponent.h"

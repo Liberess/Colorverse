@@ -61,11 +61,11 @@ void UInventoryManager::InitializeManager()
 	}
 
 	TArray<AActor*> FoundActors;
-	UGameplayStatics::GetAllActorsOfClass(GetWorld(), AStatue::StaticClass(), FoundActors);
+	UGameplayStatics::GetAllActorsOfClass(GetWorld(), ASanctum::StaticClass(), FoundActors);
 	for (auto& Actor : FoundActors)
-		Statues.Add(Cast<AStatue>(Actor));
+		Statues.Add(Cast<ASanctum>(Actor));
 
-	Statues.Sort([&](const AStatue& s1, const AStatue& s2)
+	Statues.Sort([&](const ASanctum& s1, const ASanctum& s2)
 	{
 		return s1.StatueIndex < s2.StatueIndex;
 	});
