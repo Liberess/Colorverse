@@ -8,6 +8,9 @@ AFruitTree::AFruitTree()
 	static ConstructorHelpers::FObjectFinder<UDataTable> DataTable(TEXT("/Game/DataTables/DT_ItemData"));
 	if (DataTable.Succeeded())
 		ItemDT = DataTable.Object;
+
+	SetRootComponent(StaticMesh);
+	BoxCol->SetupAttachment(StaticMesh);
 }
 
 void AFruitTree::BeginPlay()
@@ -65,7 +68,7 @@ void AFruitTree::Interact_Implementation()
 				SetActiveCollectObject(true, i);
 			}), SpawnDelayTime, false);
 			
-			int Rand = FMath::RandRange(1, 3);
+			int Rand = FMath::RandRange(1, CollectObjects.Num());
 
 			for(int j = 0; j < Rand; j++)
 				InvenMgr->AddInventoryItem(ItemData);
@@ -75,7 +78,7 @@ void AFruitTree::Interact_Implementation()
 	}
 
 	//나뭇가지 획득
-	int Rand = FMath::RandRange(1, 3);
+	int Rand = FMath::RandRange(1, MaxWoodStickAcquireAmount);
 	WoodStickData.Amount = Rand;
 	InvenMgr->AddInventoryItem(WoodStickData);
 }

@@ -23,7 +23,10 @@ private:
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Fruit Tree", meta=(AllowPrivateAccess))
 	int ItemID;
-
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Fruit Tree", meta=(AllowPrivateAccess))
+	int MaxWoodStickAcquireAmount = 3;
+	
 	UPROPERTY(BlueprintReadOnly, Category="Fruit Tree", meta=(AllowPrivateAccess))
 	TArray<FTimerHandle> SpawnTimerHandles;
 
