@@ -1,5 +1,4 @@
 #include "FruitTree.h"
-
 #include "InventoryManager.h"
 
 AFruitTree::AFruitTree()
@@ -20,6 +19,7 @@ void AFruitTree::BeginPlay()
 		FString RowStr = "Item_";
 		RowStr.Append(FString::FromInt(ItemID));
 		ItemData = *(ItemDT->FindRow<FItem>(FName(*RowStr), ""));
+		WoodStickData = *(ItemDT->FindRow<FItem>(FName(TEXT("WoodStick")), ""));
 		InteractWidgetDisplayTxt = ItemData.Name.ToString();
 	}
 	
@@ -46,6 +46,11 @@ void AFruitTree::Interact_Implementation()
 {
 	Super::Interact_Implementation();
 
+	static UInventoryManager* InvenMgr = GetWorld()->GetSubsystem<UInventoryManager>();
+
+	//흔들리는 Animation 출력
+
+	//열려있는 사과 획득
 	for (int i = 0; i < CollectObjects.Num(); i++)
 	{
 		if (!CollectObjects[i]->IsHidden())
@@ -60,7 +65,6 @@ void AFruitTree::Interact_Implementation()
 				SetActiveCollectObject(true, i);
 			}), SpawnDelayTime, false);
 			
-			UInventoryManager* InvenMgr = GetWorld()->GetSubsystem<UInventoryManager>();
 			int Rand = FMath::RandRange(1, 3);
 
 			for(int j = 0; j < Rand; j++)
@@ -69,6 +73,11 @@ void AFruitTree::Interact_Implementation()
 			break;
 		}
 	}
+
+	//나뭇가지 획득
+	int Rand = FMath::RandRange(1, 3);
+	WoodStickData.Amount = Rand;
+	InvenMgr->AddInventoryItem(WoodStickData);
 }
 
 void AFruitTree::SetActiveCollectObject(bool active, int index)

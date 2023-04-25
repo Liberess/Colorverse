@@ -18,6 +18,9 @@ private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Fruit Tree", meta=(AllowPrivateAccess))
 	FItem ItemData;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Fruit Tree", meta=(AllowPrivateAccess))
+	FItem WoodStickData;
+	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Fruit Tree", meta=(AllowPrivateAccess))
 	int ItemID;
 
