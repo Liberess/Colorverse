@@ -1,6 +1,8 @@
 #include "FruitTree.h"
 #include "InventoryManager.h"
 
+#define Print(duration, text) if(GEngine) GEngine->AddOnScreenDebugMessage(-1,duration, FColor::Blue, text);
+
 AFruitTree::AFruitTree()
 {
 	PrimaryActorTick.bCanEverTick = true;
@@ -17,14 +19,7 @@ void AFruitTree::BeginPlay()
 {
 	Super::BeginPlay();
 
-	if(IsValid(ItemDT))
-	{
-		FString RowStr = "Item_";
-		RowStr.Append(FString::FromInt(ItemID));
-		ItemData = *(ItemDT->FindRow<FItem>(FName(*RowStr), ""));
-		WoodStickData = *(ItemDT->FindRow<FItem>(FName(TEXT("WoodStick")), ""));
-		InteractWidgetDisplayTxt = ItemData.Name.ToString();
-	}
+	IsInteractable = true;
 	
 	TArray<AActor*> tempActors;
 	GetAllChildActors(tempActors, true);
@@ -33,15 +28,23 @@ void AFruitTree::BeginPlay()
 		if (auto collectObj = Cast<ACollectObject>(actor))
 		{
 			collectObj->ItemData = ItemData;
+			collectObj->SetActorEnableCollision(false);
+			collectObj->bIsSeparated = false;
+			collectObj->SetInteractable(true);
+			collectObj->GlownVelocity = FruitGlownVelocity;
 			//collectObj->SetCollectObjectData(SeparatedItemName);
 			CollectObjects.Add(collectObj);
 		}
 	}
 
-	for (int i = 0; i < CollectObjects.Num(); i++)
+	if(IsValid(ItemDT))
 	{
-		FTimerHandle newHandle;
-		SpawnTimerHandles.Add(newHandle);
+		FString RowStr = "Item_";
+		RowStr.Append(FString::FromInt(ItemID));
+		ItemData = *(ItemDT->FindRow<FItem>(FName(*RowStr), ""));
+		ItemData.Amount = CollectObjects.Num();
+		WoodStickData = *(ItemDT->FindRow<FItem>(FName(TEXT("WoodStick")), ""));
+		InteractWidgetDisplayTxt = ItemData.Name.ToString();
 	}
 }
 
@@ -50,57 +53,49 @@ void AFruitTree::Interact_Implementation()
 	Super::Interact_Implementation();
 
 	static UInventoryManager* InvenMgr = GetWorld()->GetSubsystem<UInventoryManager>();
-
+	Print(1.0f, TEXT("1"));
 	//흔들리는 Animation 출력
 
 	//열려있는 사과 획득
-	for (int i = 0; i < CollectObjects.Num(); i++)
+	if(CanAcquireFruit)
 	{
-		if (!CollectObjects[i]->IsHidden())
+		CanAcquireFruit = false;
+		SetActiveCollectObject(false);
+		
+		InvenMgr->AddInventoryItem(ItemData);
+		Print(1.0f, TEXT("사과 따기"));
+
+		GetWorldTimerManager().ClearTimer(SpawnTimerHandle);
+		GetWorldTimerManager().SetTimer(SpawnTimerHandle, FTimerDelegate::CreateLambda([this]
 		{
-			//이제 달린 사과가 없으니 상호작용 끔
-			if(i == CollectObjects.Num() - 1)
-				IsInteractable = false;
-				
-			SetActiveCollectObject(false, i);
-			GetWorldTimerManager().SetTimer(SpawnTimerHandles[i], FTimerDelegate::CreateLambda([i, this]
-			{
-				SetActiveCollectObject(true, i);
-			}), SpawnDelayTime, false);
-			
-			int Rand = FMath::RandRange(1, CollectObjects.Num());
-
-			for(int j = 0; j < Rand; j++)
-				InvenMgr->AddInventoryItem(ItemData);
-			
-			break;
-		}
+			CanAcquireFruit = true;
+			SetActiveCollectObject(true);
+		}), FruitSpawnDelayTime, false);
 	}
-
+	
+	Print(1.0f, TEXT("나뭇가지 획득"));
 	//나뭇가지 획득
 	int Rand = FMath::RandRange(1, MaxWoodStickAcquireAmount);
 	WoodStickData.Amount = Rand;
 	InvenMgr->AddInventoryItem(WoodStickData);
 }
 
-void AFruitTree::SetActiveCollectObject(bool active, int index)
+void AFruitTree::SetActiveCollectObject(bool active)
 {
-	if (index < 0 || index >= CollectObjects.Num())
-		return;
-
-	if(active)
+	for(auto& CollectObj : CollectObjects)
 	{
-		CollectObjects[index]->bIsGrown = true;
-		CollectObjects[index]->TargetScale = FVector::OneVector;
+		CollectObj->bIsGrown = true;
+		CollectObj->ActiveGlown();
+	
+		if(active)
+			CollectObj->TargetScale = FVector::OneVector;
+		else
+			CollectObj->TargetScale = FVector::ZeroVector;
+	
+		// active가 true라면 CollectObject를 활성화한다.
+		//CollectObj->SetActorHiddenInGame(!active);
+		CollectObj->SetActorEnableCollision(active);
+		CollectObj->SetInteractable(active);
+		//CollectObj->SetActorTickEnabled(active);
 	}
-	else
-	{
-		CollectObjects[index]->bIsGrown = true;
-		CollectObjects[index]->TargetScale = FVector::ZeroVector;
-	}
-
-	// active가 true라면 CollectObject를 활성화한다.
-	CollectObjects[index]->SetActorHiddenInGame(!active);
-	CollectObjects[index]->SetActorEnableCollision(active);
-	CollectObjects[index]->SetActorTickEnabled(active);
 }

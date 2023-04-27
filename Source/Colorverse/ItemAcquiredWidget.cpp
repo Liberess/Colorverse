@@ -1,13 +1,13 @@
 #include "ItemAcquiredWidget.h"
-#include "HUDWidget.h"
+#include "InventoryManager.h"
 
 void UItemAcquiredWidget::SetupItemWidget(const FItem& _ItemData)
 {
-	if(bIsViewComplete)
+	if (bIsViewComplete)
 		return;
 
 	ItemData = _ItemData;
-	
+
 	UpdateItemInformation();
 	SetupItemLogTimer();
 }
@@ -42,9 +42,9 @@ void UItemAcquiredWidget::UpdateItemInformation()
 
 void UItemAcquiredWidget::UpdateItemLogIndex()
 {
-	if(bIsViewComplete)
+	if (bIsViewComplete)
 		return;
-	
+
 	++LogIndex;
 	if (LogIndex >= 4)
 	{
@@ -83,12 +83,13 @@ void UItemAcquiredWidget::UpdateItemLogIndex()
 
 void UItemAcquiredWidget::ReleaseItemLogWidget()
 {
-	SetVisibility(ESlateVisibility::Collapsed);
-	const FSoftClassPath WidgetClassRef(TEXT("/Script/HUDWidget.HUDWidget_C"));
-	if (UClass* WidgetClass = WidgetClassRef.TryLoadClass<UItemAcquiredWidget>())
+	//SetVisibility(ESlateVisibility::Collapsed);
+
+	UInventoryManager* InvenMgr = GetWorld()->GetSubsystem<UInventoryManager>();
+	if (InvenMgr)
 	{
-		if (UHUDWidget* HUDWidget = Cast<UHUDWidget>(WidgetClass))
-			HUDWidget->ReleaseItemLogWidget(this);
+		ItemData = FItem();
+		InvenMgr->GetHUDWidget()->ReleaseItemLogWidget(this);
 	}
 
 	GetWorld()->GetTimerManager().ClearTimer(RemoveLogTimer);

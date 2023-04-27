@@ -68,43 +68,25 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category="Collect Object | Setting", meta=(AllowPrivateAccess))
 	FItem ItemData;
 
-	UPROPERTY(BlueprintReadOnly, Category="Collect Object | Setting")
-	FPaintCombo PaintComboData;
-
-	UPROPERTY(BlueprintReadOnly, Category="Collect Object | Setting")
-	bool bIsPaintComplete = false;
-
 	// Parent에게 상속된 Collect Object인지 아닌지
 	UPROPERTY(BlueprintReadWrite, Category="Collect Object | Setting")
 	bool bIsSeparated = false;
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category="Collect Object | Setting")
-	int PaintedCount = 0;
-	
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Collect Object | Setting")
-	int NeedsPaintedCount = 3;
-
-	UFUNCTION(BlueprintCallable)
-	void SetPaintedColorAndIntensity(ECombineColors colorTag, FLinearColor color);
-
-	UFUNCTION(BlueprintCallable)
-	void SetBaseTexture(UTexture2D* texture);
-	
-	UFUNCTION(BlueprintCallable)
-	FLinearColor GetPaintedColor();
-
-	UFUNCTION(BlueprintCallable)
-	void SetPaintedColor(FLinearColor color);
 
 	UFUNCTION(BlueprintCallable)
 	void SetCollectObjectData(FName _itemName);
 
 	UPROPERTY(BlueprintReadWrite)
 	bool bIsGrown = false;
+
+	UPROPERTY(BlueprintReadWrite, Category="Collect Object | Setting")
+	float GlownVelocity = 2.0f;
 	
 	UPROPERTY(BlueprintReadWrite)
 	FVector CurrentScale;
 
 	UPROPERTY(BlueprintReadWrite)
 	FVector TargetScale;
+
+	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent)
+	void ActiveGlown();
 };

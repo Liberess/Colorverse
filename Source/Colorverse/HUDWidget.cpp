@@ -1,6 +1,8 @@
 #include "HUDWidget.h"
 #include "Components/UniformGridSlot.h"
 
+#define Print(duration, text) if(GEngine) GEngine->AddOnScreenDebugMessage(-1,duration, FColor::Green, text);
+
 void UHUDWidget::InitializedHUD()
 {
 	const FSoftClassPath WidgetBPClassRef(TEXT("/Game/UI/BP_ItemAcquiredWidget.BP_ItemAcquiredWidget_C"));
@@ -35,6 +37,7 @@ void UHUDWidget::AddItemLog(const FItem& ItemData)
 					ChildSlot->SetRow(ItemWidget->LogIndex);
 				ItemWidget->UpdateItemInformation();
 				ItemWidget->SetupItemLogTimer();
+				Print(2.0f, TEXT("기존 ui 업데이트"));
 				return;
 			}
 		}
@@ -49,6 +52,7 @@ void UHUDWidget::AddItemLog(const FItem& ItemData)
 		ItemLogWidget->SetupItemWidget(ItemData);
 		ItemLogGridPanel->AddChildToUniformGrid(ItemLogWidget, 0, 0);
 		UpdateItemLog();
+		Print(2.0f, TEXT("새로 ui 업데이트"));
 	}
 }
 
@@ -111,10 +115,13 @@ UUserWidget* UHUDWidget::GetOrCreateWidget(TSubclassOf<UUserWidget> WidgetClass)
 void UHUDWidget::ReleaseWidget(UUserWidget* Widget)
 {
 	const TSubclassOf<UUserWidget> WidgetClass = Widget->GetClass();
-	const FWidgetData* FoundWidgetData = PoolMap.Find(WidgetClass);
+	auto FoundWidgetData = PoolMap.Find(WidgetClass);
 
 	if (!FoundWidgetData)
 		return;
+	
+	FoundWidgetData->WidgetClass = nullptr;
+	FoundWidgetData->WidgetArray.Empty();
 
 	Widget->SetVisibility(ESlateVisibility::Collapsed);
 }

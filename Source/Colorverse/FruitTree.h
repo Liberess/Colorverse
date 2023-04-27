@@ -26,9 +26,12 @@ private:
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Fruit Tree", meta=(AllowPrivateAccess))
 	int MaxWoodStickAcquireAmount = 3;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category="Fruit Tree", meta=(AllowPrivateAccess))
+	bool CanAcquireFruit = true;
 	
 	UPROPERTY(BlueprintReadOnly, Category="Fruit Tree", meta=(AllowPrivateAccess))
-	TArray<FTimerHandle> SpawnTimerHandles;
+	FTimerHandle SpawnTimerHandle;
 
 public:
 	AFruitTree();
@@ -37,10 +40,13 @@ public:
 	virtual void Interact_Implementation() override;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Fruit Tree")
-	float SpawnDelayTime = 3.0f;
+	float FruitSpawnDelayTime = 5.0f;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Fruit Tree")
+	float FruitGlownVelocity = 2.0f;
 
 	UFUNCTION(BlueprintCallable)
-	void SetActiveCollectObject(bool active, int index);
+	void SetActiveCollectObject(bool active);
 	
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category="Fruit Tree")
 	TArray<ACollectObject*> CollectObjects;
