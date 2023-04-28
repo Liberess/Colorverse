@@ -40,6 +40,9 @@ protected:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category=Paint)
 	float PaintBarProgressVelocity = 2.0f;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Paint)
+	int LastIndex = 0;
 	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Item Acquired", meta=(BindWidget))
 	UUniformGridPanel* ItemLogGridPanel;

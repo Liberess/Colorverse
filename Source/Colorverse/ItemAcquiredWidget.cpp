@@ -72,7 +72,7 @@ void UItemAcquiredWidget::UpdateItemLogIndex()
 			GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Blue, TEXT("over 3"));
 			StopAnimation(ShowAnim);
 			PlayAnimation(HideAnim, 0.0f, 1, EUMGSequencePlayMode::Forward, 2.0f);
-
+			
 			GetWorld()->GetTimerManager().SetTimer(RemoveLogTimer,
 			                                       FTimerDelegate::CreateUObject(
 				                                       this, &UItemAcquiredWidget::ReleaseItemLogWidget), 1.0f,

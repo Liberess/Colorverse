@@ -45,9 +45,9 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Fruit Tree")
 	float FruitGlownVelocity = 2.0f;
 
-	UFUNCTION(BlueprintCallable)
+	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent, Category="Fruit Tree")
 	void SetActiveCollectObject(bool active);
 	
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category="Fruit Tree")
-	TArray<ACollectObject*> CollectObjects;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Fruit Tree")
+	TArray<UStaticMeshComponent*> FruitMeshes;
 };

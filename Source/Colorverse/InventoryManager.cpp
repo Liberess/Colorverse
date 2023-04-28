@@ -150,7 +150,7 @@ void UInventoryManager::AddInventoryItem(const FItem& Item)
 
 void UInventoryManager::UseInventoryItem(FItem Item)
 {
-	static int Index = 0;
+	int Index = 0;
 	if(GetInventoryItemByName(Item.Name, Index))
 	{
 		InventoryArray[Index].Amount -= 1;
@@ -169,7 +169,7 @@ bool UInventoryManager::GetInventoryItemByName(const FText& Name, int& Index)
 {
 	for(int i = 0; i < InventoryArray.Num(); i++)
 	{
-		if(InventoryArray[i].Name.EqualTo(Name))
+		if(InventoryArray[i].bIsValid && InventoryArray[i].Name.EqualTo(Name))
 		{
 			Index = i;
 			return true;
