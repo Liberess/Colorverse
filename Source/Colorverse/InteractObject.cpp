@@ -10,14 +10,14 @@ AInteractObject::AInteractObject()
 	DefaultRoot = CreateDefaultSubobject<USceneComponent>(TEXT("DefaultRoot"));
 	SetRootComponent(DefaultRoot);
 
+	StaticMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Static Mesh"));
+	StaticMesh->SetupAttachment(DefaultRoot);
+	
 	BoxCol = CreateDefaultSubobject<UBoxComponent>(TEXT("Box Collision"));
 	BoxCol->InitBoxExtent(FVector(100.0f, 100.0f, 100.0f));
 	BoxCol->SetCollisionProfileName(TEXT("Trigger"));
 	BoxCol->SetupAttachment(DefaultRoot);
-
-	StaticMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Static Mesh"));
-	StaticMesh->SetupAttachment(DefaultRoot);
-
+	
 	BoxCol->OnComponentBeginOverlap.AddDynamic(this, &AInteractObject::OnOverlapBegin);
 	BoxCol->OnComponentEndOverlap.AddDynamic(this, &AInteractObject::OnOverlapEnd);
 }
