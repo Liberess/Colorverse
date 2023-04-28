@@ -180,24 +180,23 @@ void AColorverseCharacter::MoveForward(float Value)
 	if (bIsAttacked)
 		return;
 
-	if ((Controller != nullptr))
+	if ((Controller != nullptr) && !bIsAttacking)
 	{
 		if (Value != 0.0f)
 		{
-			if (bIsAttacking && CombatSystem->bIsCanInput)
-			{
-				Value *= 0.0001;
-			}
-			else if (bIsAttacking)
-			{
-				return;
-			}
-
 			const FRotator Rotation = Controller->GetControlRotation();
 			const FRotator YawRotation(0, Rotation.Yaw, 0);
 
 			const FVector Direction = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X);
-			AddMovementInput(Direction, Value);
+
+			if (!bIsAttacking)
+			{
+				AddMovementInput(Direction, Value);
+			}
+			else if (CombatSystem->bIsCanInput)
+			{
+				AddActorWorldRotation(YawRotation);
+			}
 		}
 	}
 }
@@ -214,20 +213,21 @@ void AColorverseCharacter::MoveRight(float Value)
 	{
 		if (Value != 0.0f)
 		{
-			if (bIsAttacking && CombatSystem->bIsCanInput)
-			{
-				Value *= 0.0001;
-			}
-			else if (bIsAttacking)
-			{
-				return;
-			}
-
 			const FRotator Rotation = Controller->GetControlRotation();
 			const FRotator YawRotation(0, Rotation.Yaw, 0);
 
 			const FVector Direction = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y);
-			AddMovementInput(Direction, Value);
+
+			Print(3.0f, FString::SanitizeFloat(Rotation.Yaw));
+
+			if (!bIsAttacking)
+			{
+				AddMovementInput(Direction, Value);
+			}
+			else if (CombatSystem->bIsCanInput)
+			{
+				AddActorWorldRotation(YawRotation);
+			}
 		}
 	}
 }
@@ -254,9 +254,6 @@ void AColorverseCharacter::Jump()
 
 void AColorverseCharacter::StopJumping()
 {
-	if (bIsAttacking || bIsAttacked)
-		return;
-
 	Super::StopJumping();
 }
 #pragma endregion Movement
