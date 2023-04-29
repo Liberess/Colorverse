@@ -180,23 +180,21 @@ void AColorverseCharacter::MoveForward(float Value)
 	if (bIsAttacked)
 		return;
 
-	if ((Controller != nullptr) && !bIsAttacking)
+	if (!CombatSystem->bIsCanInput)
+		return;
+
+	if ((Controller != nullptr))
 	{
 		if (Value != 0.0f)
 		{
+			SetDisabledAttack();
+
 			const FRotator Rotation = Controller->GetControlRotation();
 			const FRotator YawRotation(0, Rotation.Yaw, 0);
 
 			const FVector Direction = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X);
 
-			if (!bIsAttacking)
-			{
-				AddMovementInput(Direction, Value);
-			}
-			else if (CombatSystem->bIsCanInput)
-			{
-				AddActorWorldRotation(YawRotation);
-			}
+			AddMovementInput(Direction, Value);
 		}
 	}
 }
@@ -209,25 +207,21 @@ void AColorverseCharacter::MoveRight(float Value)
 	if (bIsAttacked)
 		return;
 
+	if (!CombatSystem->bIsCanInput)
+		return;
+
 	if ((Controller != nullptr))
 	{
 		if (Value != 0.0f)
 		{
+			SetDisabledAttack();
+
 			const FRotator Rotation = Controller->GetControlRotation();
 			const FRotator YawRotation(0, Rotation.Yaw, 0);
 
 			const FVector Direction = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y);
 
-			Print(3.0f, FString::SanitizeFloat(Rotation.Yaw));
-
-			if (!bIsAttacking)
-			{
-				AddMovementInput(Direction, Value);
-			}
-			else if (CombatSystem->bIsCanInput)
-			{
-				AddActorWorldRotation(YawRotation);
-			}
+			AddMovementInput(Direction, Value);
 		}
 	}
 }
@@ -272,13 +266,16 @@ void AColorverseCharacter::Attack_Implementation()
 	if (GetCharacterMovement()->IsFalling())
 		return;
 
-	if (bIsAttacking && CombatSystem->bIsCanInput)
+	if (bIsAttacking)
 	{
-		CombatSystem->AttackStartComboState();
-
-		if (CombatSystem->bCanNextCombo)
+		if (CombatSystem->bIsCanInput)
 		{
-			ColorverseAnim->JumpToAttackMontageSection(CombatSystem->CurrentCombo);
+			CombatSystem->AttackStartComboState();
+
+			if (CombatSystem->bCanNextCombo)
+			{
+				ColorverseAnim->JumpToAttackMontageSection(CombatSystem->CurrentCombo);
+			}
 		}
 	}
 	else if(!bIsAttacking)

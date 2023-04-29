@@ -82,7 +82,7 @@ void UCombatSystem::AttackStartComboState()
 {
 	bIsCanInput = false;
 	bCanNextCombo = true;
-	CurrentCombo = FMath::Clamp<int32>(CurrentCombo + 1, 1, MaxCombo);
+	CurrentCombo = CurrentCombo + 1;
 
 	if (CurrentCombo > MaxCombo)
 	{
