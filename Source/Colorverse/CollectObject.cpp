@@ -18,8 +18,8 @@ void ACollectObject::BeginPlay()
 	IsInteractable = true;
 	CurrentScale = FVector::ZeroVector;
 
-	ObjMatInst = UMaterialInstanceDynamic::Create(ObjMatTemplate, this);
-	StaticMesh->SetMaterial(0, ObjMatInst);
+	/*ObjMatInst = UMaterialInstanceDynamic::Create(ObjMatTemplate, this);
+	StaticMesh->SetMaterial(0, ObjMatInst);*/
 
 	if(IsValid(ItemDT) && !ItemName.IsEqual(""))
 	{

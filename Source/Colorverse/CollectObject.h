@@ -14,11 +14,13 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Collect Object", meta=(AllowPrivateAccess))
 	UDataTable* ItemDT;
 
+	/*
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Collect Object", meta=(AllowPrivateAccess))
 	UMaterialInterface* ObjMatTemplate;
 
 	UPROPERTY(BlueprintReadWrite, Category="Collect Object", meta=(AllowPrivateAccess))
 	UMaterialInstanceDynamic* ObjMatInst;
+	*/
 
 	virtual void BeginPlay() override;
 	virtual void Tick(float DeltaSeconds) override;
