@@ -15,8 +15,17 @@ void ACollectObject::BeginPlay()
 {
 	Super::BeginPlay();
 
-	IsInteractable = false;
+	IsInteractable = true;
 	CurrentScale = FVector::ZeroVector;
+
+	ObjMatInst = UMaterialInstanceDynamic::Create(ObjMatTemplate, this);
+	StaticMesh->SetMaterial(0, ObjMatInst);
+
+	if(IsValid(ItemDT) && !ItemName.IsEqual(""))
+	{
+		ItemData = *(ItemDT->FindRow<FItem>(ItemName, ""));
+		InteractWidgetDisplayTxt = ItemData.Name.ToString();
+	}
 }
 
 void ACollectObject::Tick(float DeltaSeconds)
@@ -27,12 +36,12 @@ void ACollectObject::Tick(float DeltaSeconds)
 void ACollectObject::Interact_Implementation()
 {
 	//Super::Interact_Implementation();
-
-	if(!bIsSeparated)
-		return;
-
-	UInventoryManager* InvenMgr = GetWorld()->GetSubsystem<UInventoryManager>();
-	InvenMgr->AddInventoryItem(ItemData);
+	if(ItemData.bIsValid)
+	{
+		UInventoryManager* InvenMgr = GetWorld()->GetSubsystem<UInventoryManager>();
+		InvenMgr->AddInventoryItem(ItemData);
+		Destroy();
+	}
 }
 
 void ACollectObject::SetCollectObjectData(FName _itemName)
