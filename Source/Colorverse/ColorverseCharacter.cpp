@@ -130,6 +130,8 @@ void AColorverseCharacter::SetNextAttackCheck()
 
 void AColorverseCharacter::SetEnableCanAttackTrace()
 {
+	bIsCanMove = false;
+
 	CombatSystem->bIsCanAttackTrace = true;
 	AttackHitResults.Empty();
 
@@ -180,19 +182,26 @@ void AColorverseCharacter::MoveForward(float Value)
 	if (bIsAttacked)
 		return;
 
-	if (!CombatSystem->bIsCanInput)
+	if (!bIsCanMove)
 		return;
 
 	if ((Controller != nullptr))
 	{
 		if (Value != 0.0f)
 		{
-			SetDisabledAttack();
-
 			const FRotator Rotation = Controller->GetControlRotation();
 			const FRotator YawRotation(0, Rotation.Yaw, 0);
 
 			const FVector Direction = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X);
+
+			if (bIsAttacking && CombatSystem->bIsCanInput && bIsCanMove)
+			{
+				SetDisabledAttack();
+			}
+			else if (bIsAttacking)
+			{
+				Value *= 0.001f;
+			}
 
 			AddMovementInput(Direction, Value);
 		}
@@ -207,20 +216,27 @@ void AColorverseCharacter::MoveRight(float Value)
 	if (bIsAttacked)
 		return;
 
-	if (!CombatSystem->bIsCanInput)
+	if (!bIsCanMove)
 		return;
 
 	if ((Controller != nullptr))
 	{
 		if (Value != 0.0f)
 		{
-			SetDisabledAttack();
-
 			const FRotator Rotation = Controller->GetControlRotation();
 			const FRotator YawRotation(0, Rotation.Yaw, 0);
 
 			const FVector Direction = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y);
 
+			if (bIsAttacking && CombatSystem->bIsCanInput && bIsCanMove)
+			{
+				SetDisabledAttack();
+			}
+			else if (bIsAttacking)
+			{
+				Value *= 0.001f;
+			}
+			
 			AddMovementInput(Direction, Value);
 		}
 	}
@@ -264,7 +280,11 @@ void AColorverseCharacter::Attack_Implementation()
 		return;
 
 	if (GetCharacterMovement()->IsFalling())
-		return;
+	{
+		ColorverseAnim->PlayJumpAttackMontage();
+		bIsAttacking = true;
+	}
+		
 
 	if (bIsAttacking)
 	{
@@ -289,6 +309,7 @@ void AColorverseCharacter::Attack_Implementation()
 void AColorverseCharacter::SetDisabledAttack_Implementation()
 {
 	bIsAttacking = false;
+	bIsCanMove = true;
 	CombatSystem->AttackEndComboState();
 }
 

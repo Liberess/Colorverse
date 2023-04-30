@@ -27,10 +27,14 @@ private:
 	UAnimMontage* AttackMontage;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Attack Montage", meta = (AllowPrivateAccess = "true"))
+	UAnimMontage* JumpAttackMontage;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Attack Montage", meta = (AllowPrivateAccess = "true"))
 	UAnimMontage* DamagedMontage;
 
 public:
 	void PlayAttackMontage();
+	void PlayJumpAttackMontage();
 	void PlayDamagedMontage();
 	void JumpToAttackMontageSection(int32 NewSection);
 

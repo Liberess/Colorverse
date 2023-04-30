@@ -28,6 +28,14 @@ void UColorverseCharacterAnimInstance::PlayAttackMontage()
 	}
 }
 
+void UColorverseCharacterAnimInstance::PlayJumpAttackMontage()
+{
+	if (!Montage_IsPlaying(JumpAttackMontage))
+	{
+		Montage_Play(JumpAttackMontage, 1.0f);
+	}
+}
+
 void UColorverseCharacterAnimInstance::PlayDamagedMontage()
 {
 	if (!Montage_IsPlaying(DamagedMontage))
