@@ -59,15 +59,17 @@ void APaintableObject::Tick(float DeltaTime)
 	}
 }
 
-void APaintableObject::PaintToObject_Implementation(FLinearColor PaintColor, ECombineColors CurrentColorTag)
+void APaintableObject::PaintToObject_Implementation(FLinearColor _PaintColor, ECombineColors _CurrentColorTag)
 {
 	if(!bIsInteractable)
 		return;
+
+	CurrentColorTag = _CurrentColorTag;
 	
-	bIsRightColor = (CurrentColorTag == ColorTag) ? true : false;
+	bIsRightColor = (_CurrentColorTag == TargetColorTag) ? true : false;
 	bIsColorChanged = true;
 	
-	if(CurrentColorTag != ECombineColors::Empty)
+	if(_CurrentColorTag != ECombineColors::Empty)
 	{
 		if(!bIsPaintedComplete)
 		{
@@ -76,14 +78,14 @@ void APaintableObject::PaintToObject_Implementation(FLinearColor PaintColor, ECo
 
 			if(PaintedCount >= PaintedCapacity)
 			{
-				TargetColor = PaintColor;
+				TargetColor = _PaintColor;
 			}
 			else
 			{
 				TargetColor = FLinearColor(
-				FMath::Lerp(CurrentColor.R, PaintColor.R, 0.5f),
-				FMath::Lerp(CurrentColor.G, PaintColor.G, 0.5f),
-				FMath::Lerp(CurrentColor.B, PaintColor.B, 0.5f),
+				FMath::Lerp(CurrentColor.R, _PaintColor.R, 0.5f),
+				FMath::Lerp(CurrentColor.G, _PaintColor.G, 0.5f),
+				FMath::Lerp(CurrentColor.B, _PaintColor.B, 0.5f),
 				1.0f);
 			}
 		}

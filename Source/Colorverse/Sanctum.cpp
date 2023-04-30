@@ -88,6 +88,9 @@ void ASanctum::DecreaseColor()
 {
 	if(bIsRecoveryComplete || bIsUnlock)
 		return;
+
+	if(RecoveryCount < 1)
+		return;
 	
 	bIsChangedColor = true;
 

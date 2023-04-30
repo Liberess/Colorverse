@@ -35,7 +35,10 @@ protected:
 	int ID = 0;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Paintable Object")
-	ECombineColors ColorTag;
+	ECombineColors TargetColorTag = ECombineColors::Empty;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Paintable Object")
+	ECombineColors CurrentColorTag = ECombineColors::Empty;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Paintable Object")
 	bool bIsRightColor;
@@ -49,7 +52,7 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category="Paintable Object")
 	bool bIsInteractable = true;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Paintable Object")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Paintable Object")
 	FLinearColor TargetColor;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Paintable Object")
@@ -74,5 +77,5 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category="Paintable Object")
-	void PaintToObject(FLinearColor PaintColor, ECombineColors CurrentColorTag);
+	void PaintToObject(FLinearColor _PaintColor, ECombineColors _CurrentColorTag);
 };
