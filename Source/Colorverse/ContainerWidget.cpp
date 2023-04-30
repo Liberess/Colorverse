@@ -1,8 +1,6 @@
 #include "ContainerWidget.h"
 #include "InventoryManager.h"
 
-#define Print(duration, text) if(GEngine) GEngine->AddOnScreenDebugMessage(-1,duration, FColor::Yellow, text);
-
 UContainerWidget::UContainerWidget(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)
 {
@@ -21,8 +19,7 @@ void UContainerWidget::MoveItem(TArray<FItem>& SelectAry, TArray<FItem>& DropAry
 	DropItem = DropAry[DropItemIndex];
 
 	const static FItem EmptyItem = FItem();
-
-
+	
 	const bool IsSelectMaker = SelectAry.Num() <= 2;
 	const bool IsSameCombineType = SelectItem.CombineType == DropItem.CombineType;
 
@@ -40,26 +37,22 @@ void UContainerWidget::MoveItem(TArray<FItem>& SelectAry, TArray<FItem>& DropAry
 				DropAry[DropItemIndex] = DropItem;
 				DropAry[DropItemIndex].Amount = SelectItem.Amount + DropItem.Amount;
 				SelectAry[SelectItemIndex] = EmptyItem;
-				Print(1.0f, TEXT("1"));
 			}
 			else if (IsSameCombineType)
 			{
 				DropAry[DropItemIndex] = SelectItem;
 				SelectAry[SelectItemIndex] = DropItem;
-				Print(1.0f, TEXT("2"));
 			}
 		}
 		else if (IsSelectMaker) //Maker -> Inventory
 		{
 			DropAry[DropItemIndex] = SelectItem;
 			SelectAry[SelectItemIndex] = EmptyItem;
-			Print(1.0f, TEXT("3"));
 		}
 		else if (IsSourceSwap || IsDestinationSwap)
 		{
 			DropAry[DropItemIndex] = SelectItem;
 			SelectAry[SelectItemIndex] = EmptyItem;
-			Print(1.0f, TEXT("4"));
 		}
 	}
 	else
@@ -73,20 +66,17 @@ void UContainerWidget::MoveItem(TArray<FItem>& SelectAry, TArray<FItem>& DropAry
 					DropAry[DropItemIndex] = DropItem;
 					DropAry[DropItemIndex].Amount = SelectItem.Amount + DropItem.Amount;
 					SelectAry[SelectItemIndex] = EmptyItem;
-					Print(1.0f, TEXT("5"));
 				}
 				else
 				{
 					DropAry[DropItemIndex] = SelectItem;
 					SelectAry[SelectItemIndex] = DropItem;
-					Print(1.0f, TEXT("6"));
 				}
 			}
 			else
 			{
 				DropAry[DropItemIndex] = SelectItem;
 				SelectAry[SelectItemIndex] = EmptyItem;
-				Print(1.0f, TEXT("7"));
 			}
 		}
 	}

@@ -3,7 +3,6 @@
 #include "CoreMinimal.h"
 #include "HUDWidget.h"
 #include "IItem.h"
-#include "Sanctum.h"
 #include "InventoryWidget.h"
 #include "Subsystems/WorldSubsystem.h"
 #include "InventoryManager.generated.h"
@@ -28,9 +27,6 @@ private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta=(AllowPrivateAccess))
 	bool bIsMakerOpen = false;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta=(AllowPrivateAccess))
-	bool bIsStatueOpen = false;
-
 	bool GetInventoryItemByName(const FText& Name, int& Index);
 
 	UPROPERTY()
@@ -54,9 +50,6 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	TArray<FItem> MakerArray;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-	TArray<ASanctum*> Statues;
-	
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 	float PaintAmount = 0.0f;
 

@@ -1,8 +1,6 @@
 #include "FruitTree.h"
 #include "InventoryManager.h"
 
-#define Print(duration, text) if(GEngine) GEngine->AddOnScreenDebugMessage(-1,duration, FColor::Blue, text);
-
 AFruitTree::AFruitTree()
 {
 	PrimaryActorTick.bCanEverTick = true;
@@ -30,8 +28,6 @@ void AFruitTree::BeginPlay()
 		WoodStickData = *(ItemDT->FindRow<FItem>(FName(TEXT("WoodStick")), ""));
 		InteractWidgetDisplayTxt = ItemData.Name.ToString();
 	}
-
-	GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Green, TEXT("112"));
 }
 
 void AFruitTree::Interact_Implementation()

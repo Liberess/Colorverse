@@ -1,9 +1,6 @@
 #include "InventoryManager.h"
 #include "ColorverseWorldSettings.h"
 #include "Kismet/GameplayStatics.h"
-#include "ColorverseCharacter.h"
-
-#define Print(duration, text) if(GEngine) GEngine->AddOnScreenDebugMessage(-1,duration, FColor::Yellow, text);
 
 bool UInventoryManager::ShouldCreateSubsystem(UObject* Outer) const
 {
@@ -60,7 +57,7 @@ void UInventoryManager::InitializeManager()
 		HUDWidget->AddToViewport();
 	}
 
-	TArray<AActor*> FoundActors;
+	/*TArray<AActor*> FoundActors;
 	UGameplayStatics::GetAllActorsOfClass(GetWorld(), ASanctum::StaticClass(), FoundActors);
 	for (auto& Actor : FoundActors)
 		Statues.Add(Cast<ASanctum>(Actor));
@@ -68,7 +65,7 @@ void UInventoryManager::InitializeManager()
 	Statues.Sort([&](const ASanctum& s1, const ASanctum& s2)
 	{
 		return s1.StatueIndex < s2.StatueIndex;
-	});
+	});*/
 }
 
 void UInventoryManager::SetInventoryUI(bool IsActive, bool IsFlip)

@@ -46,6 +46,9 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category="Paintable Object")
 	bool bIsPaintedComplete = false;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category="Paintable Object")
+	bool bIsInteractable = true;
+
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Paintable Object")
 	FLinearColor TargetColor;
 

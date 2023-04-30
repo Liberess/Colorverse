@@ -1,6 +1,5 @@
 #include "PaintableObject.h"
 #include "ColorverseCharacter.h"
-#include "Kismet/GameplayStatics.h"
 
 APaintableObject::APaintableObject()
 {
@@ -33,6 +32,9 @@ void APaintableObject::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	if(!bIsInteractable)
+		return;
+
 	if(!bIsPaintedComplete && bIsColorChanged)
 	{
 		CurrentColor = FMath::Lerp(CurrentColor, TargetColor, DeltaTime * 2.0f);
@@ -59,6 +61,9 @@ void APaintableObject::Tick(float DeltaTime)
 
 void APaintableObject::PaintToObject_Implementation(FLinearColor PaintColor, ECombineColors CurrentColorTag)
 {
+	if(!bIsInteractable)
+		return;
+	
 	bIsRightColor = (CurrentColorTag == ColorTag) ? true : false;
 	bIsColorChanged = true;
 	
