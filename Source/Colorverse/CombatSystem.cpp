@@ -1,6 +1,6 @@
 #include "CombatSystem.h"
 
-UCombatSystem::UCombatSystem() : ATK(10), ColorBuff(ATK / 2), ElementBuff(ATK / 2), MaxCombo(3), CurrentCombo(0), bCanNextCombo(false), bIsComboInputOn(false), bIsCanAttackTrace(false)
+UCombatSystem::UCombatSystem() : ATK(10), ColorBuff(ATK / 2), ElementBuff(ATK / 2), MaxCombo(3), CurrentCombo(0), bCanNextCombo(false), bIsCanInput(true), bIsCanAttackTrace(false)
 {
 	PrimaryComponentTick.bCanEverTick = false;
 	bWantsInitializeComponent = true;
@@ -74,18 +74,17 @@ void UCombatSystem::SetCurrentPaintColorAmount(float value)
 		SetColorBuff();
 	}
 
-	GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Red,
-		FString::Printf(TEXT("%f"), temp->PaintAmount));
+	// GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Red, FString::Printf(TEXT("%f"), temp->PaintAmount));
 	temp->GetHUDWidget()->SetPaintBarPercent(temp->PaintAmount);
 }
 
 void UCombatSystem::AttackStartComboState()
 {
-	bIsComboInputOn = false;
+	bIsCanInput = false;
 	bCanNextCombo = true;
-	CurrentCombo = FMath::Clamp<int32>(CurrentCombo + 1, 1, MaxCombo);
+	CurrentCombo = CurrentCombo + 1;
 
-	if (CurrentCombo == MaxCombo)
+	if (CurrentCombo > MaxCombo)
 	{
 		bCanNextCombo = false;
 	}
@@ -93,7 +92,7 @@ void UCombatSystem::AttackStartComboState()
 
 void UCombatSystem::AttackEndComboState()
 {
-	bIsComboInputOn = false;
+	bIsCanInput = true;
 	bCanNextCombo = false;
 	bIsCanAttackTrace = false;
 	CurrentCombo = 0;

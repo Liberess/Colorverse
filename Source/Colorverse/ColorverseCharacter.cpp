@@ -125,17 +125,13 @@ void AColorverseCharacter::PostInitializeComponents()
 
 void AColorverseCharacter::SetNextAttackCheck()	
 {
-	CombatSystem->bCanNextCombo = false;
-
-	if (CombatSystem->bIsComboInputOn)
-	{
-		CombatSystem->AttackStartComboState();
-		ColorverseAnim->JumpToAttackMontageSection(CombatSystem->CurrentCombo);
-	}
+	CombatSystem->bIsCanInput = true;
 }
 
 void AColorverseCharacter::SetEnableCanAttackTrace()
 {
+	bIsCanMove = false;
+
 	CombatSystem->bIsCanAttackTrace = true;
 	AttackHitResults.Empty();
 
@@ -186,19 +182,27 @@ void AColorverseCharacter::MoveForward(float Value)
 	if (bIsAttacked)
 		return;
 
+	if (!bIsCanMove)
+		return;
+
 	if ((Controller != nullptr))
 	{
 		if (Value != 0.0f)
 		{
-			if (bIsAttacking)
-			{
-				Value *= 0.0001;
-			}
-
 			const FRotator Rotation = Controller->GetControlRotation();
 			const FRotator YawRotation(0, Rotation.Yaw, 0);
 
 			const FVector Direction = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X);
+
+			if (bIsAttacking && CombatSystem->bIsCanInput && bIsCanMove)
+			{
+				SetDisabledAttack();
+			}
+			else if (bIsAttacking)
+			{
+				Value *= 0.001f;
+			}
+
 			AddMovementInput(Direction, Value);
 		}
 	}
@@ -212,19 +216,27 @@ void AColorverseCharacter::MoveRight(float Value)
 	if (bIsAttacked)
 		return;
 
+	if (!bIsCanMove)
+		return;
+
 	if ((Controller != nullptr))
 	{
 		if (Value != 0.0f)
 		{
-			if (bIsAttacking)
-			{
-				Value *= 0.0001;
-			}
-
 			const FRotator Rotation = Controller->GetControlRotation();
 			const FRotator YawRotation(0, Rotation.Yaw, 0);
 
 			const FVector Direction = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y);
+
+			if (bIsAttacking && CombatSystem->bIsCanInput && bIsCanMove)
+			{
+				SetDisabledAttack();
+			}
+			else if (bIsAttacking)
+			{
+				Value *= 0.001f;
+			}
+			
 			AddMovementInput(Direction, Value);
 		}
 	}
@@ -241,7 +253,10 @@ void AColorverseCharacter::Jump()
 	if (LivingEntity->GetDead())
 		return;
 
-	if (bIsAttacking || bIsAttacked)
+	if (bIsAttacked)
+		return;
+
+	if (!CombatSystem->bIsCanInput)
 		return;
 
 	Super::Jump();
@@ -249,9 +264,6 @@ void AColorverseCharacter::Jump()
 
 void AColorverseCharacter::StopJumping()
 {
-	if (bIsAttacking || bIsAttacked)
-		return;
-
 	Super::StopJumping();
 }
 #pragma endregion Movement
@@ -268,16 +280,25 @@ void AColorverseCharacter::Attack_Implementation()
 		return;
 
 	if (GetCharacterMovement()->IsFalling())
-		return;
-
-	if (bIsAttacking == true)
 	{
-		if (CombatSystem->bCanNextCombo)
+		ColorverseAnim->PlayJumpAttackMontage();
+		bIsAttacking = true;
+	}
+		
+
+	if (bIsAttacking)
+	{
+		if (CombatSystem->bIsCanInput)
 		{
-			CombatSystem->bIsComboInputOn = true;
+			CombatSystem->AttackStartComboState();
+
+			if (CombatSystem->bCanNextCombo)
+			{
+				ColorverseAnim->JumpToAttackMontageSection(CombatSystem->CurrentCombo);
+			}
 		}
 	}
-	else
+	else if(!bIsAttacking)
 	{
 		CombatSystem->AttackStartComboState();
 		ColorverseAnim->PlayAttackMontage();
@@ -288,6 +309,7 @@ void AColorverseCharacter::Attack_Implementation()
 void AColorverseCharacter::SetDisabledAttack_Implementation()
 {
 	bIsAttacking = false;
+	bIsCanMove = true;
 	CombatSystem->AttackEndComboState();
 }
 
@@ -296,10 +318,13 @@ void AColorverseCharacter::Roll_Implementation()
 	if (LivingEntity->GetDead())
 		return;
 
-	if (bIsAttacked || bIsAttacking)
+	if (bIsAttacked)
 		return;
 
 	if (!bIsRunning || bIsRolling)
+		return;
+
+	if (!CombatSystem->bIsCanInput)
 		return;
 
 	if (GetCharacterMovement()->IsFalling())
@@ -392,6 +417,9 @@ void AColorverseCharacter::OnOverlapEnd(class UPrimitiveComponent* OverlappedCom
 
 void AColorverseCharacter::ChangeEquipPaint_Implementation(ECombineColors CombineColor)
 {
+	if (!CombatSystem->bIsCanInput)
+		return;
+
 	CombatSystem->CurrentPaintColor = CombineColor;
 
 	if(CombineColor != ECombineColors::Empty)

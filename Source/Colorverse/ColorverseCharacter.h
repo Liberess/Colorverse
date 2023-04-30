@@ -148,6 +148,9 @@ private:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess), Category = "Combat System")
 	bool bIsAttacked;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess), Category = "Combat System")
+	bool bIsCanMove = true;
 	
 	bool bIsWatchingInteractWidget;
 

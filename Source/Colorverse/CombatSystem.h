@@ -63,7 +63,7 @@ public:
 	bool bCanNextCombo;
 
 	UPROPERTY(Category = "Character Combo", EditAnywhere, BlueprintReadWrite)
-	bool bIsComboInputOn;
+	bool bIsCanInput;
 
 	UPROPERTY(Category = "Character Attack", EditAnywhere, BlueprintReadWrite)
 	bool bIsCanAttackTrace;
