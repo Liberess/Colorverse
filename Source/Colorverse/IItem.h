@@ -35,7 +35,7 @@ struct FItem : public FTableRowBase
 	UTexture2D* IconImg;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item")
-	bool bIsValid;
+	bool bIsValid = false;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item")
 	bool bIsConsume = false;

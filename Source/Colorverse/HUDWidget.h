@@ -13,10 +13,10 @@ struct FWidgetData
 {
 	GENERATED_BODY()
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	TSubclassOf<UUserWidget> WidgetClass;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	TArray<UUserWidget*> WidgetArray;
 };
 
@@ -40,6 +40,9 @@ protected:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category=Paint)
 	float PaintBarProgressVelocity = 2.0f;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Paint)
+	int LastIndex = 0;
 	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Item Acquired", meta=(BindWidget))
 	UUniformGridPanel* ItemLogGridPanel;
