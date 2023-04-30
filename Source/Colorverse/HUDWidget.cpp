@@ -1,6 +1,8 @@
 #include "HUDWidget.h"
 #include "Components/UniformGridSlot.h"
 
+#define Print(duration, text) if(GEngine) GEngine->AddOnScreenDebugMessage(-1,duration, FColor::Green, text);
+
 void UHUDWidget::InitializedHUD()
 {
 	const FSoftClassPath WidgetBPClassRef(TEXT("/Game/UI/BP_ItemAcquiredWidget.BP_ItemAcquiredWidget_C"));
@@ -29,12 +31,42 @@ void UHUDWidget::AddItemLog(const FItem& ItemData)
 		{
 			if(ItemData.Name.EqualTo(ItemWidget->ItemData.Name))
 			{
+				if(ItemWidget->LogIndex != LastIndex)
+				{
+					for(auto& Child2 : ItemLogGridPanel->GetAllChildren())
+					{
+						if(Child != Child2)
+						{
+							if(UItemAcquiredWidget* otherWidget = Cast<UItemAcquiredWidget>(Child2))
+							{
+								if(otherWidget->ItemData.bIsValid)
+								{
+									if(otherWidget->LogIndex > 1 && ItemWidget->LogIndex > 0)
+									{
+										otherWidget->LogIndex -= 1;
+										GEngine->AddOnScreenDebugMessage(-1, 3.0f, FColor::Red,
+											FString::Printf(TEXT("%s : %d"), *otherWidget->ItemData.Name.ToString(), otherWidget->LogIndex));
+										if(UUniformGridSlot* ChildSlot = Cast<UUniformGridSlot>(Child2->Slot))
+											ChildSlot->SetRow(otherWidget->LogIndex);
+									}
+								}
+								else
+								{
+									otherWidget->ReleaseItemLogWidget();
+								}
+							}
+						}
+					}
+				}
+
 				ItemWidget->LogIndex = 0;
 				ItemWidget->ItemData.Amount += ItemData.Amount;
 				if(UUniformGridSlot* ChildSlot = Cast<UUniformGridSlot>(Child->Slot))
 					ChildSlot->SetRow(ItemWidget->LogIndex);
 				ItemWidget->UpdateItemInformation();
 				ItemWidget->SetupItemLogTimer();
+				Print(2.0f, TEXT("기존 ui 업데이트"));
+				UpdateItemLog();
 				return;
 			}
 		}
@@ -49,11 +81,13 @@ void UHUDWidget::AddItemLog(const FItem& ItemData)
 		ItemLogWidget->SetupItemWidget(ItemData);
 		ItemLogGridPanel->AddChildToUniformGrid(ItemLogWidget, 0, 0);
 		UpdateItemLog();
+		Print(2.0f, TEXT("새로 ui 업데이트"));
 	}
 }
 
 void UHUDWidget::UpdateItemLog()
 {
+	LastIndex = 0;
 	for(auto& Child : ItemLogGridPanel->GetAllChildren())
 	{
 		if(UItemAcquiredWidget* ItemWidget = Cast<UItemAcquiredWidget>(Child))
@@ -61,6 +95,9 @@ void UHUDWidget::UpdateItemLog()
 			ItemWidget->UpdateItemLogIndex();
 			if(UUniformGridSlot* ChildSlot = Cast<UUniformGridSlot>(Child->Slot))
 				ChildSlot->SetRow(ItemWidget->LogIndex);
+
+			if(LastIndex < ItemWidget->LogIndex)
+				LastIndex = ItemWidget->LogIndex;
 		}
 	}
 }
@@ -111,10 +148,13 @@ UUserWidget* UHUDWidget::GetOrCreateWidget(TSubclassOf<UUserWidget> WidgetClass)
 void UHUDWidget::ReleaseWidget(UUserWidget* Widget)
 {
 	const TSubclassOf<UUserWidget> WidgetClass = Widget->GetClass();
-	const FWidgetData* FoundWidgetData = PoolMap.Find(WidgetClass);
+	auto FoundWidgetData = PoolMap.Find(WidgetClass);
 
 	if (!FoundWidgetData)
 		return;
+	
+	FoundWidgetData->WidgetClass = nullptr;
+	FoundWidgetData->WidgetArray.Empty();
 
 	Widget->SetVisibility(ESlateVisibility::Collapsed);
 }

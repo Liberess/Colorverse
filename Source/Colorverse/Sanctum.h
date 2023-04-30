@@ -30,8 +30,8 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	bool bIsUnlock = false;
 	
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta=(AllowPrivateAccess))
-	int StatueIndex = 0;
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, meta=(AllowPrivateAccess))
+	int StanctumID = 0;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta=(AllowPrivateAccess))
 	ECombineColors StatueColor;

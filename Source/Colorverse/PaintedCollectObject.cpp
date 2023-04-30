@@ -43,9 +43,9 @@ void APaintedCollectObject::BeginPlay()
 		if (auto collectObj = Cast<ACollectObject>(actor))
 		{
 			collectObj->ItemData = ItemData;
-			collectObj->PaintedCount = 0;
-			collectObj->PaintComboData = PaintComboData;
-			collectObj->NeedsPaintedCount = PaintComboData.ComboColors.Num();
+			//collectObj->PaintedCount = 0;
+			//collectObj->PaintComboData = PaintComboData;
+			//collectObj->NeedsPaintedCount = PaintComboData.ComboColors.Num();
 			//collectObj->SetCollectObjectData(SeparatedItemName);
 			CollectObjects.Add(collectObj);
 		}
@@ -104,8 +104,8 @@ void APaintedCollectObject::PaintToObject_Implementation(ECombineColors colorTag
 
 	for (auto& collectObj : CollectObjects)
 	{
-		if(!collectObj->bIsPaintComplete)
-			collectObj->SetPaintedColorAndIntensity(colorTag, PaintedColor);
+		/*if(!collectObj->bIsPaintComplete)
+			collectObj->SetPaintedColorAndIntensity(colorTag, PaintedColor);*/
 	}
 }
 
@@ -133,8 +133,8 @@ void APaintedCollectObject::SetActiveCollectObject(bool active, int index)
 
 void APaintedCollectObject::SetChildCollectObjectTexture(UTexture2D* texture)
 {
-	for (auto& collectObj : CollectObjects)
-		collectObj->SetBaseTexture(texture);
+	/*for (auto& collectObj : CollectObjects)
+		collectObj->SetBaseTexture(texture);*/
 }
 
 void APaintedCollectObject::SetRecoveryColorComplete(ECombineColors color)
