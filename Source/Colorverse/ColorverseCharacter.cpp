@@ -424,8 +424,8 @@ void AColorverseCharacter::ChangeEquipPaint_Implementation(ECombineColors Combin
 
 	if(CombineColor != ECombineColors::Empty)
 	{
-		CombatSystem->SetColorBuff();
-		CombatSystem->SetElementBuff((int)CombineColor);
+		//CombatSystem->SetColorBuff();
+		//CombatSystem->SetElementBuff((int)CombineColor);
 	}
 }
 

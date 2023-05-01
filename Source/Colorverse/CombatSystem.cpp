@@ -22,7 +22,7 @@ void UCombatSystem::InitializeComponent()
 
 void UCombatSystem::SetColorBuff()
 {
-	if (GetCurrentPaintColorAmount() >= 5)
+	if (CurrentPaintColor != ECombineColors::Empty && GetCurrentPaintColorAmount() >= 5)
 	{
 		bIsOnColor = true;
 	}
