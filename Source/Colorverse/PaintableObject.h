@@ -11,9 +11,6 @@ UCLASS(Blueprintable)
 class COLORVERSE_API APaintableObject : public AActor
 {
 	GENERATED_BODY()
-	
-public:	
-	APaintableObject();
 
 protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
@@ -27,9 +24,6 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	UArrowComponent* Arrow;
-	
-	virtual void BeginPlay() override;
-	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Paintable Object")
 	int ID = 0;
 
@@ -69,10 +63,14 @@ protected:
 	UPROPERTY(BlueprintReadWrite, Category="Paintable Object")
 	UMaterialInstanceDynamic* PaintingMatInst;
 
+	virtual void BeginPlay() override;
+	
 	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent, Category="Paintable Object")
 	void CompletePainted();
 
 public:
+	APaintableObject();
+	
 	virtual void Tick(float DeltaTime) override;
 
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category="Paintable Object")
