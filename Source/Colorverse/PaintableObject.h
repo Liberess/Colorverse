@@ -7,7 +7,7 @@
 #include "Components/BoxComponent.h"
 #include "PaintableObject.generated.h"
 
-UCLASS()
+UCLASS(Blueprintable)
 class COLORVERSE_API APaintableObject : public AActor
 {
 	GENERATED_BODY()
@@ -16,8 +16,7 @@ public:
 	APaintableObject();
 
 protected:
-	
-	UPROPERTY(BlueprintReadOnly)
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	USceneComponent* DefaultRoot = nullptr;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
