@@ -26,9 +26,9 @@ public:
 	static const FName HasLineOfSightKey;
 
 private:
-	UPROPERTY()
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess))
 	class UBehaviorTree* BTAsset;
 
-	UPROPERTY()
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess))
 	class UBlackboardData* BBAsset;
 };

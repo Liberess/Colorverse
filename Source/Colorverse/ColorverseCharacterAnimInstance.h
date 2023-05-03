@@ -22,21 +22,21 @@ public:
 
 	virtual void NativeUpdateAnimation(float DeltaSeconds) override;
 
-private:
+protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Attack Montage", meta = (AllowPrivateAccess = "true"))
-	UAnimMontage* AttackMontage;
+	TArray <UAnimMontage*> AttackMontage;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Attack Montage", meta = (AllowPrivateAccess = "true"))
 	UAnimMontage* JumpAttackMontage;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Attack Montage", meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Damaged Montage", meta = (AllowPrivateAccess = "true"))
 	UAnimMontage* DamagedMontage;
 
 public:
-	void PlayAttackMontage();
+	void PlayAttackMontage(int32 skillNum = 0);
 	void PlayJumpAttackMontage();
 	void PlayDamagedMontage();
-	void JumpToAttackMontageSection(int32 NewSection);
+	void JumpToAttackMontageSection(int32 NewSection, int32 skillNum = 0);
 
 public:
 	UPROPERTY(BlueprintAssignable, BlueprintCallable)
