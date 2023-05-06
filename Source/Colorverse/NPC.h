@@ -1,0 +1,70 @@
+#pragma once
+
+#include "CoreMinimal.h"
+#include "DialogueWidget.h"
+#include "IDialogue.h"
+#include "InteractWidget.h"
+#include "Components/ArrowComponent.h"
+#include "Components/CapsuleComponent.h"
+#include "Components/SphereComponent.h"
+#include "GameFramework/Pawn.h"
+#include "NPC.generated.h"
+
+UCLASS(BlueprintType)
+class COLORVERSE_API ANPC : public APawn, public IIDialogue
+{
+	GENERATED_BODY()
+
+public:
+	ANPC();
+	virtual void Tick(float DeltaTime) override;
+	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+
+	virtual void OnTalk_Implementation() override;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="NPC|Dialogue")
+	FName NPCName;
+	
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="NPC|Dialogue")
+	FDialogue DialogueData;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category="NPC|Dialogue")
+	int TalkIndex = -1;
+
+protected:
+	virtual void BeginPlay() override;
+
+	UFUNCTION()
+	virtual void OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
+	
+	UFUNCTION()
+	virtual void OnOverlapEnd(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="NPC|Dialogue", meta=(AllowPrivateAccess))
+	UDataTable* DialogueDT;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="NPC|Dialogue", meta=(AllowPrivateAccess))
+	TSubclassOf<UDialogueWidget> DialogueWidgetRef;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="NPC|Dialogue", meta=(AllowPrivateAccess))
+	TObjectPtr<UDialogueWidget> DialogueWidget;
+	
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="NPC|Dialogue", meta=(AllowPrivateAccess))
+	TSubclassOf<UInteractWidget> InteractWidgetRef;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="NPC|Dialogue", meta=(AllowPrivateAccess))
+	TObjectPtr<UInteractWidget> InteractWidget;
+
+private:
+	UPROPERTY(Category="NPC|Component", VisibleDefaultsOnly, BlueprintReadOnly, meta=(AllowPrivateAccess = "true"))
+	TObjectPtr<USkeletalMeshComponent> Mesh;
+
+	UPROPERTY(Category="NPC|Component", VisibleDefaultsOnly, BlueprintReadOnly, meta=(AllowPrivateAccess = "true"))
+	TObjectPtr<UCapsuleComponent> CapsuleCol;
+
+	UPROPERTY(Category="NPC|Component", VisibleDefaultsOnly, BlueprintReadOnly, meta=(AllowPrivateAccess = "true"))
+	TObjectPtr<USphereComponent> TriggerZone;
+
+	UPROPERTY(Category="NPC|Component", VisibleDefaultsOnly, BlueprintReadOnly, meta=(AllowPrivateAccess = "true"))
+	TObjectPtr<UArrowComponent> ArrowComponent;
+};
