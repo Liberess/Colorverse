@@ -30,9 +30,9 @@ void AFruitTree::BeginPlay()
 	}
 }
 
-void AFruitTree::Interact_Implementation()
+void AFruitTree::OnInteract_Implementation()
 {
-	Super::Interact_Implementation();
+	Super::OnInteract_Implementation();
 
 	UInventoryManager* InvenMgr = GetWorld()->GetSubsystem<UInventoryManager>();
 	

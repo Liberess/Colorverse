@@ -1,5 +1,4 @@
 #include "NPC.h"
-
 #include "ColorverseCharacter.h"
 
 ANPC::ANPC()
@@ -102,7 +101,7 @@ void ANPC::OnOverlapEnd(UPrimitiveComponent* OverlappedComp, AActor* OtherActor,
 		{
 			if(DialogueWidget != nullptr)
 			{
-				TalkIndex = 0;
+				TalkIndex = -1;
 				DialogueWidget->RemoveFromParent();
 			}
 

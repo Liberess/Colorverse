@@ -52,19 +52,10 @@ public:
 
 	UFUNCTION()
 	virtual void OnOverlapEnd(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
-	
-	UFUNCTION(BlueprintCallable, Category=Interactable)
-	virtual void OnEnter() override;
 
-	UFUNCTION(BlueprintCallable, Category=Interactable)
-	virtual void OnInteract() override;
-
-	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category=Interactable)
-	void Interact();
-	virtual void Interact_Implementation();
-
-	UFUNCTION(BlueprintCallable, Category=Interactable)
-	virtual void OnExit() override;
+	virtual void OnEnter_Implementation() override;
+	virtual void OnInteract_Implementation() override;
+	virtual void OnExit_Implementation() override;
 
 	UFUNCTION(BlueprintGetter)
 	bool GetInteractable() const { return IsInteractable; }

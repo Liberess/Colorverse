@@ -41,7 +41,7 @@ protected:
 	virtual void OnOverlapEnd(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="NPC|Dialogue", meta=(AllowPrivateAccess))
-	UDataTable* DialogueDT;
+	TObjectPtr<UDataTable> DialogueDT;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="NPC|Dialogue", meta=(AllowPrivateAccess))
 	TSubclassOf<UDialogueWidget> DialogueWidgetRef;

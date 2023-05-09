@@ -24,7 +24,7 @@ protected:
 
 	virtual void BeginPlay() override;
 	virtual void Tick(float DeltaSeconds) override;
-	virtual void Interact_Implementation() override;
+	virtual void OnInteract_Implementation() override;
 
 public:
 	ACollectObject();

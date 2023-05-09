@@ -15,13 +15,13 @@ void AColorArea::BeginPlay()
 	Super::BeginPlay();
 }
 
-void AColorArea::OnEnter()
+void AColorArea::OnEnter_Implementation()
 {
 	//Super::OnEnter();
 	//Print(1.0f, "Enter");
 }
 
-void AColorArea::OnInteract()
+void AColorArea::OnInteract_Implementation()
 {
 	//Super::OnInteract();
 	UColorManager* ColorMgr = GetWorld()->GetSubsystem<UColorManager>();
@@ -34,7 +34,7 @@ void AColorArea::OnInteract()
 	}
 }
 
-void AColorArea::OnExit()
+void AColorArea::OnExit_Implementation()
 {
 	//Super::OnExit();
 	//Print(1.0f, "Exit");

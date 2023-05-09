@@ -5,7 +5,7 @@
 #include "UObject/Interface.h"
 #include "IDialogue.generated.h"
 
-USTRUCT(BlueprintType, BlueprintType)
+USTRUCT(BlueprintType)
 struct FDialogue : public FTableRowBase
 {
 	GENERATED_USTRUCT_BODY();

@@ -4,7 +4,7 @@
 #include "UObject/Interface.h"
 #include "IInteractable.generated.h"
 
-UINTERFACE(Blueprintable)
+UINTERFACE(BlueprintType)
 class UIInteractable : public UInterface
 {
 	GENERATED_BODY()
@@ -15,12 +15,12 @@ class COLORVERSE_API IIInteractable
 	GENERATED_BODY()
 
 public:
-	UFUNCTION()
-	virtual void OnEnter() = 0;
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category=Interactable)
+	void OnEnter();
 	
-	UFUNCTION()
-	virtual void OnInteract() = 0;
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category=Interactable)
+	void OnInteract();
 	
-	UFUNCTION()
-	virtual void OnExit() = 0;
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category=Interactable)
+	void OnExit();
 };

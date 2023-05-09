@@ -37,7 +37,7 @@ public:
 	AFruitTree();
 
 	virtual void BeginPlay() override;
-	virtual void Interact_Implementation() override;
+	virtual void OnInteract_Implementation() override;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Fruit Tree")
 	float FruitSpawnDelayTime = 5.0f;
