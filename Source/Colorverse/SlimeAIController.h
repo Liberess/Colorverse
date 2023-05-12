@@ -16,6 +16,7 @@ class COLORVERSE_API ASlimeAIController : public AAIController
 	
 public:
 	ASlimeAIController();
+
 	virtual void OnPossess(APawn* InPawn) override;
 
 	void RunAI();
@@ -24,6 +25,16 @@ public:
 	static const FName HomePosKey;
 	static const FName TargetKey;
 	static const FName HasLineOfSightKey;
+
+	static const FName IsNearRangeKey;
+	static const FName IsMiddleRangeKey;
+	static const FName IsFarRangeKey;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Skill")
+	TArray <float> Ranges;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Skill")
+	int SkillNum;
 
 private:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess))
