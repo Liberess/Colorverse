@@ -4,7 +4,6 @@
 #include "Enums.h"
 #include "Components/ArrowComponent.h"
 #include "GameFramework/Actor.h"
-#include "Components/BoxComponent.h"
 #include "PaintableObject.generated.h"
 
 UCLASS(Blueprintable)
@@ -16,9 +15,6 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	USceneComponent* DefaultRoot = nullptr;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
-	UBoxComponent* BoxCol;
-	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	UStaticMeshComponent* StaticMesh;
 
@@ -45,7 +41,7 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category="Paintable Object")
 	bool bIsInteractable = true;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Paintable Object")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Paintable Object")
 	FLinearColor TargetColor;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Paintable Object")
