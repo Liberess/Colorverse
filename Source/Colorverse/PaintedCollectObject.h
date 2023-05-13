@@ -56,7 +56,7 @@ public:
 	APaintedCollectObject();
 
 	virtual void BeginPlay() override;
-	virtual void Interact_Implementation() override;
+	virtual void OnInteract_Implementation() override;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Painted Collect Object | Child", meta=(AllowPrivateAccess))
 	int ItemID = 0;

@@ -16,9 +16,8 @@ public:
 protected:
 	virtual void BeginPlay() override;
 
-public:	
-	UFUNCTION(BlueprintCallable, Category = Interactable)
-	virtual void ApplyDamage(FDamageMessage dmgMsg) override;
+public:
+	virtual void ApplyDamage_Implementation(FDamageMessage dmgMsg) override;
 
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Character HP")

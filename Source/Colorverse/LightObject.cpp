@@ -14,12 +14,12 @@ void ALightObject::BeginPlay()
 	IsInteractable = true;
 }
 
-void ALightObject::OnEnter()
+void ALightObject::OnEnter_Implementation()
 {
 	//Print(1.0f, TEXT("LightObject::OnEnter"));
 }
 
-void ALightObject::OnInteract()
+void ALightObject::OnInteract_Implementation()
 {
 	//Super::OnInteract();
 
@@ -29,7 +29,7 @@ void ALightObject::OnInteract()
 	Destroy();
 }
 
-void ALightObject::OnExit()
+void ALightObject::OnExit_Implementation()
 {
 	//Print(1.0f, TEXT("LightObject::OnExit"));
 }
