@@ -256,6 +256,9 @@ void AColorverseCharacter::Jump()
 	if (bIsAttacked)
 		return;
 
+	if (bIsRolling)
+		return;
+
 	if (!CombatSystem->bIsCanInput)
 		return;
 
