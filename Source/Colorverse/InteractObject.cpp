@@ -38,7 +38,7 @@ void AInteractObject::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor
 	{
 		static AColorverseCharacter* Character = Cast<AColorverseCharacter>(OtherActor);
 		if(IsValid(Character))
-			OnEnter();
+			OnEnter_Implementation();
 	}
 }
 
@@ -48,29 +48,23 @@ void AInteractObject::OnOverlapEnd(UPrimitiveComponent* OverlappedComp, AActor* 
 	{
 		static AColorverseCharacter* Character = Cast<AColorverseCharacter>(OtherActor);
 		if(IsValid(Character))
-			OnExit();
+			OnExit_Implementation();
 	}
 }
 
-void AInteractObject::OnEnter()
+void AInteractObject::OnEnter_Implementation()
 {
-	//Print(1.0f, TEXT("InteractObject::OnEnter"));
+	IIInteractable::OnEnter_Implementation();
 }
 
-void AInteractObject::OnInteract()
+void AInteractObject::OnInteract_Implementation()
 {
-	Interact();
+	IIInteractable::OnInteract_Implementation();
 }
 
-void AInteractObject::Interact_Implementation()
+void AInteractObject::OnExit_Implementation()
 {
-	
-	//Print(1.0f, TEXT("InteractObject::Interact"));
-}
-
-void AInteractObject::OnExit()
-{
-	//Print(1.0f, TEXT("InteractObject::OnExit"));
+	IIInteractable::OnExit_Implementation();
 }
 
 void AInteractObject::AddColorAreaEnabledAction()

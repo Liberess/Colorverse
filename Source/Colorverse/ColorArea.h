@@ -20,9 +20,9 @@ protected:
 	
 public:
 	AColorArea();
-	virtual void OnEnter() override;
-	virtual void OnInteract() override;
-	virtual void OnExit() override;
+	virtual void OnEnter_Implementation() override;
+	virtual void OnInteract_Implementation() override;
+	virtual void OnExit_Implementation() override;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=Interactable)
 	EStageName StageName;

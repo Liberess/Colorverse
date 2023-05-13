@@ -10,11 +10,6 @@ APaintableObject::APaintableObject()
 
 	StaticMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Static Mesh"));
 	StaticMesh->SetupAttachment(DefaultRoot);
-	
-	BoxCol = CreateDefaultSubobject<UBoxComponent>(TEXT("Box Collision"));
-	BoxCol->InitBoxExtent(FVector(100.0f, 100.0f, 100.0f));
-	BoxCol->SetCollisionProfileName(TEXT("Trigger"));
-	BoxCol->SetupAttachment(DefaultRoot);
 
 	Arrow = CreateDefaultSubobject<UArrowComponent>(TEXT("Arrow"));
 	Arrow->SetupAttachment(DefaultRoot);
