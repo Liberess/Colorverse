@@ -20,6 +20,8 @@ public:
 	virtual void OnPossess(APawn* InPawn) override;
 
 	void RunAI();
+
+	UFUNCTION(BlueprintCallable)
 	void StopAI();
 
 	static const FName HomePosKey;
