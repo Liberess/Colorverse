@@ -4,6 +4,7 @@
 #include "DialogueWidget.h"
 #include "IDialogue.h"
 #include "InteractWidget.h"
+#include "Camera/CameraComponent.h"
 #include "Components/ArrowComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "Components/SphereComponent.h"
@@ -20,7 +21,8 @@ public:
 	virtual void Tick(float DeltaTime) override;
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
-	virtual void OnTalk_Implementation() override;
+	virtual void OnBeginTalk_Implementation() override;
+	virtual void OnEndTalk_Implementation() override;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="NPC|Dialogue")
 	FName NPCName;
@@ -31,6 +33,12 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category="NPC|Dialogue")
 	int TalkIndex = -1;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="NPC|Dialogue")
+	float SmoothBlendTime = 0.75f;
+	
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category="NPC|Dialogue")
+	bool bIsTalking = false;
+
 protected:
 	virtual void BeginPlay() override;
 
@@ -39,6 +47,12 @@ protected:
 	
 	UFUNCTION()
 	virtual void OnOverlapEnd(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
+
+	UFUNCTION(BlueprintCallable)
+	void SetActiveInteractUI(bool IsActive);
+	
+	UFUNCTION(BlueprintCallable)
+	void SetNPCCamera(bool IsNPCCam);
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="NPC|Dialogue", meta=(AllowPrivateAccess))
 	TObjectPtr<UDataTable> DialogueDT;
@@ -66,5 +80,14 @@ private:
 	TObjectPtr<USphereComponent> TriggerZone;
 
 	UPROPERTY(Category="NPC|Component", VisibleDefaultsOnly, BlueprintReadOnly, meta=(AllowPrivateAccess = "true"))
-	TObjectPtr<UArrowComponent> ArrowComponent;
+	TObjectPtr<UArrowComponent> Arrow;
+
+	UPROPERTY(Category="NPC|Component", EditAnywhere, BlueprintReadOnly, meta=(AllowPrivateAccess = "true"))
+	TObjectPtr<UCameraComponent> Camera;
+
+	UPROPERTY(Category="NPC|Component", VisibleDefaultsOnly, BlueprintReadOnly, meta=(AllowPrivateAccess = "true"))
+	TObjectPtr<AActor> PlayerCamera;
+
+	UPROPERTY(Category="NPC|Component", VisibleDefaultsOnly, BlueprintReadOnly, meta=(AllowPrivateAccess = "true"))
+	TObjectPtr<APlayerController> PlayerController;
 };

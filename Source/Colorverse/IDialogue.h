@@ -28,5 +28,8 @@ class COLORVERSE_API IIDialogue
 
 public:
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category=Dialogue)
-	void OnTalk();
+	void OnBeginTalk();
+
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category=Dialogue)
+	void OnEndTalk();
 };
