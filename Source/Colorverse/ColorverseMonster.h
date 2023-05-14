@@ -17,7 +17,7 @@ class COLORVERSE_API AColorverseMonster : public AColorverseCharacter
 public:
 	AColorverseMonster();
 
-private:
+protected:
 	bool active;
 
 public:

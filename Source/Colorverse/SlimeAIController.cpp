@@ -10,6 +10,10 @@ const FName ASlimeAIController::HomePosKey(TEXT("HomePos"));
 const FName ASlimeAIController::TargetKey(TEXT("Target"));
 const FName ASlimeAIController::HasLineOfSightKey(TEXT("HasLineOfSight"));
 
+const FName ASlimeAIController::IsNearRangeKey(TEXT("IsNearRange"));
+const FName ASlimeAIController::IsMiddleRangeKey(TEXT("IsMiddleRange"));
+const FName ASlimeAIController::IsFarRangeKey(TEXT("IsFarRange"));
+
 ASlimeAIController::ASlimeAIController()
 {
 	static ConstructorHelpers::FObjectFinder<UBlackboardData> BBObject(TEXT("/Game/Blueprints/AI/BB_Slime"));

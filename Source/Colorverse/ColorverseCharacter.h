@@ -77,7 +77,7 @@ public:
 	virtual void StopJumping() override;
 
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
-	void Attack();
+	void Attack(int skillNum = 0);
 
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
 	void SetDisabledAttack();

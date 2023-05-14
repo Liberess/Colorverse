@@ -18,7 +18,8 @@ EBTNodeResult::Type UBTTask_Attack::ExecuteTask(UBehaviorTreeComponent& OwnerCom
 	if (nullptr == ColorverseCharacter)
 		return EBTNodeResult::Failed;
 
-	ColorverseCharacter->Attack();
+	ASlimeAIController* controller = Cast<ASlimeAIController>(OwnerComp.GetAIOwner());
+	ColorverseCharacter->Attack(controller->SkillNum);
 
 	return EBTNodeResult::InProgress;
 }

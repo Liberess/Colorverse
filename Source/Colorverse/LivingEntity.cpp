@@ -14,8 +14,6 @@ void ULivingEntity::BeginPlay()
 
 void ULivingEntity::ApplyDamage_Implementation(FDamageMessage dmgMsg)
 {
-	IIDamageable::ApplyDamage_Implementation(dmgMsg);
-
 	CurrentHealth -= dmgMsg.damageAmount;
 
 	if (CurrentHealth < 0)
