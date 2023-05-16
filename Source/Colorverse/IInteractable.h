@@ -4,7 +4,7 @@
 #include "UObject/Interface.h"
 #include "IInteractable.generated.h"
 
-UINTERFACE(BlueprintType)
+UINTERFACE(MinimalAPI)
 class UIInteractable : public UInterface
 {
 	GENERATED_BODY()

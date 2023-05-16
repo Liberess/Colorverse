@@ -35,6 +35,8 @@ void ACollectObject::Tick(float DeltaSeconds)
 
 void ACollectObject::OnInteract_Implementation()
 {
+	IIInteractable::OnInteract_Implementation();
+	
 	//Super::OnInteract_Implementation();
 	//Super::Interact_Implementation();
 	if(ItemData.bIsValid)

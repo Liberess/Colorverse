@@ -444,8 +444,8 @@ void AColorverseCharacter::Interact_Implementation()
 	if (!bIsInteract || !IsValid(InteractObject))
 		return;
 
-	InteractObject->OnInteract();
-	
+	InteractObject->Execute_OnInteract(InteractObject);
+
 	if (bIsWatchingInteractWidget && InteractWidget != nullptr)
 	{
 		bIsWatchingInteractWidget = false;
