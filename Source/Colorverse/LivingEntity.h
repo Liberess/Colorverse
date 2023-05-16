@@ -6,7 +6,7 @@
 #include "LivingEntity.generated.h"
 
 UCLASS(ClassGroup = (Custom), meta = (BlueprintSpawnableComponent))
-class COLORVERSE_API ULivingEntity : public UActorComponent, public IIDamageable
+class COLORVERSE_API ULivingEntity : public UActorComponent
 {
 	GENERATED_BODY()
 
@@ -16,9 +16,9 @@ public:
 protected:
 	virtual void BeginPlay() override;
 
-public:	
-	UFUNCTION(BlueprintCallable, Category = Interactable)
-	virtual void ApplyDamage(FDamageMessage dmgMsg) override;
+public:
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Damageable")
+	void ApplyDamage(FDamageMessage dmgMsg);
 
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Character HP")

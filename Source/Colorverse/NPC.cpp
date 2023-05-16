@@ -1,0 +1,204 @@
+#include "NPC.h"
+#include "ColorverseCharacter.h"
+#include "Kismet/GameplayStatics.h"
+
+ANPC::ANPC()
+{
+	PrimaryActorTick.bCanEverTick = true;
+
+	CapsuleCol = CreateDefaultSubobject<UCapsuleComponent>(TEXT("Capsule Col"));
+	if(CapsuleCol)
+	{
+		CapsuleCol->InitCapsuleSize(34.0f, 88.0f);
+		CapsuleCol->SetCollisionProfileName(UCollisionProfile::Pawn_ProfileName);
+		CapsuleCol->CanCharacterStepUpOn = ECB_No;
+		CapsuleCol->SetShouldUpdatePhysicsVolume(true);
+		CapsuleCol->SetCanEverAffectNavigation(false);
+		CapsuleCol->bDynamicObstacle = true;
+		SetRootComponent(CapsuleCol);
+	}
+
+	TriggerZone = CreateDefaultSubobject<USphereComponent>(TEXT("Trigger Zone"));
+	if(TriggerZone)
+	{
+		TriggerZone->InitSphereRadius(120.0f);
+		static FName TriggerZoneProfileName(TEXT("OverlapAllDynamic"));
+		TriggerZone->SetCollisionProfileName(TriggerZoneProfileName);
+		TriggerZone->SetCanEverAffectNavigation(false);
+		TriggerZone->bDynamicObstacle = false;
+		TriggerZone->SetupAttachment(CapsuleCol);
+		TriggerZone->OnComponentBeginOverlap.AddDynamic(this, &ANPC::OnOverlapBegin);
+		TriggerZone->OnComponentEndOverlap.AddDynamic(this, &ANPC::OnOverlapEnd);
+	}
+
+	Arrow = CreateEditorOnlyDefaultSubobject<UArrowComponent>(TEXT("Arrow"));
+	if (Arrow)
+	{
+		Arrow->ArrowColor = FColor(150, 200, 255);
+		Arrow->bTreatAsASprite = true;
+		Arrow->SetupAttachment(CapsuleCol);
+		Arrow->bIsScreenSizeScaled = true;
+		Arrow->SetSimulatePhysics(false);
+	}
+
+	Mesh = CreateOptionalDefaultSubobject<USkeletalMeshComponent>(TEXT("NPC Mesh"));
+	if (Mesh)
+	{
+		Mesh->AlwaysLoadOnClient = true;
+		Mesh->AlwaysLoadOnServer = true;
+		Mesh->VisibilityBasedAnimTickOption = EVisibilityBasedAnimTickOption::AlwaysTickPose;
+		Mesh->bCastDynamicShadow = true;
+		Mesh->bAffectDynamicIndirectLighting = true;
+		Mesh->PrimaryComponentTick.TickGroup = TG_PrePhysics;
+		Mesh->SetupAttachment(CapsuleCol);
+		static FName MeshCollisionProfileName(TEXT("CharacterMesh"));
+		Mesh->SetCollisionProfileName(MeshCollisionProfileName);
+		Mesh->SetGenerateOverlapEvents(false);
+		Mesh->SetCanEverAffectNavigation(false);
+	}
+
+	Camera = CreateDefaultSubobject<UCameraComponent>(TEXT("Camera"));
+	if(Camera)
+		Camera->SetupAttachment(CapsuleCol);
+	
+	static ConstructorHelpers::FObjectFinder<UDataTable> DataTable(TEXT("/Game/DataTables/DT_Dialogue"));
+	if (DataTable.Succeeded())
+		DialogueDT = DataTable.Object;
+}
+
+void ANPC::BeginPlay()
+{
+	Super::BeginPlay();
+
+	if(IsValid(DialogueDT))
+		DialogueData = *(DialogueDT->FindRow<FDialogue>(NPCName, ""));
+
+	const FSoftClassPath DialogueRef(TEXT("/Game/UI/BP_Dialogue.BP_Dialogue_C"));
+	DialogueWidgetRef = DialogueRef.TryLoadClass<UDialogueWidget>();
+
+	const FSoftClassPath InteractRef(TEXT("/Game/UI/BP_InteractWidget.BP_InteractWidget_C"));
+	InteractWidgetRef = InteractRef.TryLoadClass<UInteractWidget>();
+
+	PlayerController = UGameplayStatics::GetPlayerController(this, 0);
+	PlayerCamera = PlayerController->GetViewTarget();
+}
+
+void ANPC::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp,
+	int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+{
+	if (OtherActor && OtherActor != this)
+	{
+		SetActiveInteractUI(true);
+	}
+}
+
+void ANPC::OnOverlapEnd(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp,
+                        int32 OtherBodyIndex)
+{
+	if (OtherActor && OtherActor != this)
+	{
+		static AColorverseCharacter* Character = Cast<AColorverseCharacter>(OtherActor);
+		if(IsValid(Character))
+		{
+			OnEndTalk_Implementation();
+		}
+	}
+}
+
+void ANPC::Tick(float DeltaTime)
+{
+	Super::Tick(DeltaTime);
+
+	/*if(bIsTalking)
+	{
+		FVector PlayerLocation = UGameplayStatics::GetPlayerCharacter(GetWorld(), 0)->GetActorLocation();
+		FRotator TargetRotation = UKismetMathLibrary::FindLookAtRotation(this->GetActorLocation(), PlayerLocation);
+		FRotator NewRotation = FMath::RInterpTo(this->GetActorRotation(), TargetRotation, DeltaTime, 1.0f);
+		SetActorRotation(FRotator(0.0f, 0.0f, NewRotation.Yaw));
+	}*/
+}
+
+void ANPC::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
+{
+	Super::SetupPlayerInputComponent(PlayerInputComponent);
+}
+
+void ANPC::OnBeginTalk_Implementation()
+{
+	IIDialogue::OnBeginTalk_Implementation();
+
+	++TalkIndex;
+
+	if(TalkIndex < DialogueData.Dialogues.Num())
+	{
+		if(DialogueWidget == nullptr)
+			DialogueWidget = Cast<UDialogueWidget>(CreateWidget(GetWorld(), DialogueWidgetRef));
+		
+		DialogueWidget->AddToViewport();
+		DialogueWidget->SetDialogueText(
+			FText::FromName(NPCName),
+			DialogueData.Dialogues[TalkIndex]);
+
+		SetActiveInteractUI(false);
+
+		bIsTalking = true;
+		SetNPCCamera(true);
+	}
+	else
+	{
+		OnEndTalk_Implementation();
+	}
+}
+
+void ANPC::OnEndTalk_Implementation()
+{
+	IIDialogue::OnEndTalk_Implementation();
+
+	TalkIndex = -1;
+
+	if(DialogueWidget != nullptr)
+		DialogueWidget->RemoveFromParent();
+
+	if(InteractWidget != nullptr)
+		InteractWidget->RemoveFromParent();
+
+	bIsTalking = false;
+	SetNPCCamera(false);
+	SetActiveInteractUI(false);
+}
+
+void ANPC::SetActiveInteractUI(bool IsActive)
+{
+	if (InteractWidgetRef != nullptr)
+	{
+		if(InteractWidget == nullptr)
+			InteractWidget = Cast<UInteractWidget>(CreateWidget(GetWorld(), InteractWidgetRef));
+
+		if(IsActive)
+		{
+			InteractWidget->SetInteractText( FText::FromName(FName(TEXT("대화하기"))));
+			InteractWidget->AddToViewport();
+		}
+		else
+		{
+			InteractWidget->RemoveFromParent();
+		}
+	}
+}
+
+void ANPC::SetNPCCamera(bool IsNPCCam)
+{
+	if (IsValid(PlayerController) && IsValid(PlayerCamera))
+	{
+		if(IsNPCCam)
+		{
+			if (PlayerController->GetViewTarget() == PlayerCamera)
+				PlayerController->SetViewTargetWithBlend(Camera->GetOwner(), SmoothBlendTime);
+		}
+		else
+		{
+			if (PlayerController->GetViewTarget() == Camera->GetOwner())
+				PlayerController->SetViewTargetWithBlend(PlayerCamera, SmoothBlendTime);
+		}
+	}
+}

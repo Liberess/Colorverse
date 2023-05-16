@@ -4,7 +4,6 @@
 #include "Enums.h"
 #include "Components/ArrowComponent.h"
 #include "GameFramework/Actor.h"
-#include "Components/BoxComponent.h"
 #include "PaintableObject.generated.h"
 
 UCLASS(Blueprintable)
@@ -17,15 +16,15 @@ protected:
 	USceneComponent* DefaultRoot = nullptr;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
-	UBoxComponent* BoxCol;
-	
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	UStaticMeshComponent* StaticMesh;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	UArrowComponent* Arrow;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Paintable Object")
 	int ID = 0;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Paintable Object")
+	EPuzzleTag PuzzleTag = EPuzzleTag::Puzzle_Red;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Paintable Object")
 	ECombineColors TargetColorTag = ECombineColors::Empty;
@@ -42,10 +41,10 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category="Paintable Object")
 	bool bIsPaintedComplete = false;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category="Paintable Object")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Paintable Object")
 	bool bIsInteractable = true;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Paintable Object")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Paintable Object")
 	FLinearColor TargetColor;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Paintable Object")

@@ -17,9 +17,9 @@ public:
 	ASanctum();
 	virtual void Tick(float DeltaSeconds) override;
 	
-	virtual void OnEnter() override;
-	virtual void Interact_Implementation() override;
-	virtual void OnExit() override;
+	virtual void OnEnter_Implementation() override;
+	virtual void OnInteract_Implementation() override;
+	virtual void OnExit_Implementation() override;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	bool bIsRecoveryComplete = false;
@@ -32,6 +32,9 @@ public:
 	
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, meta=(AllowPrivateAccess))
 	int StanctumID = 0;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess))
+	EPuzzleTag PuzzleTag = EPuzzleTag::Puzzle_Red;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta=(AllowPrivateAccess))
 	ECombineColors StatueColor;

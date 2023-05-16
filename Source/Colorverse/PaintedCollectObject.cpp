@@ -58,9 +58,9 @@ void APaintedCollectObject::BeginPlay()
 	}
 }
 
-void APaintedCollectObject::Interact_Implementation()
+void APaintedCollectObject::OnInteract_Implementation()
 {
-	Super::Interact_Implementation();
+	Super::OnInteract_Implementation();
 
 	if (IsColorActive)
 	{

@@ -79,7 +79,7 @@ void AColorverseCharacter::SetupPlayerInputComponent(class UInputComponent* Play
 	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &AColorverseCharacter::Jump);
 	PlayerInputComponent->BindAction("Jump", IE_Released, this, &AColorverseCharacter::StopJumping);
 
-	PlayerInputComponent->BindAction("Attack", IE_Pressed, this, &AColorverseCharacter::Attack);
+	PlayerInputComponent->BindAction<TDelegate<void(int32)>>("Attack", IE_Pressed, this, &AColorverseCharacter::Attack, 0);
 	PlayerInputComponent->BindAction("Roll", IE_Pressed, this, &AColorverseCharacter::Roll);
 
 	PlayerInputComponent->BindAxis("MoveForward", this, &AColorverseCharacter::MoveForward);
@@ -252,8 +252,14 @@ void AColorverseCharacter::Jump()
 {
 	if (LivingEntity->GetDead())
 		return;
+	
+	if (bIsRolling)
+		return;
 
 	if (bIsAttacked)
+		return;
+
+	if (bIsRolling)
 		return;
 
 	if (!CombatSystem->bIsCanInput)
@@ -268,7 +274,7 @@ void AColorverseCharacter::StopJumping()
 }
 #pragma endregion Movement
 
-void AColorverseCharacter::Attack_Implementation()
+void AColorverseCharacter::Attack_Implementation(int skillNum)
 {
 	if (LivingEntity->GetDead())
 		return;
@@ -285,7 +291,6 @@ void AColorverseCharacter::Attack_Implementation()
 		bIsAttacking = true;
 	}
 		
-
 	if (bIsAttacking)
 	{
 		if (CombatSystem->bIsCanInput)
@@ -294,14 +299,14 @@ void AColorverseCharacter::Attack_Implementation()
 
 			if (CombatSystem->bCanNextCombo)
 			{
-				ColorverseAnim->JumpToAttackMontageSection(CombatSystem->CurrentCombo);
+				ColorverseAnim->JumpToAttackMontageSection(CombatSystem->CurrentCombo, skillNum);
 			}
 		}
 	}
 	else if(!bIsAttacking)
 	{
 		CombatSystem->AttackStartComboState();
-		ColorverseAnim->PlayAttackMontage();
+		ColorverseAnim->PlayAttackMontage(skillNum);
 		bIsAttacking = true;
 	}
 }

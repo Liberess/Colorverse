@@ -17,54 +17,46 @@ void UBTService_Detect::TickNode(UBehaviorTreeComponent& OwnerComp, uint8* NodeM
 {
 	Super::TickNode(OwnerComp, NodeMemory, DeltaSeconds);
 
-	APawn* ControllingPawn = OwnerComp.GetAIOwner()->GetPawn();
-	if (nullptr == ControllingPawn) return;
+	AColorverseCharacter* ColorverseCharacter = Cast<AColorverseCharacter>(OwnerComp.GetBlackboardComponent()->GetValueAsObject(ASlimeAIController::TargetKey));
+	ASlimeAIController* controller = Cast<ASlimeAIController>(OwnerComp.GetAIOwner());
+	AColorverseCharacter* owner = Cast<AColorverseCharacter>(controller->GetPawn());
 
-	UWorld* World = ControllingPawn->GetWorld();
-	if (nullptr == World) return;
+	if (owner->GetIsAttacking())
+		return;
 
-	FVector Center = ControllingPawn->GetActorLocation();
-	float DetectRadius = 800.0f;
-
-	// 600의 반지름을 가진 구체를 만들어서 오브젝트를 감지한다.
-	TArray<FOverlapResult> OverlapResults;
-	FCollisionQueryParams CollisionQueryParam(NAME_None, false, ControllingPawn);
-	bool bResult = World->OverlapMultiByChannel(
-		OverlapResults,
-		Center,
-		FQuat::Identity,
-		ECollisionChannel::ECC_GameTraceChannel8,
-		FCollisionShape::MakeSphere(DetectRadius),
-		CollisionQueryParam
-	);
-
-	// 오브젝트가 감지가 되면, 그 오브젝트가 Character인지 검사한다.
-	if (bResult)
+	if (IsValid(ColorverseCharacter))
 	{
-		for (FOverlapResult OverlapResult : OverlapResults)
-		{
-			AColorverseCharacter* ColorverseCharacter = Cast<AColorverseCharacter>(OverlapResult.GetActor());
-			if (ColorverseCharacter && ColorverseCharacter->GetController()->IsPlayerController())
-			{
-				// Character면, 블랙보드에 저장한다.
-				OwnerComp.GetBlackboardComponent()->SetValueAsObject(ASlimeAIController::TargetKey, ColorverseCharacter);
+		float distance = owner->GetDistanceTo(ColorverseCharacter);
 
-				// 디버깅 용.
-				DrawDebugSphere(World, Center, DetectRadius, 16, FColor::Green, false, 0.2f);
-				DrawDebugPoint(World, ColorverseCharacter->GetActorLocation(), 10.0f, FColor::Blue, false, 0.2f);
-				DrawDebugLine(World, ControllingPawn->GetActorLocation(), ColorverseCharacter->GetActorLocation(), FColor::Blue, false, 0.2f);
-				return;
-			}
-			else
-			{
-				OwnerComp.GetBlackboardComponent()->SetValueAsObject(ASlimeAIController::TargetKey, nullptr);
-			}
+		if (distance > controller->Ranges[2])
+		{
+			OwnerComp.GetBlackboardComponent()->SetValueAsBool(ASlimeAIController::IsFarRangeKey, true);
+			OwnerComp.GetBlackboardComponent()->SetValueAsBool(ASlimeAIController::IsMiddleRangeKey, false);
+			OwnerComp.GetBlackboardComponent()->SetValueAsBool(ASlimeAIController::IsNearRangeKey, false);
+
+			controller->SkillNum = 0;
+		}
+		else if (distance > controller->Ranges[1])
+		{
+			OwnerComp.GetBlackboardComponent()->SetValueAsBool(ASlimeAIController::IsFarRangeKey, false);
+			OwnerComp.GetBlackboardComponent()->SetValueAsBool(ASlimeAIController::IsMiddleRangeKey, true);
+			OwnerComp.GetBlackboardComponent()->SetValueAsBool(ASlimeAIController::IsNearRangeKey, false);
+
+			controller->SkillNum = 1;
+		}
+		else if (distance > controller->Ranges[0])
+		{
+			OwnerComp.GetBlackboardComponent()->SetValueAsBool(ASlimeAIController::IsFarRangeKey, false);
+			OwnerComp.GetBlackboardComponent()->SetValueAsBool(ASlimeAIController::IsMiddleRangeKey, false);
+			OwnerComp.GetBlackboardComponent()->SetValueAsBool(ASlimeAIController::IsNearRangeKey, true);
+
+			controller->SkillNum = 2;
+		}
+		else
+		{
+			OwnerComp.GetBlackboardComponent()->SetValueAsBool(ASlimeAIController::IsFarRangeKey, false);
+			OwnerComp.GetBlackboardComponent()->SetValueAsBool(ASlimeAIController::IsMiddleRangeKey, false);
+			OwnerComp.GetBlackboardComponent()->SetValueAsBool(ASlimeAIController::IsNearRangeKey, false);
 		}
 	}
-	else
-	{
-		OwnerComp.GetBlackboardComponent()->SetValueAsObject(ASlimeAIController::TargetKey, nullptr);
-	}
-
-	DrawDebugSphere(World, Center, DetectRadius, 16, FColor::Red, false, 0.2f);
 }

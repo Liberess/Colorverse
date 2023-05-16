@@ -54,6 +54,15 @@ enum class EPaintComboColors : uint8
 	Purple UMETA(DisplayName = "Purple")
 };
 
+UENUM(BlueprintType)
+enum class EPuzzleTag : uint8
+{
+	Puzzle_Red UMETA(DisplayName = "Puzzle_Red"),
+	Puzzle_Yellow UMETA(DisplayName = "Puzzle_Yellow"),
+	Puzzle_Blue UMETA(DisplayName = "Puzzle_Blue"),
+	Puzzle_Last UMETA(DisplayName = "Puzzle_Last")
+};
+
 class COLORVERSE_API Enums
 {
 	

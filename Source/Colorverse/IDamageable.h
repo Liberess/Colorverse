@@ -1,7 +1,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "UObject/Interface.h"
+#include "GameFramework/Actor.h"
 #include "IDamageable.generated.h"
 
 USTRUCT(BlueprintType)
@@ -21,19 +21,4 @@ public:
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Damage Message")
 	FVector hitNormal;
-};
-
-UINTERFACE(MinimalAPI)
-class UIDamageable : public UInterface
-{
-	GENERATED_BODY()
-};
-
-class COLORVERSE_API IIDamageable
-{
-	GENERATED_BODY()
-
-public:
-	UFUNCTION(Category = "Damageable")
-	virtual void ApplyDamage(FDamageMessage dmgMsg) = 0;
 };

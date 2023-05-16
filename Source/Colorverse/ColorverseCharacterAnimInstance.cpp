@@ -11,7 +11,7 @@ UColorverseCharacterAnimInstance::UColorverseCharacterAnimInstance()
 	static ConstructorHelpers::FObjectFinder<UAnimMontage> Attack_MONTAGE(TEXT("/Game/Animations/Anim_Warrior_Attack_Montage"));
 	if (Attack_MONTAGE.Succeeded())
 	{
-		AttackMontage = Attack_MONTAGE.Object;
+		AttackMontage.Add(Attack_MONTAGE.Object);
 	}
 }
 
@@ -20,11 +20,11 @@ void UColorverseCharacterAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 
 }
 
-void UColorverseCharacterAnimInstance::PlayAttackMontage()
+void UColorverseCharacterAnimInstance::PlayAttackMontage(int32 skillNum)
 {
-	if (!Montage_IsPlaying(AttackMontage))
+	if (!Montage_IsPlaying(AttackMontage[skillNum]))
 	{
-		Montage_Play(AttackMontage, 1.0f);
+		Montage_Play(AttackMontage[skillNum], 1.0f);
 	}
 }
 
@@ -44,9 +44,9 @@ void UColorverseCharacterAnimInstance::PlayDamagedMontage()
 	}
 }
 
-void UColorverseCharacterAnimInstance::JumpToAttackMontageSection(int32 NewSection)
+void UColorverseCharacterAnimInstance::JumpToAttackMontageSection(int32 NewSection, int32 skillNum)
 {
-	Montage_JumpToSection(GetAttackMontageSectionName(NewSection), AttackMontage);
+	Montage_JumpToSection(GetAttackMontageSectionName(NewSection), AttackMontage[skillNum]);
 }
 
 void UColorverseCharacterAnimInstance::AnimNotify_NextAttackCheck()

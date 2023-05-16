@@ -36,12 +36,12 @@ void ASanctum::BeginPlay()
 	CompleteColor = Character->GetCombatSystem()->GetCurrentPaintLinearColorByEnum(StatueColor);
 }
 
-void ASanctum::OnEnter()
+void ASanctum::OnEnter_Implementation()
 {
 	
 }
 
-void ASanctum::Interact_Implementation()
+void ASanctum::OnInteract_Implementation()
 {
 	if(!bIsRecoveryComplete || bIsUnlock)
 		return;
@@ -51,7 +51,7 @@ void ASanctum::Interact_Implementation()
 	ActiveUnlockEffect();
 }
 
-void ASanctum::OnExit()
+void ASanctum::OnExit_Implementation()
 {
 	//Super::OnExit();
 }
