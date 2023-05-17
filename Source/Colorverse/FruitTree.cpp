@@ -21,9 +21,7 @@ void AFruitTree::BeginPlay()
 
 	if(IsValid(ItemDT))
 	{
-		FString RowStr = "Item_";
-		RowStr.Append(FString::FromInt(ItemID));
-		ItemData = *(ItemDT->FindRow<FItem>(FName(*RowStr), ""));
+		ItemData = *(ItemDT->FindRow<FItem>(ItemName, ""));
 		ItemData.Amount = FruitMeshes.Num();
 		WoodStickData = *(ItemDT->FindRow<FItem>(FName(TEXT("WoodStick")), ""));
 		InteractWidgetDisplayTxt = ItemData.Name.ToString();
@@ -32,13 +30,13 @@ void AFruitTree::BeginPlay()
 
 void AFruitTree::OnInteract_Implementation()
 {
-	Super::OnInteract_Implementation();
+	IIInteractable::OnInteract_Implementation();
 
 	UInventoryManager* InvenMgr = GetWorld()->GetSubsystem<UInventoryManager>();
 	
 	//흔들리는 Animation 출력
 
-	//열려있는 사과 획득
+	//열려있는 열매 획득
 	if(CanAcquireFruit)
 	{
 		CanAcquireFruit = false;

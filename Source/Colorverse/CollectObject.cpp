@@ -43,7 +43,6 @@ void ACollectObject::OnInteract_Implementation()
 	{
 		UInventoryManager* InvenMgr = GetWorld()->GetSubsystem<UInventoryManager>();
 		InvenMgr->AddInventoryItem(ItemData);
-		Destroy();
 	}
 }
 
