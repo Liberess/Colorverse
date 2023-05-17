@@ -11,10 +11,7 @@ struct FItem : public FTableRowBase
 {
 	GENERATED_USTRUCT_BODY();
 	
-	FItem() : Id(-1), CombineType(EItemCombineType::Source), Amount(1), RecoveryAmount(0.0f), IconImg(), bIsValid(false) {};
-	
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item")
-	int Id;
+	FItem() : CombineType(EItemCombineType::Source), Amount(1), RecoveryAmount(0.0f), IconImg() {};
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item")
 	EItemCombineType CombineType;

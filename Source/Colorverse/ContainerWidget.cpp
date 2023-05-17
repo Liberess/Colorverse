@@ -5,7 +5,7 @@ UContainerWidget::UContainerWidget(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)
 {
 	static ConstructorHelpers::FObjectFinder<UTexture2D> EmptyImgObj(
-		TEXT("/Game/UI/UI_Inventory/UI_Box_Off.UI_Box_Off"));
+		TEXT("/Game/UI/UI_Renewal/Inventory/Box_normal.Box_normal"));
 	if (EmptyImgObj.Object != nullptr)
 		EmptyImg = EmptyImgObj.Object;
 }

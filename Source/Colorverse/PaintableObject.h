@@ -24,6 +24,9 @@ protected:
 	int ID = 0;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Paintable Object")
+	EPuzzleTag PuzzleTag = EPuzzleTag::Puzzle_Red;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Paintable Object")
 	ECombineColors TargetColorTag = ECombineColors::Empty;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Paintable Object")
@@ -38,7 +41,7 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category="Paintable Object")
 	bool bIsPaintedComplete = false;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category="Paintable Object")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Paintable Object")
 	bool bIsInteractable = true;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Paintable Object")

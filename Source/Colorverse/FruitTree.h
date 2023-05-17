@@ -20,9 +20,9 @@ private:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Fruit Tree", meta=(AllowPrivateAccess))
 	FItem WoodStickData;
-	
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Fruit Tree", meta=(AllowPrivateAccess))
-	int ItemID;
+	FName ItemName;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Fruit Tree", meta=(AllowPrivateAccess))
 	int MaxWoodStickAcquireAmount = 3;
@@ -32,7 +32,10 @@ private:
 	
 	UPROPERTY(BlueprintReadOnly, Category="Fruit Tree", meta=(AllowPrivateAccess))
 	FTimerHandle SpawnTimerHandle;
-
+	
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Fruit Tree", meta=(AllowPrivateAccess))
+	TObjectPtr<UMaterialInterface> FruitMatTemplate;
+	
 public:
 	AFruitTree();
 
@@ -48,6 +51,6 @@ public:
 	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent, Category="Fruit Tree")
 	void SetActiveCollectObject(bool active);
 	
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Fruit Tree")
+	UPROPERTY(BlueprintReadWrite, Category="Fruit Tree")
 	TArray<UStaticMeshComponent*> FruitMeshes;
 };

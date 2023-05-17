@@ -62,6 +62,8 @@ void APaintableObject::PaintToObject_Implementation(FLinearColor _PaintColor, EC
 	CurrentColorTag = _CurrentColorTag;
 	
 	bIsRightColor = (_CurrentColorTag == TargetColorTag) ? true : false;
+	if(TargetColorTag == ECombineColors::Empty)
+		bIsRightColor = true;
 	bIsColorChanged = true;
 	
 	if(_CurrentColorTag != ECombineColors::Empty)
