@@ -35,6 +35,7 @@ protected:
 public:
 	void PlayAttackMontage(int32 skillNum = 0);
 	void PlayJumpAttackMontage();
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
 	void PlayDamagedMontage();
 	void JumpToAttackMontageSection(int32 NewSection, int32 skillNum = 0);
 
