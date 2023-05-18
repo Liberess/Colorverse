@@ -37,7 +37,10 @@ private:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta=(AllowPrivateAccess))
 	float GetCombinePaintAmount = 30.0f;
-	
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, meta=(AllowPrivateAccess))
+	TMap<FName, bool> AlreadyCombineMap;
+
 public:
 	virtual bool ShouldCreateSubsystem(UObject* Outer) const override;
 	virtual void Initialize(FSubsystemCollectionBase& Collection) override;
@@ -63,11 +66,14 @@ public:
 	void UpdateMaker();
 
 	UFUNCTION(BlueprintCallable, Category=Inventory)
-	void AddInventoryItem(const FItem& Item);
+	void AddInventoryItem(const FItem& Item, bool IsShowAcquiredUI = true);
 
 	UFUNCTION(BlueprintCallable, Category=Inventory)
 	void UseInventoryItem(FItem Item);
 
+	UFUNCTION(BlueprintCallable, Category=Inventory)
+	void UpdateMakerResultUI();
+	
 	UFUNCTION(BlueprintCallable, Category=Inventory)
 	void CombineItems();
 

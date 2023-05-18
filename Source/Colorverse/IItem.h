@@ -45,13 +45,13 @@ struct FCombine : public FTableRowBase
 	
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Combine")
-	FText CombineName;
+	FText SrcName = FText::FromString("");
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Combine")
+	FText DestName = FText::FromString("");;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Combine")
-	FText ResultItemName;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Combine")
-	ECombineColors CombineColor;
+	FText ResultItemName = FText::FromString("");;
 };
 
 USTRUCT(BlueprintType, BlueprintType)

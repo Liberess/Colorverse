@@ -54,7 +54,12 @@ void UInventoryWidget::UpdateMakerContainer(TArray<FItem> Items)
 			const FItem& Item = i < Items.Num() ? Items[i] : FItem();
 			ItemSlot->UpdateItemSlot(Item);
 			ItemSlot->ThumbnailImg->SetBrushFromTexture(Item.bIsValid ? Item.IconImg : EmptyImg);
-			//ItemSlot->ThumbnailBorder->SetBrushFromTexture(Item.bIsValid ? Item.IconImg : EmptyImg);
 		}
 	}
+}
+
+void UInventoryWidget::SetCombineResultUI(const FItem& Item, bool IsAlreadyCombine)
+{
+	GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Orange, TEXT("Result"));
+	ResultImg->SetBrushFromTexture(IsAlreadyCombine ? Item.IconImg : EmptyImg);
 }
