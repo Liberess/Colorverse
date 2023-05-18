@@ -155,14 +155,14 @@ void UInventoryManager::UpdateMakerResultUI()
 
 	if(TargetCombine.ResultItemName.EqualTo(FText::FromString("")))
 	{
+		InventoryWidget->SetCombineResultUI(FItem(), false);
+	}
+	else
+	{
 		const FItem Item = *(ItemDataTable->FindRow<FItem>(FName(TargetCombine.ResultItemName.ToString()), ""));
 		FName Key = FName(Item.Name.ToString());
 		bool IsAlreadyCombine = AlreadyCombineMap.Contains(Key);
 		InventoryWidget->SetCombineResultUI(Item, IsAlreadyCombine);
-	}
-	else
-	{
-		InventoryWidget->SetCombineResultUI(FItem(), false);
 	}
 }
 
@@ -261,6 +261,9 @@ void UInventoryManager::CombineItems()
 			bool IsAlreadyCombine = AlreadyCombineMap.Contains(Key);
 			if(!IsAlreadyCombine)
 				AlreadyCombineMap.Add(Key, true);
+	
+			if(SrcItem.bIsValid && DestItem.bIsValid)
+				InventoryWidget->SetCombineResultUI(Item, true);
 			
 			break;
 		}

@@ -60,6 +60,17 @@ void UInventoryWidget::UpdateMakerContainer(TArray<FItem> Items)
 
 void UInventoryWidget::SetCombineResultUI(const FItem& Item, bool IsAlreadyCombine)
 {
-	GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Orange, TEXT("Result"));
-	ResultImg->SetBrushFromTexture(IsAlreadyCombine ? Item.IconImg : EmptyImg);
+	if(Item.bIsValid)
+	{
+		ResultImg->SetBrushFromTexture(Item.IconImg);
+		
+		if(IsAlreadyCombine)
+			ResultImg->SetColorAndOpacity(FLinearColor(1.0f, 1.0f, 1.0f, 1.0f));
+		else
+			ResultImg->SetColorAndOpacity(FLinearColor(0.0f, 0.0f, 0.0f, 1.0f));
+	}
+	else
+	{
+		ResultImg->SetBrushFromTexture(EmptyImg);
+	}
 }
