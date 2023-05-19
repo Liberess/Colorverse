@@ -56,6 +56,8 @@ public:
 	UPROPERTY(BlueprintReadWrite)
 	FVector TargetScale;
 
+	FTimerHandle RespawnHandle;
+
 	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent)
 	void ActiveGlown();
 };
