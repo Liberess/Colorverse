@@ -31,7 +31,8 @@ UENUM(BlueprintType)
 enum class EItemCombineType : uint8
 {
 	Source UMETA(DisplayName = "Source"),
-	Destination UMETA(DisplayName = "Destination")
+	Destination UMETA(DisplayName = "Destination"),
+	None UMETA(DisplayName = "None")
 };
 
 UENUM(BlueprintType)
