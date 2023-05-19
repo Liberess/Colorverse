@@ -56,7 +56,7 @@ void UInventoryManager::InitializeManager()
 		HUDWidget->InitializedHUD();
 		HUDWidget->AddToViewport();
 	}
-
+	
 	/*TArray<AActor*> FoundActors;
 	UGameplayStatics::GetAllActorsOfClass(GetWorld(), ASanctum::StaticClass(), FoundActors);
 	for (auto& Actor : FoundActors)
@@ -104,6 +104,17 @@ void UInventoryManager::SetInventoryUI(bool IsActive, bool IsFlip)
 		PlayerController->SetInputMode(InputModeGameOnly);
 		PlayerController->SetShowMouseCursor(false);
 		InventoryWidget->RemoveFromParent();
+
+		for(int i = 0; i < MakerArray.Num(); i++)
+		{
+			if(MakerArray[i].bIsValid)
+			{
+				AddInventoryItem(MakerArray[i], false);
+				MakerArray[i] = FItem();
+			}
+		}
+
+		UpdateMaker();
 	}
 }
 
@@ -115,9 +126,47 @@ void UInventoryManager::UpdateInventory()
 void UInventoryManager::UpdateMaker()
 {
 	InventoryWidget->UpdateMakerContainer(MakerArray);
+	UpdateMakerResultUI();
 }
 
-void UInventoryManager::AddInventoryItem(const FItem& Item)
+void UInventoryManager::UpdateMakerResultUI()
+{
+	FItem& SrcItem = MakerArray[0];
+	FItem& DestItem = MakerArray[1];
+	
+	if(!SrcItem.bIsValid || !DestItem.bIsValid || CombineDataTable == nullptr)
+	{
+		InventoryWidget->SetCombineResultUI(FItem(), false);
+		return;
+	}
+	
+	TArray<FCombine*> CombineRules;
+	FCombine TargetCombine;
+	CombineDataTable->GetAllRows("", CombineRules);
+	for (auto Combine : CombineRules)
+	{
+		if(Combine->SrcName.EqualTo(SrcItem.Name)
+			&& Combine->DestName.EqualTo(DestItem.Name))
+		{
+			TargetCombine = *Combine;
+			break;
+		}
+	}
+
+	if(TargetCombine.ResultItemName.EqualTo(FText::FromString("")))
+	{
+		InventoryWidget->SetCombineResultUI(FItem(), false);
+	}
+	else
+	{
+		const FItem Item = *(ItemDataTable->FindRow<FItem>(FName(TargetCombine.ResultItemName.ToString()), ""));
+		FName Key = FName(Item.Name.ToString());
+		bool IsAlreadyCombine = AlreadyCombineMap.Contains(Key);
+		InventoryWidget->SetCombineResultUI(Item, IsAlreadyCombine);
+	}
+}
+
+void UInventoryManager::AddInventoryItem(const FItem& Item, bool IsShowAcquiredUI)
 {
 	if(!Item.bIsValid)
 		return;
@@ -142,7 +191,8 @@ void UInventoryManager::AddInventoryItem(const FItem& Item)
 	
 	UpdateInventory();
 
-	HUDWidget->AddItemLog(Item);
+	if(IsShowAcquiredUI)
+		HUDWidget->AddItemLog(Item);
 }
 
 void UInventoryManager::UseInventoryItem(FItem Item)
@@ -185,25 +235,37 @@ void UInventoryManager::CombineItems()
 		return;
 
 	const static FItem EmptyItem = FItem();
-	
-	const FString SrcItemName = SrcItem.Name.ToString();
-	const FString DestItemName = DestItem.Name.ToString();
 
-	const FCombine* CombineRule = CombineDataTable->FindRow<FCombine>(FName(SrcItemName + DestItemName), "");
-	if(CombineRule != nullptr)
+	TArray<FCombine*> CombineRules;
+	CombineDataTable->GetAllRows("", CombineRules);
+	for (auto Combine : CombineRules)
 	{
-		if(SrcItem.Amount - 1 > 0)
-			--SrcItem.Amount;
-		else
-			SrcItem = EmptyItem;
+		if(Combine->SrcName.EqualTo(SrcItem.Name)
+			&& Combine->DestName.EqualTo(DestItem.Name))
+		{
+			if(SrcItem.Amount - 1 > 0)
+				--SrcItem.Amount;
+			else
+				SrcItem = EmptyItem;
 
-		if(DestItem.Amount - 1 > 0)
-			--DestItem.Amount;
-		else
-			DestItem = EmptyItem;
+			if(DestItem.Amount - 1 > 0)
+				--DestItem.Amount;
+			else
+				DestItem = EmptyItem;
 
-		const FItem Item = *(ItemDataTable->FindRow<FItem>(FName(CombineRule->ResultItemName.ToString()), ""));
-		AddInventoryItem(Item);
-		UpdateMaker();
+			const FItem Item = *(ItemDataTable->FindRow<FItem>(FName(Combine->ResultItemName.ToString()), ""));
+			AddInventoryItem(Item);
+			UpdateMaker();
+
+			FName Key = FName(Item.Name.ToString());
+			bool IsAlreadyCombine = AlreadyCombineMap.Contains(Key);
+			if(!IsAlreadyCombine)
+				AlreadyCombineMap.Add(Key, true);
+	
+			if(SrcItem.bIsValid && DestItem.bIsValid)
+				InventoryWidget->SetCombineResultUI(Item, true);
+			
+			break;
+		}
 	}
 }

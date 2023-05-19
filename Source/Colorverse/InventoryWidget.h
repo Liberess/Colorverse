@@ -4,6 +4,7 @@
 #include "ContainerWidget.h"
 #include "IItem.h"
 #include "Blueprint/UserWidget.h"
+#include "Components/Image.h"
 #include "Components/UniformGridPanel.h"
 #include "InventoryWidget.generated.h"
 
@@ -33,9 +34,15 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Transient, meta = (BindWidgetAnim))
 	UWidgetAnimation* MakerHideAnim;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Maker, meta=(BindWidget))
+	UImage* ResultImg;
+
 	virtual void CreateContainer(int Slots) override;
 	virtual void UpdateContainer(TArray<FItem> Items) override;
 
 	UFUNCTION(BlueprintCallable)
 	void UpdateMakerContainer(TArray<FItem> Items);
+	
+	UFUNCTION(BlueprintCallable)
+	void SetCombineResultUI(const FItem& Item, bool IsAlreadyCombine);
 };

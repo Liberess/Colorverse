@@ -51,6 +51,6 @@ public:
 	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent, Category="Fruit Tree")
 	void SetActiveCollectObject(bool active);
 	
-	UPROPERTY(BlueprintReadWrite, Category="Fruit Tree")
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category="Fruit Tree")
 	TArray<UStaticMeshComponent*> FruitMeshes;
 };

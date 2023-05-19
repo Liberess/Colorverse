@@ -21,4 +21,7 @@ public:
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Damage Message")
 	FVector hitNormal;
+
+	UPROPERTY(EditAnyWhere, BlueprintReadWrite, Category = "Damage Message")
+	FVector hitImpact;
 };
