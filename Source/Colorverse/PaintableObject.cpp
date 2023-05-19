@@ -89,7 +89,7 @@ void APaintableObject::PaintToObject_Implementation(FLinearColor _PaintColor, EC
 	}
 	else
 	{
-		TargetColor = FLinearColor(FColor::White);
+		TargetColor = _PaintColor;
 		PaintedCount = 0;
 		bIsPaintedComplete = false;
 	}
