@@ -32,7 +32,7 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Collect Object")
 	FName ItemName;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category="Collect Object", meta=(AllowPrivateAccess))
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category="Collect Object")
 	FItem ItemData;
 
 	UFUNCTION(BlueprintCallable)
@@ -43,6 +43,12 @@ public:
 
 	UPROPERTY(BlueprintReadWrite, Category="Collect Object")
 	float GlownVelocity = 2.0f;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category="Collect Object")
+	float RespawnTime = 5.0f;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Collect Object")
+	float MaxRespawnTime = 120.0f;
 
 	UPROPERTY(BlueprintReadWrite)
 	FVector CurrentScale;
