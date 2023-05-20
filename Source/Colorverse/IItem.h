@@ -36,6 +36,9 @@ struct FItem : public FTableRowBase
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item")
 	bool bIsConsume = false;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item")
+	EConsumeType ConsumeType;
 };
 
 USTRUCT(BlueprintType, BlueprintType)

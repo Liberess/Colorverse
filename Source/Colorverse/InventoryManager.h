@@ -24,9 +24,6 @@ private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta=(AllowPrivateAccess))
 	bool bIsInventoryOpen = false;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta=(AllowPrivateAccess))
-	bool bIsMakerOpen = false;
-
 	bool GetInventoryItemByName(const FText& Name, int& Index);
 
 	UPROPERTY()
@@ -34,9 +31,6 @@ private:
 
 	UPROPERTY()
 	UDataTable* ItemDataTable;
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta=(AllowPrivateAccess))
-	float GetCombinePaintAmount = 30.0f;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, meta=(AllowPrivateAccess))
 	TMap<FName, bool> AlreadyCombineMap;

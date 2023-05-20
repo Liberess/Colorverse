@@ -135,7 +135,10 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	void SetDisableCanAttackTrace();
-
+	
+	UFUNCTION(BlueprintCallable)
+	void CureHeath(int HealAmount);
+	
 private:	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta=(AllowPrivateAccess), Category="Combat System")
 	bool bIsDamageable;

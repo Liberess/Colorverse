@@ -148,6 +148,11 @@ void AColorverseCharacter::SetDisableCanAttackTrace()
 		CurrentPaintedCollectObj->IsDrawing = false;
 }
 
+void AColorverseCharacter::CureHeath(int HealAmount)
+{
+	LivingEntity->CureHealth(HealAmount);
+}
+
 #pragma region Movement 
 void AColorverseCharacter::OnResetVR()
 {

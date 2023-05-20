@@ -12,12 +12,18 @@ void ULivingEntity::BeginPlay()
 	CurrentHealth = OriginHealth;
 }
 
+void ULivingEntity::CureHealth(int CureAmount)
+{
+	CurrentHealth += CureAmount;
+	
+	if (CurrentHealth > OriginHealth)
+		CurrentHealth = OriginHealth;
+}
+
 void ULivingEntity::ApplyDamage_Implementation(FDamageMessage dmgMsg)
 {
 	CurrentHealth -= dmgMsg.damageAmount;
 
 	if (CurrentHealth < 0)
-	{
 		CurrentHealth = 0;
-	}
 }
