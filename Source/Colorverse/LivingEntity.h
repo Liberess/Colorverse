@@ -17,20 +17,23 @@ protected:
 	virtual void BeginPlay() override;
 
 public:
-	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Damageable")
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "LivingEntity|Damageable")
 	void ApplyDamage(FDamageMessage dmgMsg);
+	
+	UFUNCTION(BlueprintCallable, Category = "LivingEntity|HealthPoint")
+	void CureHealth(int CureAmount);
 
 public:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Character HP")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "LivingEntity|HealthPoint")
 	int OriginHealth;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Character HP")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "LivingEntity|HealthPoint")
 	int CurrentHealth;
 
-	UFUNCTION(BlueprintCallable, Category = "Character HP")
+	UFUNCTION(BlueprintCallable, Category = "LivingEntity|HealthPoint")
 	bool GetDead() const { return bIsDead;}
 
-	UFUNCTION(BlueprintCallable, Category = "Character HP")
+	UFUNCTION(BlueprintCallable, Category = "LivingEntity|HealthPoint")
 	void SetDead(bool value) { bIsDead = value; }
 
 private:

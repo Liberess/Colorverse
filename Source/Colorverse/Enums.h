@@ -64,6 +64,15 @@ enum class EPuzzleTag : uint8
 	Puzzle_Last UMETA(DisplayName = "Puzzle_Last")
 };
 
+UENUM(BlueprintType)
+enum class EConsumeType : uint8
+{
+	None UMETA(DisplayName = "None"),
+	Health UMETA(DisplayName = "Health"),
+	Mana UMETA(DisplayName = "Mana"),
+	All UMETA(DisplayName = "All")
+};
+
 class COLORVERSE_API Enums
 {
 	

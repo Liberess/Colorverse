@@ -1,4 +1,6 @@
 #include "InventoryManager.h"
+
+#include "ColorverseCharacter.h"
 #include "ColorverseWorldSettings.h"
 #include "Kismet/GameplayStatics.h"
 
@@ -201,6 +203,24 @@ void UInventoryManager::UseInventoryItem(FItem Item)
 	if(GetInventoryItemByName(Item.Name, Index))
 	{
 		InventoryArray[Index].Amount -= 1;
+
+		static ACharacter* Player = UGameplayStatics::GetPlayerCharacter(GetWorld(), 0);
+		if(AColorverseCharacter* ColorPlayer = Cast<AColorverseCharacter>(Player))
+		{
+			if(InventoryArray[Index].ConsumeType == EConsumeType::Health)
+			{
+				ColorPlayer->GetLivingEntity()->CureHealth(InventoryArray[Index].RecoveryAmount);
+			}
+			else if(InventoryArray[Index].ConsumeType == EConsumeType::Mana)
+			{
+				PaintAmount += InventoryArray[Index].RecoveryAmount;
+			}
+			else if(InventoryArray[Index].ConsumeType == EConsumeType::All)
+			{
+				PaintAmount += InventoryArray[Index].RecoveryAmount;
+				ColorPlayer->GetLivingEntity()->CureHealth(InventoryArray[Index].RecoveryAmount);
+			}
+		}
 		
 		if(InventoryArray[Index].Amount <= 0)
 		{
