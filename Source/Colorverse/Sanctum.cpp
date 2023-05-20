@@ -28,12 +28,12 @@ void ASanctum::Tick(float DeltaSeconds)
 
 void ASanctum::BeginPlay()
 {
-	StanctumID = static_cast<int>(StatueColor);
+	StanctumID = static_cast<int>(StatueColorTag);
 	
 	Super::BeginPlay();
 
 	AColorverseCharacter* Character = Cast<AColorverseCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
-	CompleteColor = Character->GetCombatSystem()->GetCurrentPaintLinearColorByEnum(StatueColor);
+	CompleteColor = Character->GetCombatSystem()->GetCurrentPaintLinearColorByEnum(StatueColorTag);
 }
 
 void ASanctum::OnEnter_Implementation()
