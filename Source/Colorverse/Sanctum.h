@@ -68,6 +68,4 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	void DecreaseColor();
-
-	
 };
