@@ -62,10 +62,12 @@ public:
 
 	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent)
 	void ActiveUnlockEffect();
-	
+
 	UFUNCTION(BlueprintCallable)
 	void IncreaseColor();
 
 	UFUNCTION(BlueprintCallable)
 	void DecreaseColor();
+
+	
 };
