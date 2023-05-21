@@ -32,7 +32,7 @@ public:
 	UPROPERTY(Category = "Character Status (General Settings)", EditAnywhere, BlueprintReadWrite)
 	float EXP;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Character Status (General Settings)")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Character Status (General Settings)")
 	ECombineColors CurrentPaintColor;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Character Status (General Settings)")
