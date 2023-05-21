@@ -22,6 +22,11 @@ void AColorverseMonster::Tick(float DeltaTime)
 
 }
 
+void AColorverseMonster::Destroy_Implementation()
+{
+
+}
+
 void AColorverseMonster::SetActive(bool value)
 {
 	active = value;

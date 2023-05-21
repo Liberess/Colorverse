@@ -24,6 +24,9 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void SetActive(bool value);
 
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
+	void Destroy();
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
