@@ -20,6 +20,7 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	UArrowComponent* Arrow;
+	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Paintable Object")
 	int ID = 0;
 

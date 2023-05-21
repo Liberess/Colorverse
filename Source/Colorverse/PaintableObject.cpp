@@ -12,6 +12,7 @@ APaintableObject::APaintableObject()
 	StaticMesh->SetupAttachment(DefaultRoot);
 
 	Arrow = CreateDefaultSubobject<UArrowComponent>(TEXT("Arrow"));
+	Arrow->ArrowLength = 150.0f;
 	Arrow->SetupAttachment(DefaultRoot);
 }
 

@@ -5,6 +5,7 @@
 #include "IInteractable.h"
 #include "GameFramework/Actor.h"
 #include "Components/BoxComponent.h"
+#include "Components/ArrowComponent.h"
 #include "InteractObject.generated.h"
 
 UCLASS(Blueprintable)
@@ -23,6 +24,9 @@ protected:
 	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	UStaticMeshComponent* StaticMesh;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	UArrowComponent* Arrow;
 
 	UPROPERTY(VisibleAnywhere,
 		BlueprintGetter=GetInteractable,
