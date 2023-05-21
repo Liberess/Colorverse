@@ -387,7 +387,7 @@ void AColorverseCharacter::OnOverlapBegin(class UPrimitiveComponent* OverlappedC
 		if (IsValid(InteractObject))
 		{
 			bIsInteract = true;
-			
+
 			if (!bIsWatchingInteractWidget && InteractObject->GetInteractable())
 			{
 				if (IsValid(InteractWidgetClass))

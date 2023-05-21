@@ -139,6 +139,9 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void CureHeath(int HealAmount);
 	
+	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent)
+	void SetVisibleInteractableOutline(bool Visible);
+	
 private:	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta=(AllowPrivateAccess), Category="Combat System")
 	bool bIsDamageable;
