@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "ColorverseMonster.h"
+#include "Enums.h"
 #include "ColorverseMonster_middle.generated.h"
 
 /**
@@ -16,6 +17,9 @@ class COLORVERSE_API AColorverseMonster_middle : public AColorverseMonster
 	
 public:
 	AColorverseMonster_middle();
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Combat System")
+	EPuzzleTag PuzzleTag;
 
 protected:
 	// Called when the game starts or when spawned

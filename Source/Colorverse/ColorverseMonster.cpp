@@ -31,6 +31,5 @@ void AColorverseMonster::SetActive(bool value)
 {
 	active = value;
 	SetActorHiddenInGame(!value);
-	SetActorEnableCollision(value);
 	SetActorTickEnabled(value);
 }
