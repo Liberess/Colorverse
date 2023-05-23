@@ -48,7 +48,7 @@ private:
 	int RecoveryCount = 0;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, meta=(AllowPrivateAccess), Category=Sanctum)
-	int MaxRecoveryCount = 3;
+	int MaxRecoveryCount = 1;
 
 protected:
 	virtual void BeginPlay() override;
