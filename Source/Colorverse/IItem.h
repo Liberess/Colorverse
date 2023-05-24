@@ -19,7 +19,7 @@ struct FItem : public FTableRowBase
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item")
 	FText Name;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (MultiLine = true), Category = "Item")
 	FText Description;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item")
