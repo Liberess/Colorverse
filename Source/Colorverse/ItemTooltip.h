@@ -16,4 +16,7 @@ public:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, meta=(BindWidget))
 	UTextBlock* ItemDescriptionTxt;
+	
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, meta=(BindWidget))
+	UTextBlock* ItemTypeTxt;
 };
