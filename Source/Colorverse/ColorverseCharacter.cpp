@@ -184,7 +184,7 @@ void AColorverseCharacter::MoveForward(float Value)
 	if (LivingEntity->GetDead())
 		return;
 
-	if (bIsAttacked)
+	if (bIsAttacked || bIsRolling)
 		return;
 
 	if (!bIsCanMove)
@@ -218,7 +218,7 @@ void AColorverseCharacter::MoveRight(float Value)
 	if (LivingEntity->GetDead())
 		return;
 
-	if (bIsAttacked)
+	if (bIsAttacked || bIsRolling)
 		return;
 
 	if (!bIsCanMove)
