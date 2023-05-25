@@ -141,6 +141,18 @@ public:
 	
 	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent)
 	void SetVisibleInteractableOutline(bool Visible);
+
+	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent)
+	void CheatInventory();
+
+	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent)
+	void CheatStanctumRed();
+
+	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent)
+	void CheatStanctumYellow();
+
+	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent)
+	void CheatStanctumBlue();
 	
 private:	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta=(AllowPrivateAccess), Category="Combat System")

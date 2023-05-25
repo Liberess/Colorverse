@@ -98,6 +98,11 @@ void AColorverseCharacter::SetupPlayerInputComponent(class UInputComponent* Play
 	PlayerInputComponent->BindAction("Interact", IE_Pressed, this, &AColorverseCharacter::Interact);
 	PlayerInputComponent->BindAction("Inventory", IE_Pressed, this, &AColorverseCharacter::ControlInventory);
 
+	PlayerInputComponent->BindAction("CheatInventory", IE_Pressed, this, &AColorverseCharacter::CheatInventory);
+	PlayerInputComponent->BindAction("CheatStanctumRed", IE_Pressed, this, &AColorverseCharacter::CheatStanctumRed);
+	PlayerInputComponent->BindAction("CheatStanctumYellow", IE_Pressed, this, &AColorverseCharacter::CheatStanctumYellow);
+	PlayerInputComponent->BindAction("CheatStanctumBlue", IE_Pressed, this, &AColorverseCharacter::CheatStanctumBlue);
+
 	PlayerInputComponent->BindAction<TDelegate<void(ECombineColors)>>(
 		TEXT("RedPaint"), IE_Pressed, this, &AColorverseCharacter::ChangeEquipPaint, ECombineColors::Red);
 	PlayerInputComponent->BindAction<TDelegate<void(ECombineColors)>>(
