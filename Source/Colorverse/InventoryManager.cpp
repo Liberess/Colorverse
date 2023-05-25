@@ -38,7 +38,7 @@ void UInventoryManager::Initialize(FSubsystemCollectionBase& Collection)
 
 void UInventoryManager::InitializeManager()
 {
-	for(int i = 0; i < 21; i++)
+	for(int i = 0; i < 30; i++)
 		InventoryArray.Add(FItem());
 	
 	for(int i = 0; i < 2; i++)
