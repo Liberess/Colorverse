@@ -104,8 +104,8 @@ void AColorverseCharacter::SetupPlayerInputComponent(class UInputComponent* Play
 	PlayerInputComponent->BindAction("CheatStanctumBlue", IE_Pressed, this, &AColorverseCharacter::CheatStanctumBlue);
 
 	PlayerInputComponent->BindAxis("TeleportStanctumRed", this, &AColorverseCharacter::TeleportStanctumRed);
-	PlayerInputComponent->BindAxis("TeleportStanctumYellow", this, &AColorverseCharacter::TeleportStanctumRed);
-	PlayerInputComponent->BindAxis("TeleportStanctumBlue", this, &AColorverseCharacter::TeleportStanctumRed);
+	PlayerInputComponent->BindAxis("TeleportStanctumYellow", this, &AColorverseCharacter::TeleportStanctumYellow);
+	PlayerInputComponent->BindAxis("TeleportStanctumBlue", this, &AColorverseCharacter::TeleportStanctumBlue);
 	PlayerInputComponent->BindAxis("TeleportSmallVillage", this, &AColorverseCharacter::TeleportSmallVillage);
 	PlayerInputComponent->BindAxis("TeleportMiddleVillage", this, &AColorverseCharacter::TeleportMiddleVillage);
 	PlayerInputComponent->BindAxis("TeleportPanoramaOne", this, &AColorverseCharacter::TeleportPanoramaOne);

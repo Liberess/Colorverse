@@ -25,6 +25,7 @@ void AColorArea::BeginPlay()
 void AColorArea::SetEnabledPostProcess(bool Active)
 {
 	check(PostVolume);
+	//PostVolume->
 	PostVolume->bEnabled = Active;
 	OnSetEnabledStageInteract.Broadcast(!Active);
 }

@@ -66,21 +66,19 @@ void ASanctum::IncreaseColor()
 	++RecoveryCount;
 	
 	PaintingMatInst->GetVectorParameterValue(FName(TEXT("EmissiveColor")), CurrentColor);
-	
-	if (RecoveryCount >= MaxRecoveryCount)
-	{
-		bIsRecoveryComplete = true;
-		TargetColor = CompleteColor;
-		IsInteractable = true;
-		InteractWidgetDisplayTxt = FName(TEXT("성소 해금")).ToString();
-	}
-	else
-	{
-		TargetColor = FLinearColor(
+
+	TargetColor = FLinearColor(
 			FMath::Lerp(CurrentColor.R, CompleteColor.R, 0.2f),
 			FMath::Lerp(CurrentColor.G, CompleteColor.G, 0.2f),
 			FMath::Lerp(CurrentColor.B, CompleteColor.B, 0.2f),
 			1.0f);
+	
+	if (RecoveryCount >= MaxRecoveryCount)
+	{
+		bIsRecoveryComplete = true;
+		//TargetColor = CompleteColor;
+		IsInteractable = true;
+		InteractWidgetDisplayTxt = FName(TEXT("성소 해금")).ToString();
 	}
 }
 
