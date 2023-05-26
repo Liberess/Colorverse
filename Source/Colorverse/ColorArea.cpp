@@ -1,42 +1,25 @@
 #include "ColorArea.h"
-#include "ColorManager.h"
-
-#define Print(duration, text) if(GEngine) GEngine->AddOnScreenDebugMessage(-1,duration, FColor::Cyan, text);
 
 AColorArea::AColorArea()
 {
 	PrimaryActorTick.bCanEverTick = true;
-	StaticMesh->SetupAttachment(BoxCol);
+	
+	DefaultRoot = CreateDefaultSubobject<USceneComponent>(TEXT("DefaultRoot"));
+	SetRootComponent(DefaultRoot);
+
+	BoxCol = CreateDefaultSubobject<UBoxComponent>(TEXT("Box Collision"));
+	BoxCol->InitBoxExtent(FVector(100.0f, 100.0f, 100.0f));
+	BoxCol->SetCollisionProfileName(TEXT("Trigger"));
+	BoxCol->SetupAttachment(DefaultRoot);
+
+	StaticMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Static Mesh"));
 	StaticMesh->SetCollisionProfileName("NoCollision");
+	StaticMesh->SetupAttachment(DefaultRoot);
 }
 
 void AColorArea::BeginPlay()
 {
 	Super::BeginPlay();
-}
-
-void AColorArea::OnEnter_Implementation()
-{
-	//Super::OnEnter();
-	//Print(1.0f, "Enter");
-}
-
-void AColorArea::OnInteract_Implementation()
-{
-	//Super::OnInteract();
-	UColorManager* ColorMgr = GetWorld()->GetSubsystem<UColorManager>();
-	if(ColorMgr != nullptr)
-	{
-		SetEnabledPostProcess(false);
-		IsLightness = true;
-		Destroy();
-	}
-}
-
-void AColorArea::OnExit_Implementation()
-{
-	//Super::OnExit();
-	//Print(1.0f, "Exit");
 }
 
 void AColorArea::SetEnabledPostProcess(bool Active)

@@ -11,19 +11,25 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnSetEnabledStageInteract, bool, Is
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnDisabledStageInteract);
 
 UCLASS(Blueprintable, BlueprintType)
-class COLORVERSE_API AColorArea : public AInteractObject
+class COLORVERSE_API AColorArea : public AActor
 {
 	GENERATED_BODY()
+
+protected:
+	UPROPERTY(BlueprintReadOnly)
+	USceneComponent* DefaultRoot = nullptr;
+	
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	UBoxComponent* BoxCol;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	UStaticMeshComponent* StaticMesh;
 
 protected:
 	virtual void BeginPlay() override;
 	
 public:
 	AColorArea();
-	
-	virtual void OnEnter_Implementation() override;
-	virtual void OnInteract_Implementation() override;
-	virtual void OnExit_Implementation() override;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=ColorArea)
 	EPuzzleTag PuzzleTag = EPuzzleTag::Puzzle_Red;
