@@ -20,14 +20,15 @@ protected:
 	
 public:
 	AColorArea();
+	
 	virtual void OnEnter_Implementation() override;
 	virtual void OnInteract_Implementation() override;
 	virtual void OnExit_Implementation() override;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=Interactable)
-	EStageName StageName;
-	
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=Effect)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=ColorArea)
+	EPuzzleTag PuzzleTag = EPuzzleTag::Puzzle_Red;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="ColorArea|Effect")
 	APostProcessVolume* PostVolume;
 
 	UFUNCTION(BlueprintCallable)

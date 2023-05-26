@@ -37,13 +37,7 @@ protected:
 	UFUNCTION()
 	void SetEnabledInteractable(bool IsEnabled) { IsInteractable = IsEnabled; };
 
-	UFUNCTION()
-	void AddColorAreaEnabledAction();
-
 public:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=Interactable)
-	EStageName ParentStageName;
-	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=Interactable)
 	FString InteractWidgetDisplayTxt;
 

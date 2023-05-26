@@ -25,8 +25,7 @@ void AColorArea::OnInteract_Implementation()
 {
 	//Super::OnInteract();
 	UColorManager* ColorMgr = GetWorld()->GetSubsystem<UColorManager>();
-	check(ColorMgr);
-	if(ColorMgr->GetLightAmount(StageName) > 0)
+	if(ColorMgr != nullptr)
 	{
 		SetEnabledPostProcess(false);
 		IsLightness = true;

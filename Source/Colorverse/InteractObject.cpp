@@ -70,20 +70,3 @@ void AInteractObject::OnExit_Implementation()
 {
 	IIInteractable::OnExit_Implementation();
 }
-
-void AInteractObject::AddColorAreaEnabledAction()
-{
-	TArray<AActor*> FoundActors;
-	UGameplayStatics::GetAllActorsOfClass(GetWorld(), AColorArea::StaticClass(), FoundActors);
-	for (auto& Actor : FoundActors)
-	{
-		if(AColorArea* ColorArea = Cast<AColorArea>(Actor))
-		{
-			if(ColorArea->StageName == ParentStageName)
-			{
-				ColorArea->OnSetEnabledStageInteract.AddDynamic(this, &AInteractObject::SetEnabledInteractable);
-				break;
-			}
-		}
-	}
-}

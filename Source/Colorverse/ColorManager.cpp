@@ -21,16 +21,6 @@ bool UColorManager::ShouldCreateSubsystem(UObject* Outer) const
 	return false;
 }
 
-void UColorManager::Initialize(FSubsystemCollectionBase& Collection)
-{
-	Super::Initialize(Collection);
-
-	LightAmountMap.Add(EStageName::Stage_Red, 0);
-	LightAmountMap.Add(EStageName::Stage_Orange, 0);
-	LightAmountMap.Add(EStageName::Stage_Yellow, 0);
-	LightAmountMap.Add(EStageName::Stage_Blue, 0);
-}
-
 void UColorManager::InitializeManager()
 {
 	GameMode = Cast<AColorverseGameMode>(UGameplayStatics::GetGameMode(GetWorld()));
@@ -40,14 +30,8 @@ void UColorManager::InitializeManager()
 	for (auto Actor : Actors)
 	{
 		AColorArea* ColorArea = Cast<AColorArea>(Actor);
-		ColorAreaMap.Add(ColorArea->StageName, ColorArea);
+		ColorAreaMap.Add(ColorArea->PuzzleTag, ColorArea);
 	}
-}
-
-void UColorManager::SetLightAmount(EStageName StageName, int amount)
-{
-	if (LightAmountMap.Num() > 0 && LightAmountMap.Contains(StageName))
-		LightAmountMap[StageName] += amount;
 }
 
 void UColorManager::SpawnTutorialLightObject()

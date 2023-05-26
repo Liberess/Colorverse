@@ -25,7 +25,7 @@ void ALightObject::OnInteract_Implementation()
 
 	UColorManager* ColorMgr = GetWorld()->GetSubsystem<UColorManager>();
 	check(ColorMgr);
-	ColorMgr->SetLightAmount(StageName, 1);
+	//ColorMgr->SetLightAmount(PuzzleTag, 1);
 	Destroy();
 }
 
