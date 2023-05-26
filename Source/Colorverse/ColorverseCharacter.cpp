@@ -106,6 +106,11 @@ void AColorverseCharacter::SetupPlayerInputComponent(class UInputComponent* Play
 	PlayerInputComponent->BindAxis("TeleportStanctumRed", this, &AColorverseCharacter::TeleportStanctumRed);
 	PlayerInputComponent->BindAxis("TeleportStanctumYellow", this, &AColorverseCharacter::TeleportStanctumRed);
 	PlayerInputComponent->BindAxis("TeleportStanctumBlue", this, &AColorverseCharacter::TeleportStanctumRed);
+	PlayerInputComponent->BindAxis("TeleportSmallVillage", this, &AColorverseCharacter::TeleportSmallVillage);
+	PlayerInputComponent->BindAxis("TeleportMiddleVillage", this, &AColorverseCharacter::TeleportMiddleVillage);
+	PlayerInputComponent->BindAxis("TeleportPanoramaOne", this, &AColorverseCharacter::TeleportPanoramaOne);
+	PlayerInputComponent->BindAxis("TeleportPanoramaTwo", this, &AColorverseCharacter::TeleportPanoramaTwo);
+	PlayerInputComponent->BindAxis("TeleportStartPoint", this, &AColorverseCharacter::TeleportStartPoint);
 
 	PlayerInputComponent->BindAction<TDelegate<void(ECombineColors)>>(
 		TEXT("RedPaint"), IE_Pressed, this, &AColorverseCharacter::ChangeEquipPaint, ECombineColors::Red);

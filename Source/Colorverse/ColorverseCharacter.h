@@ -168,6 +168,21 @@ public:
 
 	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent)
 	void TeleportStanctumBlue(float Rate);
+
+	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent)
+	void TeleportSmallVillage(float Rate);
+
+	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent)
+	void TeleportMiddleVillage(float Rate);
+
+	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent)
+	void TeleportPanoramaOne(float Rate);
+
+	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent)
+	void TeleportPanoramaTwo(float Rate);
+
+	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent)
+	void TeleportStartPoint(float Rate);
 	
 private:	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta=(AllowPrivateAccess), Category="Combat System")
