@@ -208,6 +208,8 @@ void AColorverseCharacter::MoveForward(float Value)
 
 			const FVector Direction = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X);
 
+			MoveInputY = Direction * Value;
+
 			if (bIsAttacking && CombatSystem->bIsCanInput && bIsCanMove)
 			{
 				SetDisabledAttack();
@@ -218,6 +220,10 @@ void AColorverseCharacter::MoveForward(float Value)
 			}
 
 			AddMovementInput(Direction, Value);
+		}
+		else
+		{
+			MoveInputY = FVector::ZeroVector;
 		}
 	}
 }
@@ -242,6 +248,8 @@ void AColorverseCharacter::MoveRight(float Value)
 
 			const FVector Direction = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y);
 
+			MoveInputX = Direction * Value;
+
 			if (bIsAttacking && CombatSystem->bIsCanInput && bIsCanMove)
 			{
 				SetDisabledAttack();
@@ -250,8 +258,12 @@ void AColorverseCharacter::MoveRight(float Value)
 			{
 				Value *= 0.001f;
 			}
-			
+
 			AddMovementInput(Direction, Value);
+		}
+		else
+		{
+			MoveInputX = FVector::ZeroVector;
 		}
 	}
 }

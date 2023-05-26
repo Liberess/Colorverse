@@ -38,6 +38,12 @@ public:
 	TArray<AActor*> AttackHitResults;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Combat System")
+	FVector MoveInputY;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Combat System")
+	FVector MoveInputX;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Combat System")
 	float attackResourceValue;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Camera)
