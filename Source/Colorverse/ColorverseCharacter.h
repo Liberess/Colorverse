@@ -154,6 +154,15 @@ public:
 	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent)
 	void CheatStanctumBlue();
 	
+	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent)
+	void TeleportStanctumRed(float Rate);
+
+	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent)
+	void TeleportStanctumYellow(float Rate);
+
+	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent)
+	void TeleportStanctumBlue(float Rate);
+	
 private:	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta=(AllowPrivateAccess), Category="Combat System")
 	bool bIsDamageable;

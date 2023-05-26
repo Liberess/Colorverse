@@ -103,6 +103,10 @@ void AColorverseCharacter::SetupPlayerInputComponent(class UInputComponent* Play
 	PlayerInputComponent->BindAction("CheatStanctumYellow", IE_Pressed, this, &AColorverseCharacter::CheatStanctumYellow);
 	PlayerInputComponent->BindAction("CheatStanctumBlue", IE_Pressed, this, &AColorverseCharacter::CheatStanctumBlue);
 
+	PlayerInputComponent->BindAxis("TeleportStanctumRed", this, &AColorverseCharacter::TeleportStanctumRed);
+	PlayerInputComponent->BindAxis("TeleportStanctumYellow", this, &AColorverseCharacter::TeleportStanctumRed);
+	PlayerInputComponent->BindAxis("TeleportStanctumBlue", this, &AColorverseCharacter::TeleportStanctumRed);
+
 	PlayerInputComponent->BindAction<TDelegate<void(ECombineColors)>>(
 		TEXT("RedPaint"), IE_Pressed, this, &AColorverseCharacter::ChangeEquipPaint, ECombineColors::Red);
 	PlayerInputComponent->BindAction<TDelegate<void(ECombineColors)>>(
