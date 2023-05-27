@@ -214,10 +214,12 @@ void UInventoryManager::UseInventoryItem(FItem Item)
 			else if(InventoryArray[Index].ConsumeType == EConsumeType::Mana)
 			{
 				PaintAmount += InventoryArray[Index].RecoveryAmount;
+				HUDWidget->SetPaintBarPercent(PaintAmount);
 			}
 			else if(InventoryArray[Index].ConsumeType == EConsumeType::All)
 			{
 				PaintAmount += InventoryArray[Index].RecoveryAmount;
+				HUDWidget->SetPaintBarPercent(PaintAmount);
 				ColorPlayer->GetLivingEntity()->CureHealth(InventoryArray[Index].RecoveryAmount);
 			}
 		}
