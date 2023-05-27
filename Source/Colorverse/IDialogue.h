@@ -32,4 +32,7 @@ public:
 
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category=Dialogue)
 	void OnEndTalk();
+	
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category=Dialogue)
+	void OnQuestClear();
 };

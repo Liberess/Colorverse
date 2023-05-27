@@ -18,16 +18,15 @@ class COLORVERSE_API ANPC : public APawn, public IIDialogue
 
 public:
 	ANPC();
-	virtual void Tick(float DeltaTime) override;
-	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 	virtual void OnBeginTalk_Implementation() override;
 	virtual void OnEndTalk_Implementation() override;
+	virtual void OnQuestClear_Implementation() override;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="NPC|Dialogue")
 	FName NPCName;
 	
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="NPC|Dialogue")
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category="NPC|Dialogue")
 	FDialogue DialogueData;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category="NPC|Dialogue")
@@ -38,6 +37,9 @@ public:
 	
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category="NPC|Dialogue")
 	bool bIsTalking = false;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category="NPC|Dialogue")
+	bool bIsInteractable = true;
 
 protected:
 	virtual void BeginPlay() override;
@@ -60,13 +62,13 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="NPC|Dialogue", meta=(AllowPrivateAccess))
 	TSubclassOf<UDialogueWidget> DialogueWidgetRef;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="NPC|Dialogue", meta=(AllowPrivateAccess))
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category="NPC|Dialogue", meta=(AllowPrivateAccess))
 	TObjectPtr<UDialogueWidget> DialogueWidget;
 	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="NPC|Dialogue", meta=(AllowPrivateAccess))
 	TSubclassOf<UInteractWidget> InteractWidgetRef;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="NPC|Dialogue", meta=(AllowPrivateAccess))
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category="NPC|Dialogue", meta=(AllowPrivateAccess))
 	TObjectPtr<UInteractWidget> InteractWidget;
 
 private:
