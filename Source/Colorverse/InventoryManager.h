@@ -15,24 +15,25 @@ class COLORVERSE_API UInventoryManager : public UWorldSubsystem
 private:
 	UInventoryManager();
 	
-	UPROPERTY(BlueprintReadWrite, meta=(AllowPrivateAccess))
+	UPROPERTY(BlueprintReadWrite, meta=(AllowPrivateAccess), Category=InventoryManager)
 	UInventoryWidget* InventoryWidget;
 
-	UPROPERTY(BlueprintReadWrite, meta=(AllowPrivateAccess))
+	UPROPERTY(BlueprintReadWrite, meta=(AllowPrivateAccess), Category=InventoryManager)
 	UHUDWidget* HUDWidget;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta=(AllowPrivateAccess))
+	UPROPERTY(BlueprintReadOnly, meta=(AllowPrivateAccess), Category=InventoryManager)
 	bool bIsInventoryOpen = false;
 
+	UFUNCTION(BlueprintCallable, Category=InventoryManager)
 	bool GetInventoryItemByName(const FText& Name, int& Index);
 
-	UPROPERTY()
+	UPROPERTY(BlueprintReadOnly, meta=(AllowPrivateAccess), Category=InventoryManager)
 	UDataTable* CombineDataTable;
 
-	UPROPERTY()
+	UPROPERTY(BlueprintReadOnly, meta=(AllowPrivateAccess), Category=InventoryManager)
 	UDataTable* ItemDataTable;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, meta=(AllowPrivateAccess))
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, meta=(AllowPrivateAccess), Category=InventoryManager)
 	TMap<FName, bool> AlreadyCombineMap;
 
 public:
@@ -41,35 +42,45 @@ public:
 
 	void InitializeManager();
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=InventoryManager)
 	TArray<FItem> InventoryArray;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=InventoryManager)
 	TArray<FItem> MakerArray;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category=InventoryManager)
 	float PaintAmount = 0.0f;
 
-	UFUNCTION()
+	UFUNCTION(BlueprintCallable, Category=InventoryManager)
 	void SetInventoryUI(bool IsActive, bool IsFlip = false);
 
-	UFUNCTION(BlueprintCallable)
+	UFUNCTION(BlueprintCallable, Category=InventoryManager)
 	void UpdateInventory();
 
-	UFUNCTION(BlueprintCallable)
+	UFUNCTION(BlueprintCallable, Category=InventoryManager)
 	void UpdateMaker();
 
-	UFUNCTION(BlueprintCallable, Category=Inventory)
+	UFUNCTION(BlueprintCallable, Category=InventoryManager)
 	void AddInventoryItem(const FItem& Item, bool IsShowAcquiredUI = true);
 
-	UFUNCTION(BlueprintCallable, Category=Inventory)
+	UFUNCTION(BlueprintCallable, Category=InventoryManager)
 	void UseInventoryItem(FItem Item);
 
-	UFUNCTION(BlueprintCallable, Category=Inventory)
+	UFUNCTION(BlueprintCallable, Category=InventoryManager)
 	void UpdateMakerResultUI();
 	
-	UFUNCTION(BlueprintCallable, Category=Inventory)
+	UFUNCTION(BlueprintCallable, Category=InventoryManager)
 	void CombineItems();
 
+	UFUNCTION(BlueprintCallable, Category=InventoryManager)
 	FORCEINLINE UHUDWidget* GetHUDWidget() { return HUDWidget; }
+
+	UFUNCTION(BlueprintCallable, Category=InventoryManager)
+	FORCEINLINE void SetVisibleHUDWidget(bool Visible) const
+	{
+		if(Visible)
+			HUDWidget->AddToViewport();
+		else
+			HUDWidget->RemoveFromParent();
+	}
 };

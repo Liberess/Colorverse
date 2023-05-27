@@ -56,7 +56,6 @@ void UInventoryManager::InitializeManager()
 	{
 		HUDWidget = Cast<UHUDWidget>(CreateWidget(GetWorld(), WidgetClass));
 		HUDWidget->InitializedHUD();
-		HUDWidget->AddToViewport();
 	}
 	
 	/*TArray<AActor*> FoundActors;
