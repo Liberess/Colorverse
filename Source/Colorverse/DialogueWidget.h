@@ -11,12 +11,12 @@ class COLORVERSE_API UDialogueWidget : public UUserWidget
 	GENERATED_BODY()
 
 public:
-	UPROPERTY(meta=(BindWidget))
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, meta=(BindWidget))
 	UTextBlock* NPCNameTxt;
 	
-	UPROPERTY(meta=(BindWidget))
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, meta=(BindWidget, MultiLine=true))
 	UTextBlock* DialogueTxt;
 
-	UFUNCTION(BlueprintCallable)
-	void SetDialogueText(FText Name, FText Dialogue);
+	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent)
+	void SetDialogueText(const FText& Name, const FText& Dialogue);
 };
