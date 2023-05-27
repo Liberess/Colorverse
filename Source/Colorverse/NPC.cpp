@@ -53,7 +53,6 @@ ANPC::ANPC()
 		Mesh->SetupAttachment(CapsuleCol);
 		static FName MeshCollisionProfileName(TEXT("CharacterMesh"));
 		Mesh->SetCollisionProfileName(MeshCollisionProfileName);
-		Mesh->SetGenerateOverlapEvents(false);
 		Mesh->SetCanEverAffectNavigation(false);
 	}
 
