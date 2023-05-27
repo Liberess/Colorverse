@@ -53,7 +53,6 @@ ANPC::ANPC()
 		Mesh->SetupAttachment(CapsuleCol);
 		static FName MeshCollisionProfileName(TEXT("CharacterMesh"));
 		Mesh->SetCollisionProfileName(MeshCollisionProfileName);
-		Mesh->SetGenerateOverlapEvents(false);
 		Mesh->SetCanEverAffectNavigation(false);
 	}
 
@@ -105,27 +104,12 @@ void ANPC::OnOverlapEnd(UPrimitiveComponent* OverlappedComp, AActor* OtherActor,
 	}
 }
 
-void ANPC::Tick(float DeltaTime)
-{
-	Super::Tick(DeltaTime);
-
-	/*if(bIsTalking)
-	{
-		FVector PlayerLocation = UGameplayStatics::GetPlayerCharacter(GetWorld(), 0)->GetActorLocation();
-		FRotator TargetRotation = UKismetMathLibrary::FindLookAtRotation(this->GetActorLocation(), PlayerLocation);
-		FRotator NewRotation = FMath::RInterpTo(this->GetActorRotation(), TargetRotation, DeltaTime, 1.0f);
-		SetActorRotation(FRotator(0.0f, 0.0f, NewRotation.Yaw));
-	}*/
-}
-
-void ANPC::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
-{
-	Super::SetupPlayerInputComponent(PlayerInputComponent);
-}
-
 void ANPC::OnBeginTalk_Implementation()
 {
 	IIDialogue::OnBeginTalk_Implementation();
+
+	if(!bIsInteractable)
+		return;
 
 	++TalkIndex;
 
@@ -165,6 +149,11 @@ void ANPC::OnEndTalk_Implementation()
 	bIsTalking = false;
 	SetNPCCamera(false);
 	SetActiveInteractUI(false);
+}
+
+void ANPC::OnQuestClear_Implementation()
+{
+	IIDialogue::OnQuestClear_Implementation();
 }
 
 void ANPC::SetActiveInteractUI(bool IsActive)
