@@ -11,6 +11,9 @@ struct FDialogue : public FTableRowBase
 	GENERATED_USTRUCT_BODY();
 	
 	FDialogue() { Dialogues.Reserve(3); };
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Dialogue)
+	FText DisplayName;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Dialogue)
 	TArray<FText> Dialogues;
