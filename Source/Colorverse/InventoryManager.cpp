@@ -203,7 +203,7 @@ void UInventoryManager::UseInventoryItem(FItem Item)
 	{
 		InventoryArray[Index].Amount -= 1;
 
-		static ACharacter* Player = UGameplayStatics::GetPlayerCharacter(GetWorld(), 0);
+		ACharacter* Player = UGameplayStatics::GetPlayerCharacter(GetWorld(), 0);
 		if(AColorverseCharacter* ColorPlayer = Cast<AColorverseCharacter>(Player))
 		{
 			if(InventoryArray[Index].ConsumeType == EConsumeType::Health)
