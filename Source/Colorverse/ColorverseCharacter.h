@@ -168,6 +168,9 @@ public:
 
 	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent)
 	void TeleportStanctumBlue(float Rate);
+	
+	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent)
+	void TeleportStanctumLast(float Rate);
 
 	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent)
 	void TeleportSmallVillage(float Rate);
@@ -176,10 +179,7 @@ public:
 	void TeleportMiddleVillage(float Rate);
 
 	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent)
-	void TeleportPanoramaOne(float Rate);
-
-	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent)
-	void TeleportPanoramaTwo(float Rate);
+	void TeleportPanorama(float Rate);
 
 	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent)
 	void TeleportStartPoint(float Rate);
