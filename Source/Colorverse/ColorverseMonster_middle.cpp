@@ -15,6 +15,11 @@ void AColorverseMonster_middle::BeginPlay()
 	Super::BeginPlay();
 }
 
+void AColorverseMonster_middle::RunAI_Implementation()
+{
+
+}
+
 // Called every frame
 void AColorverseMonster_middle::Tick(float DeltaTime)
 {

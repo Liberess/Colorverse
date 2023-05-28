@@ -21,6 +21,9 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Combat System")
 	EPuzzleTag PuzzleTag;
 
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
+	void RunAI();
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
