@@ -23,6 +23,9 @@ private:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Fruit Tree", meta=(AllowPrivateAccess))
 	FName ItemName;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Fruit Tree", meta=(AllowPrivateAccess))
+	int MaxItemAcquireAmount = 3;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Fruit Tree", meta=(AllowPrivateAccess))
 	int MaxWoodStickAcquireAmount = 3;

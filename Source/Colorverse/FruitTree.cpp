@@ -22,7 +22,6 @@ void AFruitTree::BeginPlay()
 	if(IsValid(ItemDT))
 	{
 		ItemData = *(ItemDT->FindRow<FItem>(ItemName, ""));
-		ItemData.Amount = FruitMeshes.Num();
 		WoodStickData = *(ItemDT->FindRow<FItem>(FName(TEXT("WoodStick")), ""));
 		InteractWidgetDisplayTxt = ItemData.Name.ToString();
 	}
@@ -41,6 +40,9 @@ void AFruitTree::OnInteract_Implementation()
 	{
 		CanAcquireFruit = false;
 		SetActiveCollectObject(false);
+		
+		int Rand = FMath::RandRange(1, MaxItemAcquireAmount);
+		ItemData.Amount = Rand;
 		
 		InvenMgr->AddInventoryItem(ItemData);
 	
