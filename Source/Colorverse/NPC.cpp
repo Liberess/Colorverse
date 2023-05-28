@@ -87,7 +87,9 @@ void ANPC::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActo
 {
 	if (OtherActor && OtherActor != this)
 	{
-		SetActiveInteractUI(true);
+		AColorverseCharacter* Character = Cast<AColorverseCharacter>(OtherActor);
+		if(IsValid(Character))
+			SetActiveInteractUI(true);
 	}
 }
 
@@ -96,11 +98,9 @@ void ANPC::OnOverlapEnd(UPrimitiveComponent* OverlappedComp, AActor* OtherActor,
 {
 	if (OtherActor && OtherActor != this)
 	{
-		static AColorverseCharacter* Character = Cast<AColorverseCharacter>(OtherActor);
+		AColorverseCharacter* Character = Cast<AColorverseCharacter>(OtherActor);
 		if(IsValid(Character))
-		{
 			OnEndTalk_Implementation();
-		}
 	}
 }
 
@@ -158,13 +158,14 @@ void ANPC::OnQuestClear_Implementation()
 
 void ANPC::SetActiveInteractUI(bool IsActive)
 {
+	GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, TEXT("npc!!"));
 	if (InteractWidgetRef != nullptr)
 	{
-		if(InteractWidget == nullptr)
-			InteractWidget = Cast<UInteractWidget>(CreateWidget(GetWorld(), InteractWidgetRef));
-
 		if(IsActive)
 		{
+			if(InteractWidget == nullptr)
+				InteractWidget = Cast<UInteractWidget>(CreateWidget(GetWorld(), InteractWidgetRef));
+			
 			InteractWidget->SetInteractText( FText::FromName(FName(TEXT("대화하기"))));
 			InteractWidget->AddToViewport();
 		}

@@ -121,7 +121,7 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=Interact)
 	TSubclassOf<UUserWidget> InteractWidgetClass;
 	
-	UPROPERTY()
+	UPROPERTY(BlueprintReadWrite, Category=Interact)
 	UInteractWidget* InteractWidget;
 
 	UPROPERTY(BlueprintReadWrite, Category=Interact)

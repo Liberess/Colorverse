@@ -418,13 +418,13 @@ void AColorverseCharacter::OnOverlapBegin(class UPrimitiveComponent* OverlappedC
 			{
 				if (IsValid(InteractWidgetClass))
 				{
-					InteractWidget = Cast<UInteractWidget>(CreateWidget(GetWorld(), InteractWidgetClass));
-					if (InteractWidget != nullptr)
-					{
-						InteractWidget->SetInteractText(FText::FromString(InteractObject->InteractWidgetDisplayTxt));
-						bIsWatchingInteractWidget = true;
-						InteractWidget->AddToViewport();
-					}
+					GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, TEXT("1"));
+					if(InteractWidget == nullptr)
+						InteractWidget = Cast<UInteractWidget>(CreateWidget(GetWorld(), InteractWidgetClass));
+					
+					InteractWidget->SetInteractText(FText::FromString(InteractObject->InteractWidgetDisplayTxt));
+					bIsWatchingInteractWidget = true;
+					InteractWidget->AddToViewport();
 				}
 			}
 		}
