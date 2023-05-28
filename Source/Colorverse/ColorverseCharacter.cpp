@@ -472,8 +472,16 @@ void AColorverseCharacter::ControlInventory_Implementation()
 
 void AColorverseCharacter::Interact_Implementation()
 {
-	if (!bIsInteract || !IsValid(InteractObject))
+	if (!bIsInteractable || !bIsInteract || !IsValid(InteractObject))
 		return;
+
+	bIsInteractable = false;
+	
+	GetWorld()->GetTimerManager().ClearTimer(InteractCoolTimer);
+	GetWorld()->GetTimerManager().SetTimer(InteractCoolTimer, [this]()
+	{
+		bIsInteractable = true;
+	}, InteractCoolTime, false);
 
 	InteractObject->Execute_OnInteract(InteractObject);
 

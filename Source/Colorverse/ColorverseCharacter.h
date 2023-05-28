@@ -200,12 +200,23 @@ private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess), Category = "Combat System")
 	bool bIsCanMove = true;
 	
+	UPROPERTY(BlueprintReadOnly, meta = (AllowPrivateAccess))
 	bool bIsWatchingInteractWidget;
 
+	UPROPERTY(BlueprintReadOnly, meta = (AllowPrivateAccess))
 	UInventoryManager* InvenMgr;
 
 	UPROPERTY(BlueprintReadWrite, meta=(AllowPrivateAccess))
 	UColorverseCharacterAnimInstance* ColorverseAnim;
+
+	UPROPERTY(BlueprintReadOnly, meta=(AllowPrivateAccess))
+	bool bIsInteractable = true;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta=(AllowPrivateAccess))
+	float InteractCoolTime = 1.0f;
+	
+	UPROPERTY(BlueprintReadOnly, meta=(AllowPrivateAccess))
+	FTimerHandle InteractCoolTimer;
 
 protected:
 	void OnResetVR();
