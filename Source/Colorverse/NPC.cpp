@@ -7,7 +7,7 @@ ANPC::ANPC()
 	PrimaryActorTick.bCanEverTick = true;
 
 	CapsuleCol = CreateDefaultSubobject<UCapsuleComponent>(TEXT("Capsule Col"));
-	if(CapsuleCol)
+	if (CapsuleCol)
 	{
 		CapsuleCol->InitCapsuleSize(34.0f, 88.0f);
 		CapsuleCol->SetCollisionProfileName(UCollisionProfile::Pawn_ProfileName);
@@ -19,7 +19,7 @@ ANPC::ANPC()
 	}
 
 	TriggerZone = CreateDefaultSubobject<USphereComponent>(TEXT("Trigger Zone"));
-	if(TriggerZone)
+	if (TriggerZone)
 	{
 		TriggerZone->InitSphereRadius(120.0f);
 		static FName TriggerZoneProfileName(TEXT("OverlapAllDynamic"));
@@ -57,9 +57,9 @@ ANPC::ANPC()
 	}
 
 	Camera = CreateDefaultSubobject<UCameraComponent>(TEXT("Camera"));
-	if(Camera)
+	if (Camera)
 		Camera->SetupAttachment(CapsuleCol);
-	
+
 	static ConstructorHelpers::FObjectFinder<UDataTable> DataTable(TEXT("/Game/DataTables/DT_Dialogue"));
 	if (DataTable.Succeeded())
 		DialogueDT = DataTable.Object;
@@ -69,7 +69,7 @@ void ANPC::BeginPlay()
 {
 	Super::BeginPlay();
 
-	if(IsValid(DialogueDT))
+	if (IsValid(DialogueDT))
 		DialogueData = *(DialogueDT->FindRow<FDialogue>(NPCName, ""));
 
 	const FSoftClassPath DialogueRef(TEXT("/Game/UI/BP_Dialogue.BP_Dialogue_C"));
@@ -83,12 +83,12 @@ void ANPC::BeginPlay()
 }
 
 void ANPC::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp,
-	int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+                          int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
 	if (OtherActor && OtherActor != this)
 	{
 		AColorverseCharacter* Character = Cast<AColorverseCharacter>(OtherActor);
-		if(IsValid(Character))
+		if (IsValid(Character))
 			SetActiveInteractUI(true);
 	}
 }
@@ -99,7 +99,7 @@ void ANPC::OnOverlapEnd(UPrimitiveComponent* OverlappedComp, AActor* OtherActor,
 	if (OtherActor && OtherActor != this)
 	{
 		AColorverseCharacter* Character = Cast<AColorverseCharacter>(OtherActor);
-		if(IsValid(Character))
+		if (IsValid(Character))
 			OnEndTalk_Implementation();
 	}
 }
@@ -108,19 +108,19 @@ void ANPC::OnBeginTalk_Implementation()
 {
 	IIDialogue::OnBeginTalk_Implementation();
 
-	if(!bIsInteractable)
+	if (!bIsInteractable)
 		return;
 
 	++TalkIndex;
 
-	if(TalkIndex < DialogueData.Dialogues.Num())
+	if (TalkIndex < DialogueData.Dialogues.Num())
 	{
-		if(DialogueWidget == nullptr)
+		if (DialogueWidget == nullptr)
 			DialogueWidget = Cast<UDialogueWidget>(CreateWidget(GetWorld(), DialogueWidgetRef));
-		
+
 		DialogueWidget->AddToViewport();
 		DialogueWidget->SetDialogueText(
-			FText::FromName(NPCName),
+			DialogueData.DisplayName,
 			DialogueData.Dialogues[TalkIndex]);
 
 		SetActiveInteractUI(false);
@@ -140,10 +140,10 @@ void ANPC::OnEndTalk_Implementation()
 
 	TalkIndex = -1;
 
-	if(DialogueWidget != nullptr)
+	if (DialogueWidget != nullptr)
 		DialogueWidget->RemoveFromParent();
 
-	if(InteractWidget != nullptr)
+	if (InteractWidget != nullptr)
 		InteractWidget->RemoveFromParent();
 
 	bIsTalking = false;
@@ -158,15 +158,14 @@ void ANPC::OnQuestClear_Implementation()
 
 void ANPC::SetActiveInteractUI(bool IsActive)
 {
-	GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, TEXT("npc!!"));
 	if (InteractWidgetRef != nullptr)
 	{
-		if(IsActive)
+		if (IsActive)
 		{
-			if(InteractWidget == nullptr)
+			if (InteractWidget == nullptr)
 				InteractWidget = Cast<UInteractWidget>(CreateWidget(GetWorld(), InteractWidgetRef));
-			
-			InteractWidget->SetInteractText( FText::FromName(FName(TEXT("대화하기"))));
+
+			InteractWidget->SetInteractText(FText::FromName(FName(TEXT("대화하기"))));
 			InteractWidget->AddToViewport();
 		}
 		else
@@ -180,7 +179,7 @@ void ANPC::SetNPCCamera(bool IsNPCCam)
 {
 	if (IsValid(PlayerController) && IsValid(PlayerCamera))
 	{
-		if(IsNPCCam)
+		if (IsNPCCam)
 		{
 			if (PlayerController->GetViewTarget() == PlayerCamera)
 				PlayerController->SetViewTargetWithBlend(Camera->GetOwner(), SmoothBlendTime);
