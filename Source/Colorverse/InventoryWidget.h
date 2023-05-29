@@ -45,4 +45,7 @@ public:
 	
 	UFUNCTION(BlueprintCallable)
 	void SetCombineResultUI(const FItem& Item, bool IsAlreadyCombine);
+
+	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent)
+	void PlayInventorySound(bool IsOpen);
 };

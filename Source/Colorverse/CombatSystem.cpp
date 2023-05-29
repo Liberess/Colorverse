@@ -57,25 +57,19 @@ float UCombatSystem::GetCurrentATK()
 float UCombatSystem::GetCurrentPaintColorAmount()
 {
 	UInventoryManager* temp = GetWorld()->GetSubsystem<UInventoryManager>();
-	return temp->PaintAmount;
+	return temp->GetPaintAmount();
 }
 
 void UCombatSystem::SetCurrentPaintColorAmount(float value)
 {
 	UInventoryManager* temp = GetWorld()->GetSubsystem<UInventoryManager>();
-	temp->PaintAmount += value;
+	temp->CurePaint(value);
 
-	if (temp->PaintAmount <= 0.0f)
-	{
-		temp->PaintAmount = 0;
-	}
-	else if (temp->PaintAmount < 5.0f)
-	{
+	if (temp->GetPaintAmount() < 5.0f)
 		SetColorBuff();
-	}
-
+	
 	// GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Red, FString::Printf(TEXT("%f"), temp->PaintAmount));
-	temp->GetHUDWidget()->SetPaintBarPercent(temp->PaintAmount);
+	temp->GetHUDWidget()->SetPaintBarPercent(temp->GetPaintAmount());
 }
 
 void UCombatSystem::AttackStartComboState()

@@ -9,8 +9,6 @@
 #include "GameFramework/Controller.h"
 #include "GameFramework/SpringArmComponent.h"
 
-#define Print(duration, text) if(GEngine) GEngine->AddOnScreenDebugMessage(-1,duration, FColor::Blue, text);
-
 AColorverseCharacter::AColorverseCharacter()
 {
 	GetCapsuleComponent()->InitCapsuleSize(42.f, 96.0f);
@@ -418,7 +416,6 @@ void AColorverseCharacter::OnOverlapBegin(class UPrimitiveComponent* OverlappedC
 			{
 				if (IsValid(InteractWidgetClass))
 				{
-					GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, TEXT("1"));
 					if(InteractWidget == nullptr)
 						InteractWidget = Cast<UInteractWidget>(CreateWidget(GetWorld(), InteractWidgetClass));
 					

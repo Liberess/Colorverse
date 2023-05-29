@@ -69,6 +69,16 @@ void UInventoryManager::InitializeManager()
 	});*/
 }
 
+void UInventoryManager::CurePaint(float Amount)
+{
+	PaintAmount += Amount;
+
+	if(PaintAmount >= MaxPaintAmount)
+		PaintAmount = MaxPaintAmount;
+	else if(PaintAmount <= 0.0f)
+		PaintAmount = 0.0f;
+}
+
 void UInventoryManager::SetInventoryUI(bool IsActive, bool IsFlip)
 {
 	if(!IsValid(InventoryWidget))
@@ -85,7 +95,8 @@ void UInventoryManager::SetInventoryUI(bool IsActive, bool IsFlip)
 
 		bIsInventoryOpen = IsActive;
 	}
-	
+
+	InventoryWidget->PlayInventorySound(bIsInventoryOpen);
 	APlayerController* PlayerController = UGameplayStatics::GetPlayerController(GetWorld(), 0);
 	if(bIsInventoryOpen)
 	{
@@ -212,12 +223,12 @@ void UInventoryManager::UseInventoryItem(FItem Item)
 			}
 			else if(InventoryArray[Index].ConsumeType == EConsumeType::Mana)
 			{
-				PaintAmount += InventoryArray[Index].RecoveryAmount;
+				CurePaint(InventoryArray[Index].RecoveryAmount);
 				HUDWidget->SetPaintBarPercent(PaintAmount);
 			}
 			else if(InventoryArray[Index].ConsumeType == EConsumeType::All)
 			{
-				PaintAmount += InventoryArray[Index].RecoveryAmount;
+				CurePaint(InventoryArray[Index].RecoveryAmount);
 				HUDWidget->SetPaintBarPercent(PaintAmount);
 				ColorPlayer->GetLivingEntity()->CureHealth(InventoryArray[Index].RecoveryAmount);
 			}
