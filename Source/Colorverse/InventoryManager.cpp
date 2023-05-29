@@ -83,7 +83,8 @@ void UInventoryManager::CurePaint(float Amount)
 
 void UInventoryManager::UpdatePaintUI()
 {
-	HUDWidget->SetPaintBarPercent(PaintAmount);
+	if(HUDWidget != nullptr)
+		HUDWidget->SetPaintBarPercent(PaintAmount);
 }
 
 void UInventoryManager::SetInventoryUI(bool IsActive, bool IsFlip)

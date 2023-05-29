@@ -76,8 +76,6 @@ void UCombatSystem::SetCurrentPaintColorAmount(float value)
 
 		if (temp->PaintAmount < 5.0f)
 			SetColorBuff();
-		
-		temp->UpdatePaintUI();
 	}
 }
 
