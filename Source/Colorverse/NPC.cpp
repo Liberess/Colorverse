@@ -73,12 +73,6 @@ void ANPC::BeginPlay()
 	if (IsValid(DialogueDT))
 		DialogueData = *(DialogueDT->FindRow<FDialogue>(NPCName, ""));
 
-	if(auto GameMode = Cast<AColorverseGameMode>(UGameplayStatics::GetGameMode(this)))
-	{
-		DialogueWidget = GameMode->DialogueWidget;
-		InteractWidget = GameMode->InteractWidget;
-	}
-	
 	PlayerController = UGameplayStatics::GetPlayerController(this, 0);
 	PlayerCamera = PlayerController->GetViewTarget();
 }

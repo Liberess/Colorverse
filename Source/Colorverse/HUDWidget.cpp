@@ -6,14 +6,13 @@
 
 void UHUDWidget::InitializedHUD()
 {
-	const FSoftClassPath WidgetBPClassRef(TEXT("/Game/UI/BP_ItemAcquiredWidget.BP_ItemAcquiredWidget_C"));
-	if(UClass* WidgetClass = WidgetBPClassRef.TryLoadClass<UItemAcquiredWidget>())
-		ItemAcquiredWidgetClass = WidgetClass;
-	
 	//PaintWidget->SetPaintColor(static_cast<ECombineColors>(i));
 	//PaintWidget->SetInputKeyText(FString::FromInt(i+1));
 	PaintBar->SetPercent(0.0f);
 	SetPaintBarPercent(0.0f);
+
+	if(auto GameMode = Cast<AColorverseGameMode>(UGameplayStatics::GetGameMode(this)))
+		ItemAcquiredWidgetClass = GameMode->ItemAcquiredWidgetClass;
 }
 
 void UHUDWidget::SetPaintBarPercent(float Amount)
