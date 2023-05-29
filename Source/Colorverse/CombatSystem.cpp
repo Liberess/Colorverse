@@ -69,7 +69,8 @@ void UCombatSystem::SetCurrentPaintColorAmount(float value)
 		SetColorBuff();
 	
 	// GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Red, FString::Printf(TEXT("%f"), temp->PaintAmount));
-	temp->GetHUDWidget()->SetPaintBarPercent(temp->GetPaintAmount());
+
+	temp->UpdatePaintUI();
 }
 
 void UCombatSystem::AttackStartComboState()

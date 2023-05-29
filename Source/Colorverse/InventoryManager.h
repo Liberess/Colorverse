@@ -71,6 +71,9 @@ public:
 	void CurePaint(float Amount);
 
 	UFUNCTION(BlueprintCallable, Category=InventoryManager)
+	void UpdatePaintUI();
+
+	UFUNCTION(BlueprintCallable, Category=InventoryManager)
 	void SetInventoryUI(bool IsActive, bool IsFlip = false);
 
 	UFUNCTION(BlueprintCallable, Category=InventoryManager)
