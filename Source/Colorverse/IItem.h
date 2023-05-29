@@ -62,12 +62,15 @@ struct FPaintCombo : public FTableRowBase
 {
 	GENERATED_USTRUCT_BODY();
 
+	FPaintCombo() : ResultColor(FColor(1, 1, 1, 1))
+	{};
+
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PaintCombo")
 	TArray<ECombineColors> ComboColors;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PaintCombo")
-	FLinearColor ResultColor;
+	FLinearColor ResultColor = FColor(1, 1, 1, 1);
 };
 
 UINTERFACE(MinimalAPI)
