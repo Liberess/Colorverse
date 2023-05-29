@@ -40,8 +40,9 @@ public:
 	virtual bool ShouldCreateSubsystem(UObject* Outer) const override;
 	virtual void Initialize(FSubsystemCollectionBase& Collection) override;
 
+	UFUNCTION(BlueprintCallable)
 	void InitializeManager();
-
+	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=InventoryManager)
 	TArray<FItem> InventoryArray;
 

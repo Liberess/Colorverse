@@ -41,6 +41,12 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category="NPC|Dialogue")
 	bool bIsInteractable = true;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category="NPC|Dialogue", meta=(AllowPrivateAccess))
+	TObjectPtr<UDialogueWidget> DialogueWidget;
+	
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category="NPC|Dialogue", meta=(AllowPrivateAccess))
+	TObjectPtr<UInteractWidget> InteractWidget;
+
 protected:
 	virtual void BeginPlay() override;
 
@@ -58,18 +64,6 @@ protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="NPC|Dialogue", meta=(AllowPrivateAccess))
 	TObjectPtr<UDataTable> DialogueDT;
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="NPC|Dialogue", meta=(AllowPrivateAccess))
-	TSubclassOf<UDialogueWidget> DialogueWidgetRef;
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category="NPC|Dialogue", meta=(AllowPrivateAccess))
-	TObjectPtr<UDialogueWidget> DialogueWidget;
-	
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="NPC|Dialogue", meta=(AllowPrivateAccess))
-	TSubclassOf<UInteractWidget> InteractWidgetRef;
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category="NPC|Dialogue", meta=(AllowPrivateAccess))
-	TObjectPtr<UInteractWidget> InteractWidget;
 
 private:
 	UPROPERTY(Category="NPC|Component", VisibleDefaultsOnly, BlueprintReadOnly, meta=(AllowPrivateAccess = "true"))

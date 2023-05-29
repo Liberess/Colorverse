@@ -1,5 +1,6 @@
 #include "NPC.h"
 #include "ColorverseCharacter.h"
+#include "ColorverseGameMode.h"
 #include "Kismet/GameplayStatics.h"
 
 ANPC::ANPC()
@@ -72,12 +73,12 @@ void ANPC::BeginPlay()
 	if (IsValid(DialogueDT))
 		DialogueData = *(DialogueDT->FindRow<FDialogue>(NPCName, ""));
 
-	const FSoftClassPath DialogueRef(TEXT("/Game/UI/BP_Dialogue.BP_Dialogue_C"));
-	DialogueWidgetRef = DialogueRef.TryLoadClass<UDialogueWidget>();
-
-	const FSoftClassPath InteractRef(TEXT("/Game/UI/BP_InteractWidget.BP_InteractWidget_C"));
-	InteractWidgetRef = InteractRef.TryLoadClass<UInteractWidget>();
-
+	if(auto GameMode = Cast<AColorverseGameMode>(UGameplayStatics::GetGameMode(this)))
+	{
+		DialogueWidget = GameMode->DialogueWidget;
+		InteractWidget = GameMode->InteractWidget;
+	}
+	
 	PlayerController = UGameplayStatics::GetPlayerController(this, 0);
 	PlayerCamera = PlayerController->GetViewTarget();
 }
@@ -115,9 +116,6 @@ void ANPC::OnBeginTalk_Implementation()
 
 	if (TalkIndex < DialogueData.Dialogues.Num())
 	{
-		if (DialogueWidget == nullptr)
-			DialogueWidget = Cast<UDialogueWidget>(CreateWidget(GetWorld(), DialogueWidgetRef));
-
 		DialogueWidget->AddToViewport();
 		DialogueWidget->SetDialogueText(
 			DialogueData.DisplayName,
@@ -158,13 +156,10 @@ void ANPC::OnQuestClear_Implementation()
 
 void ANPC::SetActiveInteractUI(bool IsActive)
 {
-	if (InteractWidgetRef != nullptr)
+	if (InteractWidget != nullptr)
 	{
 		if (IsActive)
 		{
-			if (InteractWidget == nullptr)
-				InteractWidget = Cast<UInteractWidget>(CreateWidget(GetWorld(), InteractWidgetRef));
-
 			InteractWidget->SetInteractText(FText::FromName(FName(TEXT("F:대화하기"))));
 			InteractWidget->AddToViewport();
 		}

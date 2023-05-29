@@ -72,10 +72,9 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Item Acquired Widget Pool")
 	void ReleaseWidget(UUserWidget* Widget);
 
-private:
-	UPROPERTY(BlueprintReadOnly, Category = "Item Acquired", meta=(AllowPrivateAccess))
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "Item Acquired", meta=(AllowPrivateAccess))
 	TSubclassOf<UItemAcquiredWidget> ItemAcquiredWidgetClass;
 
-	UPROPERTY()
+	UPROPERTY(VisibleDefaultsOnly)
 	TMap<TSubclassOf<UUserWidget>, FWidgetData> PoolMap;
 };

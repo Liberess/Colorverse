@@ -21,6 +21,7 @@ private:
 public:
 	virtual bool ShouldCreateSubsystem(UObject* Outer) const override;
 
+	UFUNCTION(BlueprintCallable)
 	void InitializeManager();
 
 	UFUNCTION(BlueprintCallable)

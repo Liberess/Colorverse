@@ -1,5 +1,8 @@
 #include "HUDWidget.h"
+
+#include "ColorverseGameMode.h"
 #include "Components/UniformGridSlot.h"
+#include "Kismet/GameplayStatics.h"
 
 void UHUDWidget::InitializedHUD()
 {
@@ -67,6 +70,14 @@ void UHUDWidget::AddItemLog(const FItem& ItemData)
 		}
 	}
 
+	if(ItemAcquiredWidgetClass != nullptr)
+	{
+		if(auto GameMode = Cast<AColorverseGameMode>(UGameplayStatics::GetGameMode(this)))
+		{
+			if(GameMode->ItemAcquiredWidgetClass)
+				ItemAcquiredWidgetClass = ItemAcquiredWidgetClass;
+		}
+	}
 	//UUserWidget* NewWidget = CreateWidget<UUserWidget>(GetWorld(), ItemAcquiredWidgetClass);
 	if(UItemAcquiredWidget* ItemLogWidget = Cast<UItemAcquiredWidget>(GetOrCreateWidget(ItemAcquiredWidgetClass)))
 	{

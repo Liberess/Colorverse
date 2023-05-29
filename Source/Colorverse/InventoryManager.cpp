@@ -1,5 +1,4 @@
 #include "InventoryManager.h"
-
 #include "ColorverseCharacter.h"
 #include "ColorverseWorldSettings.h"
 #include "Kismet/GameplayStatics.h"
@@ -43,20 +42,26 @@ void UInventoryManager::InitializeManager()
 	
 	for(int i = 0; i < 2; i++)
 		MakerArray.Add(FItem());
-	
-	const FSoftClassPath InventoryRef(TEXT("/Game/UI/BP_InventoryWidget.BP_InventoryWidget_C"));
-	if(UClass* WidgetClass = InventoryRef.TryLoadClass<UInventoryWidget>())
-	{
-		InventoryWidget = Cast<UInventoryWidget>(CreateWidget(GetWorld(), WidgetClass));
-		InventoryWidget->CreateContainer(InventoryArray.Num());
-	}
 
-	const FSoftClassPath HUDRef(TEXT("/Game/UI/BP_HUD.BP_HUD_C"));
-	if(UClass* WidgetClass = HUDRef.TryLoadClass<UHUDWidget>())
+	/*if(!IsValid(InventoryWidget))
 	{
-		HUDWidget = Cast<UHUDWidget>(CreateWidget(GetWorld(), WidgetClass));
-		HUDWidget->InitializedHUD();
+		static FSoftClassPath InventoryRef(TEXT("/Game/UI/BP_InventoryWidget.BP_InventoryWidget_C"));
+		if(UClass* WidgetClass1 = InventoryRef.TryLoadClass<UInventoryWidget>())
+		{
+			InventoryWidget = Cast<UInventoryWidget>(CreateWidget(GetWorld(), WidgetClass1));
+			InventoryWidget->CreateContainer(InventoryArray.Num());
+		}
 	}
+	
+	if(!IsValid(HUDWidget))
+	{
+		static FSoftClassPath HUDRef(TEXT("/Game/UI/BP_HUD.BP_HUD_C"));
+		if(UClass* WidgetClass2 = HUDRef.TryLoadClass<UHUDWidget>())
+		{
+			HUDWidget = Cast<UHUDWidget>(CreateWidget(GetWorld(), WidgetClass2));
+			HUDWidget->InitializedHUD();
+		}
+	}*/
 	
 	/*TArray<AActor*> FoundActors;
 	UGameplayStatics::GetAllActorsOfClass(GetWorld(), ASanctum::StaticClass(), FoundActors);
@@ -90,7 +95,7 @@ void UInventoryManager::UpdatePaintUI()
 void UInventoryManager::SetInventoryUI(bool IsActive, bool IsFlip)
 {
 	if(!IsValid(InventoryWidget))
-		return;;
+		return;
 
 	if(IsFlip)
 	{
@@ -140,6 +145,9 @@ void UInventoryManager::SetInventoryUI(bool IsActive, bool IsFlip)
 
 void UInventoryManager::UpdateInventory()
 {
+	if(!IsValid(InventoryWidget))
+		return;
+	
 	InventoryWidget->UpdateContainer(InventoryArray);
 }
 
