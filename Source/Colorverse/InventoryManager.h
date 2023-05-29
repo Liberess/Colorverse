@@ -36,16 +36,6 @@ private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, meta=(AllowPrivateAccess), Category=InventoryManager)
 	TMap<FName, bool> AlreadyCombineMap;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly,
-	    BlueprintGetter=GetPaintAmount,
-		meta=(AllowPrivateAccess), Category=InventoryManager)
-	float PaintAmount = 0.0f;
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite,
-		BlueprintGetter=GetMaxPaintAmount, BlueprintSetter=SetMaxPaintAmount,
-		meta=(AllowPrivateAccess), Category=InventoryManager)
-	float MaxPaintAmount = 100.0f;
-
 public:
 	virtual bool ShouldCreateSubsystem(UObject* Outer) const override;
 	virtual void Initialize(FSubsystemCollectionBase& Collection) override;
@@ -58,14 +48,11 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=InventoryManager)
 	TArray<FItem> MakerArray;
 
-	UFUNCTION(BlueprintGetter)
-	float GetPaintAmount() const { return PaintAmount; }
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category=InventoryManager)
+	float PaintAmount = 0.0f;
 
-	UFUNCTION(BlueprintGetter)
-	float GetMaxPaintAmount() const { return MaxPaintAmount; }
-
-	UFUNCTION(BlueprintSetter)
-	void SetMaxPaintAmount(float Amount) { MaxPaintAmount = Amount; }
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category=InventoryManager)
+	float MaxPaintAmount = 100.0f;
 
 	UFUNCTION(BlueprintCallable, Category=InventoryManager)
 	void CurePaint(float Amount);

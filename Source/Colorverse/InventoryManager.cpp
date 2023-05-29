@@ -78,7 +78,7 @@ void UInventoryManager::CurePaint(float Amount)
 	else if(PaintAmount <= 0.0f)
 		PaintAmount = 0.0f;
 
-	HUDWidget->SetPaintBarPercent(PaintAmount);
+	UpdatePaintUI();
 }
 
 void UInventoryManager::UpdatePaintUI()
@@ -231,10 +231,12 @@ void UInventoryManager::UseInventoryItem(FItem Item)
 			else if(InventoryArray[Index].ConsumeType == EConsumeType::Mana)
 			{
 				CurePaint(InventoryArray[Index].RecoveryAmount);
+				UpdatePaintUI();
 			}
 			else if(InventoryArray[Index].ConsumeType == EConsumeType::All)
 			{
 				CurePaint(InventoryArray[Index].RecoveryAmount);
+				UpdatePaintUI();
 				ColorPlayer->GetLivingEntity()->CureHealth(InventoryArray[Index].RecoveryAmount);
 			}
 		}

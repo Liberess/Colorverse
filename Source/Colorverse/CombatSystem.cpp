@@ -57,20 +57,28 @@ float UCombatSystem::GetCurrentATK()
 float UCombatSystem::GetCurrentPaintColorAmount()
 {
 	UInventoryManager* temp = GetWorld()->GetSubsystem<UInventoryManager>();
-	return temp->GetPaintAmount();
+	if(temp != nullptr)
+		return temp->PaintAmount;
+	return -1.0f;
 }
 
 void UCombatSystem::SetCurrentPaintColorAmount(float value)
 {
 	UInventoryManager* temp = GetWorld()->GetSubsystem<UInventoryManager>();
-	temp->CurePaint(value);
+	if(temp != nullptr)
+	{
+		temp->PaintAmount += value;
 
-	if (temp->GetPaintAmount() < 5.0f)
-		SetColorBuff();
-	
-	// GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Red, FString::Printf(TEXT("%f"), temp->PaintAmount));
+		if(temp->PaintAmount >= temp->MaxPaintAmount)
+			temp->PaintAmount = temp->MaxPaintAmount;
+		else if(temp->PaintAmount <= 0.0f)
+			temp->PaintAmount = 0.0f;
 
-	temp->UpdatePaintUI();
+		if (temp->PaintAmount < 5.0f)
+			SetColorBuff();
+		
+		temp->UpdatePaintUI();
+	}
 }
 
 void UCombatSystem::AttackStartComboState()
@@ -92,4 +100,3 @@ void UCombatSystem::AttackEndComboState()
 	bIsCanAttackTrace = false;
 	CurrentCombo = 0;
 }
-
