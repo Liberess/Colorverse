@@ -154,7 +154,7 @@ void ANPC::SetActiveInteractUI(bool IsActive)
 	{
 		if (IsActive)
 		{
-			InteractWidget->SetInteractText(FText::FromName(FName(TEXT("F:대화하기"))));
+			InteractWidget->SetInteractText(FText::FromName(FName(TEXT("[F] 대화하기"))));
 			InteractWidget->AddToViewport();
 		}
 		else
