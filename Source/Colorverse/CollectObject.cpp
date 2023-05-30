@@ -18,7 +18,7 @@ void ACollectObject::BeginPlay()
 	IsInteractable = true;
 	CurrentScale = FVector::ZeroVector;
 
-	RespawnTime = FMath::RandRange(5.0f, MaxRespawnTime);
+	RespawnTime = FMath::RandRange(50.0f, MaxRespawnTime);
 
 	/*ObjMatInst = UMaterialInstanceDynamic::Create(ObjMatTemplate, this);
 	StaticMesh->SetMaterial(0, ObjMatInst);*/
@@ -45,7 +45,7 @@ void ACollectObject::OnInteract_Implementation()
 	IsInteractable = false;
 	StaticMesh->SetHiddenInGame(true);
 
-	RespawnTime = FMath::RandRange(5.0f, MaxRespawnTime);
+	RespawnTime = FMath::RandRange(50.0f, MaxRespawnTime);
 
 	if (ItemData.bIsValid)
 	{

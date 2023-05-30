@@ -45,7 +45,7 @@ public:
 	float GlownVelocity = 2.0f;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category="Collect Object")
-	float RespawnTime = 5.0f;
+	float RespawnTime = 50.0f;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Collect Object")
 	float MaxRespawnTime = 120.0f;
