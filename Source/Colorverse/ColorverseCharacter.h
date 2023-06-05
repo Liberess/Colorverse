@@ -176,8 +176,8 @@ private:
 	UPROPERTY(BlueprintReadOnly, meta=(AllowPrivateAccess))
 	bool bIsInteractable = true;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta=(AllowPrivateAccess))
-	float InteractCoolTime = 1.0f;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, meta=(AllowPrivateAccess))
+	float InteractCoolTime = 2.0f;
 	
 	UPROPERTY(BlueprintReadOnly, meta=(AllowPrivateAccess))
 	FTimerHandle InteractCoolTimer;
