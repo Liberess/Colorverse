@@ -96,20 +96,6 @@ void AColorverseCharacter::SetupPlayerInputComponent(class UInputComponent* Play
 	PlayerInputComponent->BindAction("Interact", IE_Pressed, this, &AColorverseCharacter::Interact);
 	PlayerInputComponent->BindAction("Inventory", IE_Pressed, this, &AColorverseCharacter::ControlInventory);
 
-	PlayerInputComponent->BindAction("CheatInventory", IE_Pressed, this, &AColorverseCharacter::CheatInventory);
-	PlayerInputComponent->BindAction("CheatStanctumRed", IE_Pressed, this, &AColorverseCharacter::CheatStanctumRed);
-	PlayerInputComponent->BindAction("CheatStanctumYellow", IE_Pressed, this, &AColorverseCharacter::CheatStanctumYellow);
-	PlayerInputComponent->BindAction("CheatStanctumBlue", IE_Pressed, this, &AColorverseCharacter::CheatStanctumBlue);
-
-	PlayerInputComponent->BindAxis("TeleportStanctumRed", this, &AColorverseCharacter::TeleportStanctumRed);
-	PlayerInputComponent->BindAxis("TeleportStanctumYellow", this, &AColorverseCharacter::TeleportStanctumYellow);
-	PlayerInputComponent->BindAxis("TeleportStanctumBlue", this, &AColorverseCharacter::TeleportStanctumBlue);
-	PlayerInputComponent->BindAxis("TeleportStanctumLast", this, &AColorverseCharacter::TeleportStanctumLast);
-	PlayerInputComponent->BindAxis("TeleportSmallVillage", this, &AColorverseCharacter::TeleportSmallVillage);
-	PlayerInputComponent->BindAxis("TeleportMiddleVillage", this, &AColorverseCharacter::TeleportMiddleVillage);
-	PlayerInputComponent->BindAxis("TeleportPanorama", this, &AColorverseCharacter::TeleportPanorama);
-	PlayerInputComponent->BindAxis("TeleportStartPoint", this, &AColorverseCharacter::TeleportStartPoint);
-
 	PlayerInputComponent->BindAction<TDelegate<void(ECombineColors)>>(
 		TEXT("RedPaint"), IE_Pressed, this, &AColorverseCharacter::ChangeEquipPaint, ECombineColors::Red);
 	PlayerInputComponent->BindAction<TDelegate<void(ECombineColors)>>(

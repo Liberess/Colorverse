@@ -148,42 +148,6 @@ public:
 	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent)
 	void SetVisibleInteractableOutline(bool Visible);
 
-	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent)
-	void CheatInventory();
-
-	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent)
-	void CheatStanctumRed();
-
-	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent)
-	void CheatStanctumYellow();
-
-	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent)
-	void CheatStanctumBlue();
-	
-	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent)
-	void TeleportStanctumRed(float Rate);
-
-	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent)
-	void TeleportStanctumYellow(float Rate);
-
-	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent)
-	void TeleportStanctumBlue(float Rate);
-	
-	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent)
-	void TeleportStanctumLast(float Rate);
-
-	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent)
-	void TeleportSmallVillage(float Rate);
-
-	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent)
-	void TeleportMiddleVillage(float Rate);
-
-	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent)
-	void TeleportPanorama(float Rate);
-
-	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent)
-	void TeleportStartPoint(float Rate);
-	
 private:	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta=(AllowPrivateAccess), Category="Combat System")
 	bool bIsDamageable;
