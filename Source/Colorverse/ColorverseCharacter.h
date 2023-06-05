@@ -173,13 +173,13 @@ private:
 	UPROPERTY(BlueprintReadWrite, meta=(AllowPrivateAccess))
 	UColorverseCharacterAnimInstance* ColorverseAnim;
 
-	UPROPERTY(BlueprintReadOnly, meta=(AllowPrivateAccess))
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, meta=(AllowPrivateAccess), Category=Interact)
 	bool bIsInteractable = true;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, meta=(AllowPrivateAccess))
-	float InteractCoolTime = 2.0f;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta=(AllowPrivateAccess), Category=Interact)
+	float InteractCoolTime = 1.0f;
 	
-	UPROPERTY(BlueprintReadOnly, meta=(AllowPrivateAccess))
+	UPROPERTY(BlueprintReadWrite, meta=(AllowPrivateAccess), Category=Interact)
 	FTimerHandle InteractCoolTimer;
 
 protected:

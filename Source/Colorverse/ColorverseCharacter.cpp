@@ -459,7 +459,7 @@ void AColorverseCharacter::Interact_Implementation()
 		return;
 
 	bIsInteractable = false;
-	
+
 	GetWorld()->GetTimerManager().ClearTimer(InteractCoolTimer);
 	GetWorld()->GetTimerManager().SetTimer(InteractCoolTimer, [this]()
 	{

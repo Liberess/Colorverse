@@ -31,31 +31,30 @@ void AFruitTree::OnInteract_Implementation()
 {
 	IIInteractable::OnInteract_Implementation();
 
+	if(!IsInteractable)
+		return;
+	
+	IsInteractable = false;
+
 	UInventoryManager* InvenMgr = GetWorld()->GetSubsystem<UInventoryManager>();
 	
 	//흔들리는 Animation 출력
 
-	//열려있는 열매 획득
-	if(CanAcquireFruit)
-	{
-		CanAcquireFruit = false;
-		SetActiveCollectObject(false);
-		
-		int Rand = FMath::RandRange(1, MaxItemAcquireAmount);
-		ItemData.Amount = Rand;
-		
-		InvenMgr->AddInventoryItem(ItemData);
-	
-		GetWorldTimerManager().ClearTimer(SpawnTimerHandle);
-		GetWorldTimerManager().SetTimer(SpawnTimerHandle, FTimerDelegate::CreateLambda([this]
-		{
-			CanAcquireFruit = true;
-			SetActiveCollectObject(true);
-		}), FruitSpawnDelayTime, false);
-	}
-
 	//나뭇가지 획득
-	int Rand = FMath::RandRange(1, MaxWoodStickAcquireAmount);
-	WoodStickData.Amount = Rand;
+	WoodStickData.Amount = FMath::RandRange(1, MaxWoodStickAcquireAmount);
 	InvenMgr->AddInventoryItem(WoodStickData);
+
+	SetActiveCollectObject(false);
+
+	ItemData.Amount = FMath::RandRange(1, MaxItemAcquireAmount);
+		
+	InvenMgr->AddInventoryItem(ItemData);
+
+	FruitSpawnDelayTime = FMath::RandRange(10.0f, 60.0f);
+	GetWorldTimerManager().ClearTimer(SpawnTimerHandle);
+	GetWorldTimerManager().SetTimer(SpawnTimerHandle, FTimerDelegate::CreateLambda([this]
+	{
+		IsInteractable = true;
+		SetActiveCollectObject(true);
+	}), FruitSpawnDelayTime, false);
 }

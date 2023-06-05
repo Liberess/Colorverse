@@ -29,9 +29,6 @@ private:
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Fruit Tree", meta=(AllowPrivateAccess))
 	int MaxWoodStickAcquireAmount = 3;
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category="Fruit Tree", meta=(AllowPrivateAccess))
-	bool CanAcquireFruit = true;
 	
 	UPROPERTY(BlueprintReadOnly, Category="Fruit Tree", meta=(AllowPrivateAccess))
 	FTimerHandle SpawnTimerHandle;

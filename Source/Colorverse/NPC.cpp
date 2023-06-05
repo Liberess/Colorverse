@@ -171,12 +171,14 @@ void ANPC::SetNPCCamera(bool IsNPCCam)
 		if (IsNPCCam)
 		{
 			if (PlayerController->GetViewTarget() == PlayerCamera)
-				PlayerController->SetViewTargetWithBlend(Camera->GetOwner(), SmoothBlendTime);
+				PlayerController->SetViewTarget(Camera->GetOwner());
+				//PlayerController->SetViewTargetWithBlend(Camera->GetOwner(), SmoothBlendTime);
 		}
 		else
 		{
 			if (PlayerController->GetViewTarget() == Camera->GetOwner())
-				PlayerController->SetViewTargetWithBlend(PlayerCamera, SmoothBlendTime);
+				PlayerController->SetViewTarget(PlayerCamera);
+				//PlayerController->SetViewTargetWithBlend(PlayerCamera, SmoothBlendTime);
 		}
 	}
 }
