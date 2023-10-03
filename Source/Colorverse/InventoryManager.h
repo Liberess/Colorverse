@@ -16,10 +16,10 @@ private:
 	UInventoryManager();
 	
 	UPROPERTY(BlueprintReadWrite, meta=(AllowPrivateAccess), Category=InventoryManager)
-	UInventoryWidget* InventoryWidget;
-
-	UPROPERTY(BlueprintReadWrite, meta=(AllowPrivateAccess), Category=InventoryManager)
 	UHUDWidget* HUDWidget;
+	
+	UPROPERTY(BlueprintReadWrite, meta=(AllowPrivateAccess), Category=InventoryManager)
+	UInventoryWidget* InventoryWidget;
 
 	UPROPERTY(BlueprintReadOnly, meta=(AllowPrivateAccess), Category=InventoryManager)
 	bool bIsInventoryOpen = false;
@@ -43,12 +43,6 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void InitializeManager();
 	
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=InventoryManager)
-	TArray<FItem> InventoryArray;
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=InventoryManager)
-	TArray<FItem> MakerArray;
-
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category=InventoryManager)
 	float PaintAmount = 0.0f;
 
@@ -60,7 +54,13 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category=InventoryManager)
 	void UpdatePaintUI();
+	
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=InventoryManager)
+	TArray<FItem> InventoryArray;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=InventoryManager)
+	TArray<FItem> MakerArray;
+	
 	UFUNCTION(BlueprintCallable, Category=InventoryManager)
 	void SetInventoryUI(bool IsActive, bool IsFlip = false);
 
